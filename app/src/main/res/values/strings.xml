@@ -1,0 +1,92 @@
+<resources>
+    <string name="app_name">DrivingApp</string>
+    <string name="phone">Phone</string>
+    <string name="password">Password</string>
+    <string name="log_in">Login</string>
+    <string name="name">Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="sign_up">Sign up</string>
+    <string name="email">Email</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="remember_user">Remember user</string>
+
+    <!--Drawer and Tabs-->
+    <string name="menu_home">Home</string>
+    <string name="menu_speed">My Speed</string>
+    <string name="menu_campus_map">Zones Map</string>
+    <string name="menu_alerts">My Alerts</string>
+    <string name="menu_my_campus">My zones</string>
+    <string name="menu_my_location">My location</string>
+    <string name="menu_profile">My Profile</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_logout">Logout</string>
+    <string name="menu_history">Alert history</string>
+
+
+    <!--Messages-->
+    <string name="message_valid_email">Email is not valid, please try again.</string>
+    <string name="message_valid_password">Password is not valid, please try again.</string>
+    <string name="message_user_not_found">Incorrect email or password, try again.</string>
+    <string name="message_login_not_found">Failed to login.</string>
+    <string name="message_undetected_zone">You are not in any zone...!</string>
+    <string name="message_no_alerts_show">This area has no alerts to show...!</string>
+    <string name="message_successful_sending">Successful sending...!</string>
+    <string name="message_failed_send">Failed to send...!</string>
+
+    <!--Dialog alerts-->
+    <string name="message_alert_gps">GPS is disabled on the device. Do you want to enable?</string>
+    <string name="button_enable_alert_gps">Enable GPS</string>
+    <string name="message_alert_see_map">See on the map</string>
+    <string name="message_alert_delete">Delete</string>
+    <string name="message_is_driving_user_title">Are you inside a car?</string>
+    <string name="message_is_driving_user_yes">Yes</string>
+    <string name="message_is_driving_user_no">No</string>
+
+    <!--Message Permission -->
+    <string name="message_title_showMessageOKCancel">Required Permissions</string>
+    <string name="message_accept_showMessageOKCancel">Accept</string>
+    <string name="message_cancel_showMessageOKCancel">Cancel</string>
+    <string name="message_permission_denied">Some Permission is Denied</string>
+    <string name="message_need_rationale">You need to grant access to</string>
+    <string name="message_gps">GPS</string>
+
+    <!--Message HomeFragment-->
+    <string name="message_name_campus">Name Campus</string>
+    <string name="message_address_campus">Address</string>
+    <string name="message_any_campus">You are not in any campus..!</string>
+
+    <!--FloatingActionButton-->
+    <string name="message_floating_unknown">Unknown emergency</string>
+    <string name="message_floating_accident">Car Accident</string>
+    <string name="message_floating_traffic">Traffic Jam</string>
+
+    <!--messages Alerts-->
+    <string name="message_alert_category_accident">accident</string>
+    <string name="message_alert_category_traffic">traffic</string>
+
+    <!--Variables del slide-->
+    <string name="message_title_accident_slide">Car Accident</string>
+    <string name="message_title_traffic_slide">Traffic Jam</string>
+
+    <string name="message_severity_slide">Severity</string>
+    <string name="message_severity_informational_slide">Informational</string>
+    <string name="message_severity_low_slide">Low</string>
+    <string name="message_severity_medium_slide">Medium</string>
+    <string name="message_severity_high_slide">High</string>
+    <string name="message_severity_critical_slide">Critical</string>
+
+    <string name="message_edit_text_slide">Description</string>
+    <string name="message_button_send_slide">Send Alert</string>
+
+
+
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">GOT IT</string>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>

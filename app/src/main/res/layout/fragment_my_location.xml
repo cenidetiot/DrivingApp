@@ -1,0 +1,15 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.MyLocationFragment">
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapMyLocation"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <!--include android:id="@+id/btnFloating" layout="@layout/floating_button"/-->
+
+</FrameLayout>

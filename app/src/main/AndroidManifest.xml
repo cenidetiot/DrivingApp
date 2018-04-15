@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="mx.edu.cenidet.drivingapp">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_drive"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_drive_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".activities.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activities.HomeActivity" />
+        <activity
+            android:name=".activities.SplashActivity"
+            android:theme="@style/SplashScreen" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <service android:name=".services.DeviceService" />
+
+        <activity android:name=".activities.MapDetailActivity" />
+
+        <service android:name=".services.DrivingFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".services.MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity android:name=".activities.AlertMapDetailActivity" />
+        <activity android:name=".activities.AlertHistoryActivity" />
+        <activity android:name=".activities.SendManualAlertsActivity"></activity>
+    </application>
+
+</manifest>

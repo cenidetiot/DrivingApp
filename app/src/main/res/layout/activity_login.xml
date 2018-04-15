@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0B3861"
+    tools:context=".activities.LoginActivity">
+
+    <!--LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content
+        android:orientation="vertical"
+        android:background="@drawable/drive1"
+        android:padding="15dp"!-->
+    <!--LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/colorPrimaryDark"
+        android:padding="15dp"-->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="15dp">
+
+            <ImageView
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="150dp"
+                android:src="@drawable/logo"/>
+
+            <EditText
+                android:id="@+id/etLoginEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress"
+                android:textColor="#FFF"
+                android:textColorHint="#FFF" />
+
+            <EditText
+                android:id="@+id/etLoginPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:textColor="#FFF"
+                android:textColorHint="#FFF" />
+            <Button
+                android:id="@+id/btnLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FFF"
+                android:background="#B40404"
+                android:text="@string/log_in" />
+
+            <ImageView
+                android:layout_gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="120dp"
+                android:src="@drawable/logo_smartsdk"/>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

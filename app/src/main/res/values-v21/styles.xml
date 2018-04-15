@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#2d5f73</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/black</item>
+    </style>
+
+    <style name="SplashScreen" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash</item>
+    </style>
+    <style name="MenuButtonsUnknown">
+        <item name="fab_colorNormal">#e74c3c</item>
+        <item name="fab_colorPressed">#B40404</item>
+        <item name="fab_colorRipple">#8A0808</item>
+    </style>
+    <style name="MenuButtonsAccident">
+        <item name="fab_colorNormal">#e67e22</item>
+        <item name="fab_colorPressed">#B45F04</item>
+        <item name="fab_colorRipple">#8A4B08</item>
+    </style>
+    <style name="MenuButtonsTraffic">
+        <item name="fab_colorNormal">#f1c40f</item>
+        <item name="fab_colorPressed">#DBA901</item>
+        <item name="fab_colorRipple">#B18904</item>
+    </style>
+</resources>
