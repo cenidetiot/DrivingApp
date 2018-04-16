@@ -4,85 +4,116 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/backgroundDefault"
     tools:context="mx.edu.cenidet.drivingapp.activities.CreateAccountActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="15dp">
 
-        <include
-            android:id="@+id/toolbar"
-            layout="@layout/toolbar"/>
-        <LinearLayout
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="15dp">
-            <TextView
-                android:gravity="center_horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/message_title_create_account"
-                android:textStyle="bold"/>
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center_horizontal"
+            android:text="@string/message_title_create_account"
+            android:textColor="@color/white"
+            android:textSize="@dimen/display_1"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/etFirstName"
+            style="@style/EditTextStyleOne"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:hint="@string/name"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/etLastName"
+            style="@style/EditTextStyleOne"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:hint="@string/last_name"
+            android:inputType="text" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
             <EditText
-                android:id="@+id/etFirstName"
+                android:id="@+id/etPhone"
+                style="@style/EditTextStyleOne"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/name"
-                android:inputType="text" />
-            <EditText
-                android:id="@+id/etLastName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/last_name"
-                android:inputType="text" />
-            <LinearLayout
+                android:layout_centerInParent="true"
+                android:layout_toLeftOf="@+id/btnPhone"
+                android:layout_toStartOf="@+id/btnPhone"
+                android:enabled="false"
+                android:focusable="false"
+                android:hint="@string/phone"
+                android:inputType="phone" />
+
+            <ImageButton
+                android:id="@+id/btnPhone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <EditText
-                    android:id="@+id/etPhone"
-                    android:layout_width="250dp"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/phone"
-                    android:enabled="false"
-                    android:inputType="phone" />
-                <ImageButton
-                    android:id="@+id/btnPhone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:src="@android:drawable/ic_menu_call"/>
-            </LinearLayout>
-            <EditText
-                android:id="@+id/etEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/email"
-                android:inputType="textEmailAddress" />
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:onClick="onClickEvent"
+                android:src="@android:drawable/ic_menu_call" />
+        </RelativeLayout>
 
-            <EditText
-                android:id="@+id/etPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/password"
-                android:inputType="textPassword" />
-            <EditText
-                android:id="@+id/etConfirmPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/confirm_password"
-                android:inputType="textPassword" />
+        <EditText
+            android:id="@+id/etEmail"
+            style="@style/EditTextStyleOne"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Al hacer clic en 'Crear cuenta', aceptas las Condiciones y confirmas que leíste nuestra Política de datos. Recibirás notificaciones por la aplicación, que puedes configurar en cualquier momento."/>
-            <Button
-                android:id="@+id/btnCreateAccount"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="@string/message_btn_create_account"/>
-        </LinearLayout>
+        <EditText
+            android:id="@+id/etPassword"
+            style="@style/EditTextStyleOne"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:hint="@string/password"
+            android:inputType="textPassword" />
+
+        <EditText
+            android:id="@+id/etConfirmPassword"
+            style="@style/EditTextStyleOne"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:hint="@string/confirm_password"
+            android:inputType="textPassword" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:text="Al hacer clic en 'Crear cuenta', aceptas las Condiciones y confirmas que leíste nuestra Política de datos. Recibirás notificaciones por la aplicación, que puedes configurar en cualquier momento."
+            android:textColor="@color/white70"
+            android:textSize="@dimen/caption" />
+
+        <Button
+            android:id="@+id/btnCreateAccount"
+            style="@style/ButtonStyleOne"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:onClick="onClickEvent"
+            android:text="@string/message_btn_create_account" />
+
     </LinearLayout>
 </ScrollView>

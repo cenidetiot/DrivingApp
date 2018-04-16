@@ -15,6 +15,19 @@
     <color name="bg_screen3">#f1c40f</color>
     <color name="bg_screen4">#e67e22</color>
     <color name="bg_screen5">#c0392b</color-->
+    <color name="backgroundDefault">#0B3861</color>
+    <color name="white">#ffffff</color>
+    <color name="white70">#b3ffffff</color>
+    <color name="white50">#80ffffff</color>
+    <color name="transparent">#00000000</color>
+    <color name="red">#a20303</color>
+    <color name="red80">#bb1d1d</color>
+    <color name="red50">#d26868</color>
+    <color name="red30">#e19a9a</color>
+    <color name="blue">#2e88c5</color>
+    <color name="blue80">#48a2de</color>
+    <color name="blue50">#85c1e9</color>
+    <color name="blue30">#add5f0</color>
 
     <!-- dots inactive colors -->
     <color name="dot_dark_screen1">#E2A9F3</color>

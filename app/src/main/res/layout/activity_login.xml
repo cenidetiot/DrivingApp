@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0B3861"
+    android:background="@color/backgroundDefault"
     tools:context=".activities.LoginActivity">
 
     <!--LinearLayout
@@ -19,60 +19,63 @@
         android:orientation="vertical"
         android:background="@color/colorPrimaryDark"
         android:padding="15dp"-->
-    <ScrollView
+
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="15dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/logo" />
+
+        <EditText
+            android:id="@+id/etLoginEmail"
+            style="@style/EditTextStyleOne"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="15dp">
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress" />
 
-            <ImageView
-                android:layout_gravity="center_horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="150dp"
-                android:src="@drawable/logo"/>
+        <EditText
+            android:id="@+id/etLoginPassword"
+            style="@style/EditTextStyleOne"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:hint="@string/password"
+            android:inputType="textPassword" />
 
-            <EditText
-                android:id="@+id/etLoginEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/email"
-                android:inputType="textEmailAddress"
-                android:textColor="#FFF"
-                android:textColorHint="#FFF" />
+        <Button
+            android:id="@+id/btnLogin"
+            style="@style/ButtonStyleOne"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/log_in" />
 
-            <EditText
-                android:id="@+id/etLoginPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/password"
-                android:inputType="textPassword"
-                android:textColor="#FFF"
-                android:textColorHint="#FFF" />
-            <Button
-                android:id="@+id/btnLogin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#FFFFFF"
-                android:background="#B40404"
-                android:text="@string/log_in" />
-            <Button
-                android:id="@+id/btnSignUp"
-                android:layout_marginTop="15dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#FFFFFF"
-                android:background="#3498db"
-                android:text="@string/message_btn_sign_up"/>
+        <Button
+            android:id="@+id/btnSignUp"
+            style="@style/ButtonStyleTwo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/message_btn_sign_up" />
 
-            <ImageView
-                android:layout_gravity="center_horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="100dp"
-                android:src="@drawable/logo_smartsdk"/>
-        </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="100dp"
+            android:src="@drawable/logo_smartsdk" />
+    </LinearLayout>
+
+</ScrollView>

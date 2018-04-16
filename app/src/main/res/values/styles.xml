@@ -52,4 +52,23 @@
         <item name="fab_colorPressed">#e74c3c</item>
         <item name="fab_colorRipple">#8A4B08</item>
     </style>
+    <style name="EditTextStyleOne">
+        <item name="android:background">@drawable/edit_text_background_one</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textColorHint">@color/white70</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+    </style>
+    <style name="ButtonStyleOne">
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:background">@drawable/button_background_one</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="ButtonStyleTwo">
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:background">@drawable/button_background_two</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
 </resources>
