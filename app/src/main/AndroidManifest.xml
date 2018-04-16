@@ -48,7 +48,8 @@
 
         <activity android:name=".activities.AlertMapDetailActivity" />
         <activity android:name=".activities.AlertHistoryActivity" />
-        <activity android:name=".activities.SendManualAlertsActivity"></activity>
+        <activity android:name=".activities.SendManualAlertsActivity" />
+        <activity android:name=".activities.CreateAccountActivity"></activity>
     </application>
 
 </manifest>

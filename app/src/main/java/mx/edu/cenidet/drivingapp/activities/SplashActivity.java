@@ -172,7 +172,7 @@ public class SplashActivity extends AppCompatActivity implements DeviceTokenCont
                         zone.getRefBuildingType().setValue(object.getString("refBuildingType"));
                         zone.getName().setValue(object.getString("name"));
                         zone.getAddress().setValue(object.getString("address"));
-                        zone.getCategory().setValue(""+object.getJSONArray("category"));
+                        zone.getCategory().setValue(""+object.getString("category"));
                         zone.getLocation().setValue(""+object.getJSONArray("location"));
                         zone.getCenterPoint().setValue(""+object.getJSONArray("centerPoint"));
                         zone.getDescription().setValue(object.getString("description"));

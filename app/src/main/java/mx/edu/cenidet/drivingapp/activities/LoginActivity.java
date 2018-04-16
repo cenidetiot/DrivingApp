@@ -45,6 +45,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText etLoginEmail;
     private EditText etLoginPassword;
     private Button btnLogin;
+    private Button btnSignUp;
     private ApplicationPreferences appPreferences;
     private UserController userController;
     private String email;
@@ -67,7 +68,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         bindUI();
         userController = new UserController(getApplicationContext(), this);
        // setCredentialsIfExist();
-        btnLogin.setOnClickListener(this);
 
         //Comprobando la version de Android...
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -115,6 +115,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         etLoginEmail = (EditText) findViewById(R.id.etLoginEmail);
         etLoginPassword = (EditText) findViewById(R.id.etLoginPassword);
         btnLogin = (Button) findViewById(R.id.btnLogin);
+        btnLogin.setOnClickListener(this);
+        btnSignUp = (Button) findViewById(R.id.btnSignUp);
+        btnSignUp.setOnClickListener(this);
     }
 
     private boolean login(String email, String password){
@@ -156,6 +159,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if(login(email, password)){
                     userController.logInUser(email, password);
                 }
+                break;
+            case R.id.btnSignUp:
+                Intent intentCreateAccount = new Intent(LoginActivity.this, CreateAccountActivity.class);
+                startActivity(intentCreateAccount);
                 break;
         }
     }

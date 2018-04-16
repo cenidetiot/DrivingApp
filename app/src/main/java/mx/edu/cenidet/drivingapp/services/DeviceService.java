@@ -155,8 +155,8 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locationListenerGPS);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0, locationListenerNetwork);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 0, locationListenerGPS);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 000, 0, locationListenerNetwork);
 
         //Sensor acelerometro y giroscopio
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);

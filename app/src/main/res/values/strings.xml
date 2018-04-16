@@ -4,12 +4,15 @@
     <string name="password">Password</string>
     <string name="log_in">Login</string>
     <string name="name">Name</string>
-    <string name="last_name">Last Name</string>
+    <string name="last_name">Last name</string>
     <string name="sign_up">Sign up</string>
     <string name="email">Email</string>
     <string name="cancel">Cancel</string>
     <string name="confirm_password">Confirm password</string>
     <string name="remember_user">Remember user</string>
+    <string name="message_btn_create_account">Create Account</string>
+    <string name="message_title_create_account">Create an account</string>
+    <string name="message_btn_sign_up">Sign up</string>
 
     <!--Drawer and Tabs-->
     <string name="menu_home">Home</string>
@@ -78,7 +81,6 @@
 
     <string name="message_edit_text_slide">Description</string>
     <string name="message_button_send_slide">Send Alert</string>
-
 
 
     <string name="next">NEXT</string>

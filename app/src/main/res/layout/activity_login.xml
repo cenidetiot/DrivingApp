@@ -55,15 +55,23 @@
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#FFF"
+                android:textColor="#FFFFFF"
                 android:background="#B40404"
                 android:text="@string/log_in" />
+            <Button
+                android:id="@+id/btnSignUp"
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:background="#3498db"
+                android:text="@string/message_btn_sign_up"/>
 
             <ImageView
                 android:layout_gravity="center_horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="120dp"
+                android:layout_marginTop="100dp"
                 android:src="@drawable/logo_smartsdk"/>
         </LinearLayout>
     </ScrollView>

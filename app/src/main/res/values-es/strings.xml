@@ -11,6 +11,9 @@
     <string name="cancel">Cancelar</string>
     <string name="confirm_password">Confirmar contraseña</string>
     <string name="remember_user">Recordar usuario</string>
+    <string name="message_btn_create_account">Crear cuenta</string>
+    <string name="message_title_create_account">Crea una cuenta</string>
+    <string name="message_btn_sign_up">Regístrate</string>
 
 
     <!--Drawer and Tabs-->
