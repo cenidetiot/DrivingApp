@@ -19,11 +19,6 @@ public class DeviceUpdateModel implements Serializable {
     private TextObject dateModified;
     private TextObject ipAddress;
     private LocationPointObject location;
-    private NumberObject latitude;
-    private NumberObject longitude;
-    private TextObject mnc;
-    private TextObject mcc;
-    private TextObject macAddress;
     private TextObject refDeviceModel;
     private TextObject serialNumber;
     private TextObject owner;
@@ -35,11 +30,6 @@ public class DeviceUpdateModel implements Serializable {
         dateModified = new TextObject();
         ipAddress = new TextObject();
         location = new LocationPointObject();
-        latitude = new NumberObject();
-        longitude = new NumberObject();
-        mnc = new TextObject();
-        mcc = new TextObject();
-        macAddress = new TextObject();
         refDeviceModel = new TextObject();
         serialNumber = new TextObject();
         owner = new TextObject();
@@ -91,46 +81,6 @@ public class DeviceUpdateModel implements Serializable {
 
     public void setLocation(LocationPointObject location) {
         this.location = location;
-    }
-
-    public NumberObject getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(NumberObject latitude) {
-        this.latitude = latitude;
-    }
-
-    public NumberObject getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(NumberObject longitude) {
-        this.longitude = longitude;
-    }
-
-    public TextObject getMnc() {
-        return mnc;
-    }
-
-    public void setMnc(TextObject mnc) {
-        this.mnc = mnc;
-    }
-
-    public TextObject getMcc() {
-        return mcc;
-    }
-
-    public void setMcc(TextObject mcc) {
-        this.mcc = mcc;
-    }
-
-    public TextObject getMacAddress() {
-        return macAddress;
-    }
-
-    public void setMacAddress(TextObject macAddress) {
-        this.macAddress = macAddress;
     }
 
     public TextObject getRefDeviceModel() {
