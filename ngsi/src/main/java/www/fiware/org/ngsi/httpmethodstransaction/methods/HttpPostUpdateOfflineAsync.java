@@ -3,8 +3,11 @@ package www.fiware.org.ngsi.httpmethodstransaction.methods;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -66,10 +69,16 @@ public class HttpPostUpdateOfflineAsync  extends AsyncTask<String, String, Respo
             //open
             conn.connect();
             response.setBodyString(json);
-            DataOutputStream localDataOutputStream = new DataOutputStream(conn.getOutputStream());
+            /*DataOutputStream localDataOutputStream = new DataOutputStream(conn.getOutputStream());
             localDataOutputStream.writeBytes(response.getBodyString());
             localDataOutputStream.flush();
-            localDataOutputStream.close();
+            localDataOutputStream.close();*/
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(conn.getOutputStream(), "UTF-8");
+            Writer writer = new BufferedWriter(outputStreamWriter);
+            writer.write(response.getBodyString());
+            outputStreamWriter.flush();
+            writer.close();
+            outputStreamWriter.close();
 
             response.setHttpCode(conn.getResponseCode());
             if(response.getHttpCode()==204 || response.getHttpCode()==200){

@@ -54,10 +54,21 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
     private String category, description, location, severity;
     private ApplicationPreferences applicationPreferences;
     private String zoneId;
+    private DataListener callback;
     public AlertHistoryFragment() {
         context = HomeActivity.MAIN_CONTEXT;
         alertsControllerSdk = new AlertsControllerSdk(context, this);
         applicationPreferences = new ApplicationPreferences();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            callback = (DataListener) context;
+        }catch (Exception e){
+            throw new ClassCastException(context.toString()+" Should implement DataListener");
+        }
     }
 
     @Override
@@ -66,6 +77,7 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
         rootView = inflater.inflate(R.layout.fragment_alert_history, container, false);
         if(applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_CURRENT_ZONE) != null){
             zoneId = applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_CURRENT_ZONE);
+            callback.sendDataZoneId(zoneId);
             if(zoneId.equals("undetectedZone")){
                 Toast.makeText(context, R.string.message_undetected_zone, Toast.LENGTH_SHORT).show();
             }else {
@@ -73,9 +85,16 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
             }
         }
         //zoneId = "Zone_1523325691338";
+        //zoneId = "Zone_1523933778251";
         //alertsControllerSdk.historyAlertByZone(zoneId);
         listAlerts = new ArrayList<Alert>();
         return rootView;
+    }
+
+    public interface DataListener{
+        void sendDataListAlerts(ArrayList<Alert> listAlerts);
+        void sendDataAlert(Alert alert);
+        void sendDataZoneId(String zoneId);
     }
 
     @Override
@@ -92,7 +111,8 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
 
     @Override
     public void historyAlertByZone(Response response) {
-        Log.i("Test: ", "Code Alerts: "+response.getHttpCode());
+        Log.i("Test: ", "Code Alerts: "+response.getHttpCode()+" 1-------------------------------------");
+        //callback.sendData("Code: "+response.getHttpCode()+" 2-------------------------------------");
         switch (response.getHttpCode()) {
             case 200:
                 Log.i("Test: ", "Body: " + response.getBodyString());
@@ -117,15 +137,20 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
                             alert.getSubCategory().setValue(object.getString("subCategory"));
                             alert.getValidFrom().setValue(object.getString("validFrom"));
                             alert.getValidTo().setValue(object.getString("validTo"));
+                            callback.sendDataAlert(alert);
                             listAlerts.add(alert);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
                         if (listAlerts.size() > 0) {
+                            //callback.sendData(listAlerts);
                             myAdapterAlerts = new MyAdapterAlerts(context, R.id.listViewAlertsHistory, listAlerts);
                             listViewAlertsHistory.setAdapter(myAdapterAlerts);
                         }
+                    }
+                    if(listAlerts.size() > 0){
+                        callback.sendDataListAlerts(listAlerts);
                     }
                 }
                 break;

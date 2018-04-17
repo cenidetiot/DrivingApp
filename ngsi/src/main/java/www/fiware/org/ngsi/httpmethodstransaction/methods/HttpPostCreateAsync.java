@@ -3,8 +3,10 @@ package www.fiware.org.ngsi.httpmethodstransaction.methods;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import java.io.DataOutputStream;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -58,7 +60,7 @@ public class HttpPostCreateAsync extends AsyncTask<String, String, Response> {
             conn.setUseCaches(false);
 
             //make some HTTP header nicety
-            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
             //conn.setRequestProperty("X-Requested-With", "XMLHttpRequest");
 
             //open
@@ -66,10 +68,16 @@ public class HttpPostCreateAsync extends AsyncTask<String, String, Response> {
 
             //setup send
             response.setBodyString(queryString[0]);
-            DataOutputStream localDataOutputStream = new DataOutputStream(conn.getOutputStream());
+            /*DataOutputStream localDataOutputStream = new DataOutputStream(conn.getOutputStream());
             localDataOutputStream.writeBytes(response.getBodyString());
             localDataOutputStream.flush();
-            localDataOutputStream.close();
+            localDataOutputStream.close();*/
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(conn.getOutputStream(), "UTF-8");
+            Writer writer = new BufferedWriter(outputStreamWriter);
+            writer.write(response.getBodyString());
+            outputStreamWriter.flush();
+            writer.close();
+            outputStreamWriter.close();
 
             response.setHttpCode(conn.getResponseCode());
 

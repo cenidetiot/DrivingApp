@@ -374,6 +374,7 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
 
     @Override
     public void onCreateEntityAlert(Response response) {
+        Log.i("SEND", "---------------------------------------"+response.getHttpCode());
         if(response.getHttpCode() == 201 || response.getHttpCode() == 200){
             Toast.makeText(context, R.string.message_successful_sending, Toast.LENGTH_SHORT).show();
         }else{

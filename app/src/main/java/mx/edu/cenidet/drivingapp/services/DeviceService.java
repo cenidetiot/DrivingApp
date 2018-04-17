@@ -155,8 +155,8 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 0, locationListenerGPS);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 000, 0, locationListenerNetwork);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0000, 0, locationListenerGPS);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0000, 0, locationListenerNetwork);
 
         //Sensor acelerometro y giroscopio
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -172,13 +172,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         public void onLocationChanged(Location location) {
             if (location != null) {
                 eventDetecion(location);
-
-                /*UserLocation userLocation = updateUserLocation(HomeActivity.ID, latitudeGPS, longitudeGPS);
-                try {
-                    uLocationService.updateUserLocation(userLocation);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }*/
                 Log.i(STATUS, "GPS latitude: "+location.getLatitude()+" longitude: "+location.getLatitude());
             }else {
                 Log.i(STATUS, "Error GPS...!");
@@ -211,12 +204,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         public void onLocationChanged(Location location) {
             if (location != null) {
                 eventDetecion(location);
-                /*UserLocation userLocation = updateUserLocation(HomeActivity.ID, latitudeNetwork, longitudeNetwork);
-                try {
-                    uLocationService.updateUserLocation(userLocation);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }*/
                  Log.i(STATUS, "NETWORK latitude: "+location.getLatitude()+" longitude: "+location.getLongitude());
             }else{
                 Log.i(STATUS, "Error Network...!");

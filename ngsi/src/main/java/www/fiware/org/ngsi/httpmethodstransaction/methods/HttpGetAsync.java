@@ -69,7 +69,7 @@ public class HttpGetAsync extends AsyncTask<String, String, Response> {
             //open
             conn.connect();
             //BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
             StringBuilder sb = new StringBuilder();
 
             String line;

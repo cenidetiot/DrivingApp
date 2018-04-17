@@ -216,4 +216,73 @@ public class SQLiteDrivingApp extends SQLiteOpenHelper {
         // return list
         return list;
     }
+
+    /*public static final String TBL_ZONE_ID = "idZone";
+    public static final String TBL_ZONE_TYPE = "type";
+    public static final String TBL_ZONE_REFBUILDINGTYPE = "refBuildingType";
+    public static final String TBL_ZONE_NAME = "name";
+    public static final String TBL_ZONE_ADDRESS = "address";
+    public static final String TBL_ZONE_CATEGORY = "category";
+    public static final String TBL_ZONE_LOCATION = "location";
+    public static final String TBL_ZONE_CENTERPOINT = "centerPoint";
+    public static final String TBL_ZONE_DESCRIPTION = "description";
+    public static final String TBL_ZONE_DATECREATED = "dateCreated";
+    public static final String TBL_ZONE_DATEMODIFIED = "dateModified";
+    public static final String TBL_ZONE_STATUS = "status";*/
+
+    public Zone getZoneById(String zoneId) {
+        Zone zone = new Zone();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        // Define a projection that specifies which columns from the database
+        // you will actually use after this query.
+        String[] projection = {
+                TBL_ZONE_ID,
+                TBL_ZONE_TYPE,
+                TBL_ZONE_REFBUILDINGTYPE,
+                TBL_ZONE_NAME,
+                TBL_ZONE_ADDRESS,
+                TBL_ZONE_CATEGORY,
+                TBL_ZONE_LOCATION,
+                TBL_ZONE_CENTERPOINT,
+                TBL_ZONE_DESCRIPTION,
+                TBL_ZONE_DATECREATED,
+                TBL_ZONE_DATEMODIFIED,
+                TBL_ZONE_STATUS
+        };
+        String selection = TBL_ZONE_ID + " = ?";
+        String[] selectionArgs = {zoneId};
+        Cursor cursor = db.query(
+                Tables.TBL_ZONE,                     // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                       // The sort order
+        );
+
+        if(cursor != null) {
+            if(cursor.moveToFirst()){
+                zone.setIdZone(cursor.getString(0));
+                zone.setType(cursor.getString(1));
+                zone.getRefBuildingType().setValue(cursor.getString(2));
+                zone.getName().setValue(cursor.getString(3));
+                zone.getAddress().setValue(cursor.getString(4));
+                zone.getCategory().setValue(cursor.getString(5));
+                zone.getLocation().setValue(cursor.getString(6));
+                zone.getCenterPoint().setValue(cursor.getString(7));
+                zone.getDescription().setValue(cursor.getString(8));
+                zone.getDateCreated().setValue(cursor.getString(9));
+                zone.getDateModified().setValue(cursor.getString(10));
+                zone.getStatus().setValue(cursor.getString(11));
+            }else {
+                zone = null;
+            }
+        }else {
+            zone = null;
+        }
+        // return objeto
+        return zone;
+    }
 }
