@@ -36,6 +36,10 @@
     <string name="message_no_alerts_show">This area has no alerts to show...!</string>
     <string name="message_successful_sending">Successful sending...!</string>
     <string name="message_failed_send">Failed to send...!</string>
+    <string name="message_empty_fields">Empty fields</string>
+    <string name="message_passwords_incorrect">The passwords are incorrect, try again.</string>
+    <string name="message_account_generated">Account generated successfully.</string>
+    <string name="message_user_exists">The user already exists with this phone number.</string>
 
     <!--Dialog alerts-->
     <string name="message_alert_gps">GPS is disabled on the device. Do you want to enable?</string>

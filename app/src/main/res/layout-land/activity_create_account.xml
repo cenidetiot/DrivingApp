@@ -20,22 +20,24 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/display_1"
                 android:textStyle="bold" />
+
             <EditText
                 android:id="@+id/etFirstName"
+                style="@style/EditTextStyleOne"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/name"
-                style="@style/EditTextStyleOne"
                 android:layout_marginBottom="8dp"
-                android:inputType="text" />
+                android:hint="@string/name"
+                android:inputType="textPersonName" />
+
             <EditText
                 android:id="@+id/etLastName"
+                style="@style/EditTextStyleOne"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/last_name"
-                style="@style/EditTextStyleOne"
                 android:layout_marginBottom="8dp"
-                android:inputType="text" />
+                android:hint="@string/last_name"
+                android:inputType="textPersonName" />
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -321,7 +321,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     alert.getDateObserved().setValue(Functions.getActualDate());
                     alert.getDescription().setValue("Unknown alert");
                     alert.getLocation().setValue(latitude + ", " + longitude);
-                    alert.getSeverity().setValue("undefined");
+                    alert.getSeverity().setValue("critical");
                     alert.getSubCategory().setValue("Unknown");
                     alert.getValidFrom().setValue(Functions.getActualDate());
                     alert.getValidTo().setValue(Functions.getActualDate());

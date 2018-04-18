@@ -75,13 +75,13 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
         if(statusLocation == true){
             //Log.i("STATUS: ","Campus Name: "+campus.getName()+" statusLocation: "+statusLocation);
             if(imagenViewDetailCampus != null && tvDetailCampus != null){
-                imagenViewDetailCampus.setImageResource(R.drawable.inside);
+                imagenViewDetailCampus.setImageResource(R.mipmap.ic_inside_foreground);
                 tvDetailCampus.setText(context.getString(R.string.message_name_campus)+": "+zone.getName().getValue()+"\n"+context.getString(R.string.message_address_campus)+": "+zone.getAddress().getValue());
             }
         }else{
             Log.i("STATUS 1: ","DetectCampus...!"+ statusLocation);
             if(imagenViewDetailCampus != null && tvDetailCampus != null){
-                imagenViewDetailCampus.setImageResource(R.drawable.outside);
+                imagenViewDetailCampus.setImageResource(R.mipmap.ic_outside_foreground);
                 tvDetailCampus.setText(context.getString(R.string.message_any_campus));
             }
             //tvDetailCampus.setText("No te encuentras en ningun campus");

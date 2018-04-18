@@ -53,6 +53,7 @@ public class MyAdapterAlerts extends BaseAdapter {
 
         //Nos traemos el valor dependiente de la posición
         String category = listAlerts.get(position).getCategory().getValue();
+        String subCategory = listAlerts.get(position).getSubCategory().getValue();
         String description = listAlerts.get(position).getDescription().getValue();
         String severity = listAlerts.get(position).getSeverity().getValue();
 
@@ -77,7 +78,7 @@ public class MyAdapterAlerts extends BaseAdapter {
         }
 
         TextView textViewCategory = (TextView) view.findViewById(R.id.textViewCategory);
-        textViewCategory.setText(category);
+        textViewCategory.setText(subCategory);
         TextView textViewDescription = (TextView) view.findViewById(R.id.textViewDescription);
         textViewDescription.setText(description);
 

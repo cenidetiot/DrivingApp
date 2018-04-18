@@ -213,12 +213,13 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
         if (typeAlert == 1){
             alert.setId(new DevicePropertiesFunctions().getAlertId(context));
             alert.getAlertSource().setValue(new DevicePropertiesFunctions().getDeviceId(context));
-            alert.getCategory().setValue(this.getString(R.string.message_alert_category_accident));
+            //alert.getCategory().setValue(this.getString(R.string.message_alert_category_accident));
+            alert.getCategory().setValue("traffic");
             alert.getDateObserved().setValue(Functions.getActualDate());
             alert.getDescription().setValue(etDescriptionAlert.getText().toString());
             alert.getLocation().setValue(latitude+", "+longitude);
             alert.getSeverity().setValue(severity);
-            alert.getSubCategory().setValue("AccidentDetection");
+            alert.getSubCategory().setValue("carAccident");
             alert.getValidFrom().setValue(Functions.getActualDate());
             alert.getValidTo().setValue(Functions.getActualDate());
             try {
@@ -230,12 +231,13 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
         }else{
             alert.setId(new DevicePropertiesFunctions().getAlertId(context));
             alert.getAlertSource().setValue(new DevicePropertiesFunctions().getDeviceId(context));
-            alert.getCategory().setValue(this.getString(R.string.message_alert_category_traffic));
+            //alert.getCategory().setValue(this.getString(R.string.message_alert_category_traffic));
+            alert.getCategory().setValue("traffic");
             alert.getDateObserved().setValue(Functions.getActualDate());
             alert.getDescription().setValue(etDescriptionAlert.getText().toString());
             alert.getLocation().setValue(latitude+", "+longitude);
             alert.getSeverity().setValue(severity);
-            alert.getSubCategory().setValue("TrafficDetection");
+            alert.getSubCategory().setValue("trafficJam");
             alert.getValidFrom().setValue(Functions.getActualDate());
             alert.getValidTo().setValue(Functions.getActualDate());
             try {

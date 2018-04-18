@@ -38,6 +38,10 @@
     <string name="message_no_alerts_show">Esta zona no tiene alertas para mostrar...!</string>
     <string name="message_successful_sending">Envío exitoso...!</string>
     <string name="message_failed_send">Error al enviar...!</string>
+    <string name="message_empty_fields">Empty fields</string>
+    <string name="message_passwords_incorrect">Las contraseñas son incorrectas, inténtalo de nuevo.</string>
+    <string name="message_account_generated">Cuenta generada exitosamente.</string>
+    <string name="message_user_exists">El usuario ya existe con este número de teléfono.</string>
 
     <!--Dialog alerts-->
     <string name="message_alert_gps">El GPS está desactivado en el dispositivo. ¿Quieres habilitarlo?</string>

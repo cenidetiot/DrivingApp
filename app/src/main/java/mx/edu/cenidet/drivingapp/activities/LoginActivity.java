@@ -2,11 +2,14 @@ package mx.edu.cenidet.drivingapp.activities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -22,6 +25,11 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.credentials.Credential;
+import com.google.android.gms.auth.api.credentials.HintRequest;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -40,9 +48,10 @@ import mx.edu.cenidet.drivingapp.R;
 import www.fiware.org.ngsi.utilities.ApplicationPreferences;
 import www.fiware.org.ngsi.utilities.Constants;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener, UserController.UsersServiceMethods {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener, UserController.UsersServiceMethods {
     final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
-    private EditText etLoginEmail;
+    private static final int RESOLVE_HINT = 12;
+    private EditText etPhone;
     private EditText etLoginPassword;
     private Button btnLogin;
     private Button btnSignUp;
@@ -53,6 +62,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Intent mIntent;
     private Context context;
     public static Context LOGIN_CONTEXT = null;
+    private GoogleApiClient mGoogleApiClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,11 +70,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         LOGIN_CONTEXT = LoginActivity.this;
         context = LOGIN_CONTEXT;
         appPreferences = new ApplicationPreferences();
+
         if(setCredentialsIfExist()){
             mIntent = new Intent(this, SplashActivity.class);
             startActivity(mIntent);
             this.finish();
         }
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.CREDENTIALS_API)
+                .build();
         bindUI();
         userController = new UserController(getApplicationContext(), this);
        // setCredentialsIfExist();
@@ -112,7 +128,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void bindUI(){
-        etLoginEmail = (EditText) findViewById(R.id.etLoginEmail);
+        etPhone = (EditText) findViewById(R.id.etPhone);
         etLoginPassword = (EditText) findViewById(R.id.etLoginPassword);
         btnLogin = (Button) findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(this);
@@ -120,11 +136,39 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         btnSignUp.setOnClickListener(this);
     }
 
+    // Construct a request for phone numbers and show the picker
+    private void requestHint() {
+        //CredentialsClient mCredentialsClient = Credentials.getClient(this);
+        HintRequest hintRequest = new HintRequest.Builder()
+                .setPhoneNumberIdentifierSupported(true)
+                .build();
+        PendingIntent intent = Auth.CredentialsApi.getHintPickerIntent(mGoogleApiClient, hintRequest);
+        try {
+            startIntentSenderForResult(intent.getIntentSender(), RESOLVE_HINT, null, 0, 0, 0);
+        } catch (IntentSender.SendIntentException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Obtain the phone number from the result
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RESOLVE_HINT) {
+            if (resultCode == RESULT_OK) {
+                Bundle extras = data.getExtras();
+                Credential credential = data.getParcelableExtra(Credential.EXTRA_KEY);
+                etPhone.setText(credential.getId()); //Will need to process phone number string
+            }
+        }
+    }
+
     private boolean login(String email, String password){
-        if(!isValidEmail(email)){
+        /*if(!isValidEmail(email)){
             Toast.makeText(getApplicationContext(), R.string.message_valid_email, Toast.LENGTH_SHORT).show();
             return false;
-        }else if(!isValidPassword(password)){
+        }else */
+        if(!isValidPassword(password)){
             Toast.makeText(getApplicationContext(), R.string.message_valid_password, Toast.LENGTH_SHORT).show();
             return false;
         }else{
@@ -154,18 +198,25 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.btnLogin:
-                String email = etLoginEmail.getText().toString();
+                String phone = etPhone.getText().toString();
                 String password = etLoginPassword.getText().toString();
-                if(login(email, password)){
-                    userController.logInUser(email, password);
+                String subPhone = phone.substring(1, phone.length());
+                Log.i("SubPhone", subPhone);
+                if(login(subPhone, password)){
+                    userController.logInUser(subPhone, password);
                 }
                 break;
             case R.id.btnSignUp:
                 Intent intentCreateAccount = new Intent(LoginActivity.this, CreateAccountActivity.class);
                 startActivity(intentCreateAccount);
                 break;
+            case R.id.btnPhone:
+                requestHint();
+                break;
         }
     }
+
+
 
     @Override
     public void createUser(Response response) {
@@ -357,5 +408,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }

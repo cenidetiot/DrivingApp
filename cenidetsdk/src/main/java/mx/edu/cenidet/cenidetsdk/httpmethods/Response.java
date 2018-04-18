@@ -87,4 +87,14 @@ public class Response {
         Gson gson = new Gson();
         return gson.fromJson(jsonObjectString, mClass);
     }
+
+    /**
+     * @param arg es el objeto para ser convertido a un json y ser enviado al servidor.
+     * @return retorna el objeto json en un String.
+     */
+    public String checkForNewsAttributes(Object arg){
+        Gson gson = new Gson();
+        Log.i("JSON_gson: ", gson.toJson(arg));
+        return gson.toJson(arg);
+    }
 }

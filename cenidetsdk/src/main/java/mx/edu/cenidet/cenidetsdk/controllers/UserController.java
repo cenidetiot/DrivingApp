@@ -6,6 +6,7 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import mx.edu.cenidet.cenidetsdk.entities.User;
 import mx.edu.cenidet.cenidetsdk.httpmethods.Response;
 import mx.edu.cenidet.cenidetsdk.httpmethods.methods.MethodGET;
 import mx.edu.cenidet.cenidetsdk.httpmethods.methods.MethodPOST;
@@ -44,6 +45,9 @@ public class UserController implements MethodGET.MethodGETCallback, MethodPOST.M
             case "logInUser":
                 uServiceMethods.logInUser(response);
                 break;
+            case "createUser":
+                uServiceMethods.createUser(response);
+                break;
         }
     }
 
@@ -56,9 +60,21 @@ public class UserController implements MethodGET.MethodGETCallback, MethodPOST.M
         void logOutUser(Response response);
     }
 
-    public void logInUser(String email, String password){
+    public void createUser(User user){
+        method = "createUser";
         Response response = new Response();
+        String URL = URL_BASE_HOST + ConfigServer.http_api.getPropiedad() +"/"+ ConfigServer.http_user.getPropiedad();
+        String jsonString = response.parseObjectToJsonString(user);
+       // JSONObject jsonLogInUser = response.parseJsonObject(user);
+        Log.i("Status", "JSON CREATE USER: "+jsonString);
+        mPOST = new MethodPOST(this);
+        //JSONObject jsonLogInUser = response.parseJsonObject(jsonString);
+        mPOST.execute(URL, jsonString.toString());
+    }
+
+    public void logInUser(String phoneNumber, String password){
         method = "logInUser";
+        Response response = new Response();
         String URL = URL_BASE_HOST + ConfigServer.http_api.getPropiedad() +"/"+ ConfigServer.http_user.getPropiedad() +"/"+ ConfigServer.http_login.getPropiedad();
         //String URL = URL_BASE_LOGIN + ConfigServer.http_tokens.getPropiedad();
         //String URL = URL_BASE_LOGIN + ConfigServer.http_login.getPropiedad();
@@ -81,7 +97,7 @@ public class UserController implements MethodGET.MethodGETCallback, MethodPOST.M
                 "\t}\n" +
                 "}";*/
         String json = "{\n" +
-                "\t\"email\":\""+email+"\",\n" +
+                "\t\"phoneNumber\":\""+phoneNumber+"\",\n" +
                 "\t\"password\":\""+password+"\"\n" +
                 "}";
         JSONObject jsonLogInUser = response.parseJsonObject(json);

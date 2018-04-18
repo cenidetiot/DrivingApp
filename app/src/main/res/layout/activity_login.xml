@@ -34,15 +34,42 @@
             android:layout_marginBottom="8dp"
             android:src="@drawable/logo" />
 
-        <EditText
-            android:id="@+id/etLoginEmail"
+        <!--EditText
+            android:id="@+id/etPhone"
             style="@style/EditTextStyleOne"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
-            android:hint="@string/email"
-            android:inputType="textEmailAddress" />
+            android:hint="@string/phone"
+            android:inputType="phone" /-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <EditText
+                android:id="@+id/etPhone"
+                style="@style/EditTextStyleOne"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_toLeftOf="@+id/btnPhone"
+                android:layout_toStartOf="@+id/btnPhone"
+                android:enabled="false"
+                android:focusable="false"
+                android:hint="@string/phone"
+                android:inputType="phone" />
+
+            <ImageButton
+                android:id="@+id/btnPhone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:onClick="onClick"
+                android:src="@android:drawable/ic_menu_call" />
+        </RelativeLayout>
 
         <EditText
             android:id="@+id/etLoginPassword"

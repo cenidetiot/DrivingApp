@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:hint="@string/name"
-            android:inputType="text" />
+            android:inputType="textPersonName" />
 
         <EditText
             android:id="@+id/etLastName"
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:hint="@string/last_name"
-            android:inputType="text" />
+            android:inputType="textPersonName" />
 
         <RelativeLayout
             android:layout_width="match_parent"

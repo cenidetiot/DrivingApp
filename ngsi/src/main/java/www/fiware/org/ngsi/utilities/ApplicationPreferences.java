@@ -45,4 +45,5 @@ public class ApplicationPreferences {
         SharedPreferences preferences = context.getSharedPreferences(preferenceName, context.MODE_PRIVATE);
         preferences.edit().clear().apply();
     }
+
 }
