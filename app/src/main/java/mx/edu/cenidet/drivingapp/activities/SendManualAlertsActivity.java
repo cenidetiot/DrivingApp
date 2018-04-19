@@ -40,7 +40,7 @@ import www.fiware.org.ngsi.utilities.Functions;
 public class SendManualAlertsActivity extends AppCompatActivity implements SendDataService.SendDataMethods, View.OnClickListener, AlertController.AlertResourceMethods  {
     private ViewPager viewPager;
     private MyViewPagerAdapter myViewPagerAdapter;
-    private LinearLayout dotsLayout;
+    //private LinearLayout dotsLayout;
     private TextView[] dots;
     private int[] layouts;
     private PrefManager prefManager;
@@ -50,7 +50,7 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
     private double latitude, longitude;
     private SendDataService sendDataService;
     private AlertController alertController;
-    private ImageButton btnReturn;
+    //ImageButton btnReturn;
     // Elementos GUI
     private ImageView imageViewSendAlert;
     private TextView tvTitle;
@@ -85,7 +85,7 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
         }
 
         viewPager = (ViewPager) findViewById(R.id.view_pager);
-        dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
+        //dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
         // layouts of all welcome sliders
         // add few more layouts if you want
         layouts = new int[]{
@@ -96,7 +96,7 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
                 R.layout.welcome_slide5};
 
         // adding bottom dots
-        addBottomDots(0);
+        //addBottomDots(0);
 
         // making notification bar transparent
         changeStatusBarColor();
@@ -118,12 +118,11 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
         tvTitle = (TextView) findViewById(R.id.tvTitle);
         tvSeverity = (TextView) findViewById(R.id.tvSeverity);
         etDescriptionAlert = (EditText) findViewById(R.id.etDescriptionAlert);
-        etDescriptionAlert.setHint(R.string.message_edit_text_slide);
+
         btnSendAlert = (Button) findViewById(R.id.btnSendAlert);
-        btnSendAlert.setText(R.string.message_button_send_slide);
         btnSendAlert.setOnClickListener(this);
-        btnReturn = (ImageButton) findViewById(R.id.btnReturn);
-        btnReturn.setOnClickListener(this);
+        //btnReturn = (ImageButton) findViewById(R.id.btnReturn);
+        //btnReturn.setOnClickListener(this);
         btnFloatingInformational = (FloatingActionButton) findViewById(R.id.btnFloatingInformational);
         btnFloatingInformational.setOnClickListener(this);
         btnFloatingLow = (FloatingActionButton) findViewById(R.id.btnFloatingLow);
@@ -249,7 +248,7 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private void addBottomDots(int currentPage) {
+    /*private void addBottomDots(int currentPage) {
         dots = new TextView[layouts.length];
 
         int[] colorsActive = getResources().getIntArray(R.array.array_dot_active);
@@ -266,7 +265,7 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
 
         if (dots.length > 0)
             dots[currentPage].setTextColor(colorsActive[currentPage]);
-    }
+    }*/
 
     private int getItem(int i) {
         return viewPager.getCurrentItem() + i;
@@ -279,7 +278,7 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
         @Override
         public void onPageSelected(int position) {
             //auxPosition = position;
-            addBottomDots(position);
+            //addBottomDots(position);
             viewPositionSlide(position);
         }
 
@@ -313,20 +312,20 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
                 sendAlert(auxPosition, typeAlert);
                 //Toast.makeText(getApplicationContext(), "Position: "+auxPosition, Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.btnReturn:
+            /*case R.id.btnReturn:
                 startActivity(new Intent(SendManualAlertsActivity.this, HomeActivity.class));
                 this.finish();
-                break;
+                break;*/
             case R.id.btnFloatingInformational:
                 position = 0;
-                addBottomDots(position);
+                //addBottomDots(position);
                 viewPositionSlide(position);
                 myViewPagerAdapter = new MyViewPagerAdapter(context, layouts, position);
                 viewPager.setAdapter(myViewPagerAdapter);
                 break;
             case R.id.btnFloatingLow:
                 position = 1;
-                addBottomDots(position);
+                //addBottomDots(position);
                 viewPositionSlide(position);
                 myViewPagerAdapter = new MyViewPagerAdapter(context, layouts, position);
                 viewPager.setAdapter(myViewPagerAdapter);
@@ -334,21 +333,21 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
             case R.id.btnFloatingMedium:
                 position = 2;
                 viewPositionSlide(position);
-                addBottomDots(position);
+                //addBottomDots(position);
                 myViewPagerAdapter = new MyViewPagerAdapter(context, layouts, position);
                 viewPager.setAdapter(myViewPagerAdapter);
                 break;
             case R.id.btnFloatingHigh:
                 position = 3;
                 viewPositionSlide(position);
-                addBottomDots(position);
+                //addBottomDots(position);
                 myViewPagerAdapter = new MyViewPagerAdapter(context, layouts, position);
                 viewPager.setAdapter(myViewPagerAdapter);
                 break;
             case R.id.btnFloatingCritical:
                 position = 4;
                 viewPositionSlide(position);
-                addBottomDots(position);
+                //addBottomDots(position);
                 myViewPagerAdapter = new MyViewPagerAdapter(context, layouts, position);
                 viewPager.setAdapter(myViewPagerAdapter);
                 break;

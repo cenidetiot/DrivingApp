@@ -53,7 +53,7 @@ public class MapDetailActivity extends AppCompatActivity implements OnMapReadyCa
             String[] subString;
             listLocation = new ArrayList<>();
 
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            LatLngBounds.Builder builder = new LatLngBounds.Builder(); //Creas un builder
             try {
                 arrayLocation = new JSONArray(location);
                 for (int j=0; j<arrayLocation.length(); j++){
@@ -64,14 +64,14 @@ public class MapDetailActivity extends AppCompatActivity implements OnMapReadyCa
                     longitude = Double.parseDouble(subString[1]);
                     LatLng tmp = new LatLng(latitude,longitude);
                     listLocation.add(tmp);
-                    builder.include(tmp);
+                    builder.include(tmp); //Le agregas los puntos del poligono
                 }
                 /*arrayPoint = new JSONArray(centerPoint);
                 pointLatitude = arrayPoint.getDouble(0);
                 pointLongitude = arrayPoint.getDouble(1);*/
 
-                LatLngBounds bounds = builder.build();
-                centerLatLng =  bounds.getCenter();
+                LatLngBounds bounds = builder.build(); //Obtienes los limites del poligono
+                centerLatLng =  bounds.getCenter(); //Obtienes el centro de los limites del poligono
 
                 /*JSONObject jsonObject = arrayPoint.getJSONObject(0);
                 pointLatitude = jsonObject.getDouble("latitude");

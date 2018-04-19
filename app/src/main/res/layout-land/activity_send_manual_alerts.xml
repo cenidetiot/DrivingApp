@@ -1,161 +1,174 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:background="@color/backgroundDefault"
+    android:orientation="vertical"
     tools:context="mx.edu.cenidet.drivingapp.activities.SendManualAlertsActivity">
+
 
     <!--include
         android:id="@+id/toolbar"
         layout="@layout/toolbar"/-->
 
-
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    </android.support.v4.view.ViewPager>
+        android:layout_height="match_parent" />
 
-    <LinearLayout
+
+    <!--<LinearLayout
         android:id="@+id/layoutDots"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dots_height"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/dots_margin_bottom"
         android:gravity="center"
-        android:orientation="horizontal"></LinearLayout>
-
-
-    <LinearLayout
+        android:orientation="horizontal" />-->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/message_title_level_severity"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:textColor="@color/white"
-            android:textSize="@dimen/title"
-            android:textStyle="bold"
-            android:gravity="center_horizontal"/>
+        android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal">
+            android:padding="15dp"
+            android:orientation="vertical">
 
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/btnFloatingInformational"
-                android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/ic_alerts_menu"
-                style="@style/MenuButtonsInformational"
-                fab:fab_size="mini"
-                fab:fab_shadowColor="#000"
-                fab:fab_elevationCompat="6dp"/>
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center_horizontal"
+                android:text="@string/message_title_level_severity"
+                android:textColor="@color/white"
+                android:textSize="@dimen/title"
+                android:textStyle="bold" />
 
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/btnFloatingLow"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/ic_alerts_menu"
-                style="@style/MenuButtonsLow"
-                fab:fab_size="mini"
-                fab:fab_shadowColor="#000"
-                fab:fab_elevationCompat="6dp"/>
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
 
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/btnFloatingMedium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/ic_alerts_menu"
-                style="@style/MenuButtonsMedium"
-                fab:fab_size="mini"
-                fab:fab_shadowColor="#000"
-                fab:fab_elevationCompat="6dp"/>
+                <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/btnFloatingInformational"
+                    style="@style/MenuButtonsInformational"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/ic_alerts_menu"
+                    fab:fab_elevationCompat="6dp"
+                    fab:fab_shadowColor="#000"
+                    fab:fab_size="mini" />
 
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/btnFloatingHigh"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/ic_alerts_menu"
-                style="@style/MenuButtonsHigh"
-                fab:fab_size="mini"
-                fab:fab_shadowColor="#000"
-                fab:fab_elevationCompat="6dp"/>
+                <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/btnFloatingLow"
+                    style="@style/MenuButtonsLow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/ic_alerts_menu"
+                    fab:fab_elevationCompat="6dp"
+                    fab:fab_shadowColor="#000"
+                    fab:fab_size="mini" />
 
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/btnFloatingCritical"
-                android:layout_width="wrap_content"
+                <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/btnFloatingMedium"
+                    style="@style/MenuButtonsMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/ic_alerts_menu"
+                    fab:fab_elevationCompat="6dp"
+                    fab:fab_shadowColor="#000"
+                    fab:fab_size="mini" />
+
+                <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/btnFloatingHigh"
+                    style="@style/MenuButtonsHigh"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/ic_alerts_menu"
+                    fab:fab_elevationCompat="6dp"
+                    fab:fab_shadowColor="#000"
+                    fab:fab_size="mini" />
+
+                <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/btnFloatingCritical"
+                    style="@style/MenuButtonsCritical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/ic_alerts_menu"
+                    fab:fab_elevationCompat="6dp"
+                    fab:fab_shadowColor="#000"
+                    fab:fab_size="mini" />
+            </LinearLayout>
+            <!--Fin de los Float Button-->
+
+            <ImageView
+                android:id="@+id/imageViewSendAlert"
+                android:layout_width="@dimen/img_width_height"
+                android:layout_marginTop="8dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_height="@dimen/img_width_height" />
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_marginTop="8dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/ic_alerts_menu"
-                style="@style/MenuButtonsCritical"
-                fab:fab_size="mini"
-                fab:fab_shadowColor="#000"
-                fab:fab_elevationCompat="6dp"/>
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/headline"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvSeverity"
+                android:layout_width="match_parent"
+                android:layout_marginTop="8dp"
+
+                android:gravity="center_horizontal"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etDescriptionAlert"
+                style="@style/EditTextStyleOne"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="@string/message_edit_text_slide"
+                android:inputType="text" />
+
+            <Button
+                android:id="@+id/btnSendAlert"
+                style="@style/ButtonStyleOne"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:text="@string/message_button_send_slide" />
         </LinearLayout>
-        <!--Fin de los Float Button-->
-
-        <ImageView
-            android:id="@+id/imageViewSendAlert"
-            android:layout_width="@dimen/img_width_height"
-            android:layout_height="@dimen/img_width_height"
-            />
-
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/headline"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tvSeverity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textColor="@android:color/white"/>
-
-        <EditText
-            android:id="@+id/etDescriptionAlert"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="20dp"
-            android:inputType="text"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white"
-            android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/btnSendAlert"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#8A0808"
-            android:textColor="@android:color/white"/>
-    </LinearLayout>
-
-    <View
+    </ScrollView>
+    <!--<View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:alpha=".5"
         android:layout_above="@id/layoutDots"
+        android:alpha=".5"
         android:background="@android:color/white" />
 
     <ImageButton
@@ -165,5 +178,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:background="@android:color/transparent"
-        app:srcCompat="@drawable/ic_return_dark" />
+        app:srcCompat="@drawable/ic_return_dark" />-->
+
+
 </RelativeLayout>
