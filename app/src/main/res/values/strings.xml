@@ -75,7 +75,7 @@
     <!--Variables del slide-->
     <string name="message_title_accident_slide">Car Accident</string>
     <string name="message_title_traffic_slide">Traffic Jam</string>
-
+    <string name="message_title_level_severity">Select the level of severity</string>
     <string name="message_severity_slide">Severity</string>
     <string name="message_severity_informational_slide">Informational</string>
     <string name="message_severity_low_slide">Low</string>

@@ -110,7 +110,7 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
         myViewPagerAdapter = new MyViewPagerAdapter(context, layouts);
         viewPager.setAdapter(myViewPagerAdapter);
 
-        viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
+       // viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
     }
 
     private void elementsGUI(){
@@ -134,8 +134,6 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
         btnFloatingHigh.setOnClickListener(this);
         btnFloatingCritical = (FloatingActionButton) findViewById(R.id.btnFloatingCritical);
         btnFloatingCritical.setOnClickListener(this);
-
-
     }
 
     /**
@@ -182,27 +180,22 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
         switch (position){
             case 0:
                 severity = "informational";
-                //severity = this.getString(R.string.message_severity_informational_slide);
                 structureAlert(typeAlert, severity);
                 break;
             case 1:
                 severity = "low";
-                //severity = this.getString(R.string.message_severity_low_slide);
                 structureAlert(typeAlert, severity);
                 break;
             case 2:
                 severity = "medium";
-                //severity = this.getString(R.string.message_severity_medium_slide);
                 structureAlert(typeAlert, severity);
                 break;
             case 3:
                 severity = "high";
-                //severity = this.getString(R.string.message_severity_high_slide);
                 structureAlert(typeAlert, severity);
                 break;
             case 4:
                 severity = "critical";
-                //severity = this.getString(R.string.message_severity_critical_slide);
                 structureAlert(typeAlert, severity);
                 break;
         }
@@ -328,26 +321,36 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
                 position = 0;
                 addBottomDots(position);
                 viewPositionSlide(position);
+                myViewPagerAdapter = new MyViewPagerAdapter(context, layouts, position);
+                viewPager.setAdapter(myViewPagerAdapter);
                 break;
             case R.id.btnFloatingLow:
                 position = 1;
                 addBottomDots(position);
                 viewPositionSlide(position);
+                myViewPagerAdapter = new MyViewPagerAdapter(context, layouts, position);
+                viewPager.setAdapter(myViewPagerAdapter);
                 break;
             case R.id.btnFloatingMedium:
                 position = 2;
                 viewPositionSlide(position);
                 addBottomDots(position);
+                myViewPagerAdapter = new MyViewPagerAdapter(context, layouts, position);
+                viewPager.setAdapter(myViewPagerAdapter);
                 break;
             case R.id.btnFloatingHigh:
                 position = 3;
                 viewPositionSlide(position);
                 addBottomDots(position);
+                myViewPagerAdapter = new MyViewPagerAdapter(context, layouts, position);
+                viewPager.setAdapter(myViewPagerAdapter);
                 break;
             case R.id.btnFloatingCritical:
                 position = 4;
                 viewPositionSlide(position);
                 addBottomDots(position);
+                myViewPagerAdapter = new MyViewPagerAdapter(context, layouts, position);
+                viewPager.setAdapter(myViewPagerAdapter);
                 break;
         }
     }

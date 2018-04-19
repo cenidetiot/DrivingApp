@@ -77,7 +77,7 @@
     <!--Variables del slide-->
     <string name="message_title_accident_slide">Accidente Automovilistico</string>
     <string name="message_title_traffic_slide">Embotellamiento</string>
-
+    <string name="message_title_level_severity">Seleccione el nivel de severidad</string>
     <string name="message_severity_slide">Severidad</string>
     <string name="message_severity_informational_slide">Informacional</string>
     <string name="message_severity_low_slide">Bajo</string>

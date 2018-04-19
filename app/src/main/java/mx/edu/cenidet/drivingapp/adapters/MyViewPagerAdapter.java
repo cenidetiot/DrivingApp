@@ -18,18 +18,33 @@ public class MyViewPagerAdapter extends android.support.v4.view.PagerAdapter {
     private LayoutInflater layoutInflater;
     private int[] layouts;
     private Context context;
+    private int auxPosition;
 
     public MyViewPagerAdapter(Context context, int[] layouts) {
         this.layouts = layouts;
         this.context = context;
     }
 
+    public MyViewPagerAdapter(Context context, int[] layouts, int auxPosition){
+        this.layouts = layouts;
+        this.context = context;
+        this.auxPosition = auxPosition;
+    }
+
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         View view;
         layoutInflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
-
-        view = layoutInflater.inflate(layouts[position], container, false);
+        /*if(auxPosition == -1){
+            view = layoutInflater.inflate(layouts[position], container, false);
+            Log.i("VIEW", "Position------------------------------------------"+position);
+            container.addView(view);
+        }else {
+            view = layoutInflater.inflate(layouts[auxPosition], container, false);
+            Log.i("VIEW", "Position------------------------------------------"+position);
+            container.addView(view);
+        }*/
+        view = layoutInflater.inflate(layouts[auxPosition], container, false);
         Log.i("VIEW", "Position------------------------------------------"+position);
         container.addView(view);
 
@@ -38,6 +53,7 @@ public class MyViewPagerAdapter extends android.support.v4.view.PagerAdapter {
 
     @Override
     public int getCount() {
+        Log.i("VIEW", "Length------------------------------------------"+layouts.length);
         return layouts.length;
     }
 

@@ -5,16 +5,18 @@
     <color name="colorAccent">#FF4081</color>
 
     <!-- Screens background color-->
-    <color name="bg_screen1">#0B3861</color>
+    <!--color name="bg_screen1">#0B3861</color>
     <color name="bg_screen2">#0B3861</color>
-    <color name="bg_screen3">#0B3861</color>
+    <color name="bg_screen3">#f1c40f</color>
     <color name="bg_screen4">#0B3861</color>
-    <color name="bg_screen5">#0B3861</color>
-    <!--color name="bg_screen1">#3498db</-color>
+    <color name="bg_screen5">#0B3861</color-->
+
+    <color name="bg_screen1">#3498db</color>
     <color name="bg_screen2">#2c3e50</color>
     <color name="bg_screen3">#f1c40f</color>
     <color name="bg_screen4">#e67e22</color>
-    <color name="bg_screen5">#c0392b</color-->
+    <color name="bg_screen5">#c0392b</color>
+
     <color name="backgroundDefault">#0B3861</color>
     <color name="white">#ffffff</color>
     <color name="white70">#b3ffffff</color>
