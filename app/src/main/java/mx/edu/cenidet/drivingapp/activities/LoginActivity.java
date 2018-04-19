@@ -159,6 +159,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Bundle extras = data.getExtras();
                 Credential credential = data.getParcelableExtra(Credential.EXTRA_KEY);
                 etPhone.setText(credential.getId()); //Will need to process phone number string
+                //credential.getProfilePictureUri()
             }
         }
     }

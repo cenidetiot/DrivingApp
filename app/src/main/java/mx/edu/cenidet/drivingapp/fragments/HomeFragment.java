@@ -28,6 +28,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -83,6 +86,7 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
         //contactPhoto = (ImageView) rootView.findViewById(R.id.contactPhoto);
         /*if (contactPhoto != null)
             contactPhoto.setImageBitmap(retrieveContactPhoto(context));*/
+
         return rootView;
     }
 
@@ -124,6 +128,9 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
     @Override
     public void sendEvent(String event) {
     }
+
+
+
     //Android - Get Contact Photo from phone number
 
 

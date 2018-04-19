@@ -3,6 +3,7 @@ package mx.edu.cenidet.drivingapp.activities;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -25,6 +26,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
 import mx.edu.cenidet.drivingapp.R;
@@ -165,6 +168,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         Intent intent = new Intent(getApplicationContext(), AlertHistoryActivity.class);
                         startActivity(intent);
                         break;
+                    case R.id.menu_profile:
+                        drawerLayout.closeDrawers();
+                        /*Intent intentMyProfile = new Intent(getApplicationContext(), MyProfileActivity.class);
+                        startActivity(intentMyProfile);*/
+                        break;
                 }
 
                 if(fratmentTransaction){
@@ -187,12 +195,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         //Inicia el servicio para la captura de la posición.
         Intent deviceService = new Intent(MAIN_CONTEXT, DeviceService.class);
         startService(deviceService);
-
-       /* //Enviar Datos a los Fragment
-        Bundle bundle = new Bundle();
-        HomeFragment homeFragment = new HomeFragment();
-        bundle.putString("latitude1", "12345");
-        homeFragment.setArguments(bundle);*/
         Log.i("onCreate", "-----------------------------------------------------------------------------");
     }
 
@@ -262,24 +264,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 drawerLayout.openDrawer(GravityCompat.START);
                 return true;
             case R.id.menu_notify:
-                    //Demo dar de alta casa...
-                /*Campus campus = new Campus();
-                campus.setId("12345_Demo");
-                campus.setType("Campus");
-                campus.setName("Casa Demo X");
-                campus.setAddress("Algun lugar del mundo");
-                campus.setLocation("[[19.03487377104212,-98.315500728786],[19.034102963126966,-98.31417035311462],[19.032683044444674,-98.3120245859027],[19.030066305361256,-98.31305455416442],[19.029985165505956,-98.31371974200012],[19.03014744517694,-98.31442784518005],[19.02974174570222,-98.31629466265441],[19.030654568126966,-98.31788253039123],[19.03162823985106,-98.31743191927673],[19.031526815979436,-98.31691693514587],[19.031607955081697,-98.31629466265441],[19.03219621238769,-98.31644486635925],[19.032135358280243,-98.3170456811786],[19.032338205218377,-98.31721734255554],[19.03487377104212,-98.315500728786]]");
-                campus.setPointMap("[{\"latitude\":19.0323107,\"longitude\":-98.31537019999999}]");
-                //campus.setLocation("[[18.869818,-99.211902],[18.869814,-99.211978],[18.869837,-99.211980],[18.869834,-99.212069],[18.869922,-99.212073],[18.869924,-99.212026],[18.869954,-99.212024],[18.869958,-99.211837],[18.869819,-99.211833]]");
-                //campus.setPointMap("[{\"latitude\":18.869885,\"longitude\":-99.211928}]");
-                campus.setDateCreated("2017-11-13T01:28:41.192Z");
-                campus.setDateModified("2017-11-13T01:28:41.192Z");
-                SQLiteDrivingApp sqLiteDrivingApp = new SQLiteDrivingApp(MAIN_CONTEXT);
-                sqLiteDrivingApp.createCampus(campus);*/
                 Intent intent = new Intent(getApplicationContext(), AlertHistoryActivity.class);
                 startActivity(intent);
-                Log.i("STATUS", "TOKEN-1: "+appPreferences.getPreferenceString(getApplicationContext(),ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_FCMTOKEN));
-                //Toast.makeText(getApplicationContext(), "Notify...!", Toast.LENGTH_LONG).show();
                 return true;
 
         }
