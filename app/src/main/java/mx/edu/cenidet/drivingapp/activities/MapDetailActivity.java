@@ -11,6 +11,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
@@ -33,6 +34,7 @@ public class MapDetailActivity extends AppCompatActivity implements OnMapReadyCa
     private JSONArray arrayLocation, arrayPoint;
     private ArrayList<LatLng> listLocation;
     private double pointLatitude, pointLongitude;
+    LatLng centerLatLng = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,8 @@ public class MapDetailActivity extends AppCompatActivity implements OnMapReadyCa
             double latitude, longitude;
             String[] subString;
             listLocation = new ArrayList<>();
+
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
             try {
                 arrayLocation = new JSONArray(location);
                 for (int j=0; j<arrayLocation.length(); j++){
@@ -58,11 +62,17 @@ public class MapDetailActivity extends AppCompatActivity implements OnMapReadyCa
                     subString =  clearString.split(",");
                     latitude = Double.parseDouble(subString[0]);
                     longitude = Double.parseDouble(subString[1]);
-                    listLocation.add(new LatLng(latitude,longitude));
+                    LatLng tmp = new LatLng(latitude,longitude);
+                    listLocation.add(tmp);
+                    builder.include(tmp);
                 }
-                arrayPoint = new JSONArray(centerPoint);
+                /*arrayPoint = new JSONArray(centerPoint);
                 pointLatitude = arrayPoint.getDouble(0);
-                pointLongitude = arrayPoint.getDouble(1);
+                pointLongitude = arrayPoint.getDouble(1);*/
+
+                LatLngBounds bounds = builder.build();
+                centerLatLng =  bounds.getCenter();
+
                 /*JSONObject jsonObject = arrayPoint.getJSONObject(0);
                 pointLatitude = jsonObject.getDouble("latitude");
                 pointLongitude = jsonObject.getDouble("longitude");*/
@@ -78,12 +88,15 @@ public class MapDetailActivity extends AppCompatActivity implements OnMapReadyCa
         }
     }
 
+
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
         gMap.addPolygon(new PolygonOptions()
                 .addAll(listLocation).strokeColor(Color.RED));
-        createOrUpdateMarkerByLocation(pointLatitude, pointLongitude);
+        createOrUpdateMarkerByLocation(centerLatLng.latitude, centerLatLng.longitude);
+        //createOrUpdateMarkerByLocation(pointLatitude, pointLongitude);
     }
 
     private void createOrUpdateMarkerByLocation(double latitude, double longitude){

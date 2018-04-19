@@ -5,10 +5,10 @@
             android:icon="@drawable/ic_home_menu"
             android:title="@string/menu_home"/>
         <item android:id="@+id/menu_speed"
-            android:icon="@drawable/ic_speed_menu"
+            android:icon="@drawable/ic_speed"
             android:title="@string/menu_speed"/>
         <item android:id="@+id/menu_campus"
-            android:icon="@drawable/ic_campus_menu"
+            android:icon="@drawable/ic_map"
             android:title="@string/menu_campus_map"/>
         <item android:id="@+id/menu_alerts"
         android:icon="@drawable/ic_my_alerts"
