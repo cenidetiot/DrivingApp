@@ -43,7 +43,7 @@ public class ZoneControllerSdk implements MethodGET.MethodGETCallback, MethodPOS
 
     public void readAllZone(){
         method = "readAllZone";
-        String URL = URL_BASE_HOST +ConfigServer.http_api.getPropiedad()+"/"+ConfigServer.http_zone.getPropiedad();
+        String URL = URL_BASE_HOST +ConfigServer.http_api.getPropiedad()+"/"+ConfigServer.http_zone.getPropiedad()+"?status=1";
         mGET = new MethodGET(this);
         mGET.execute(URL);
     }

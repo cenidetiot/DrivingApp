@@ -39,6 +39,10 @@ public class EventsDetect {
         return flag;
     }
 
+    public static String suddenStops(){
+        return "";
+    }
+
     public static boolean suddenStop(double lastSpeed, double currentSpeed, LatLng lastPoint,LatLng currrentPoint){
         boolean flag=false;
         double distanceTraveled= SphericalUtil.computeDistanceBetween(lastPoint,currrentPoint);

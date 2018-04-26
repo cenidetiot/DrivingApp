@@ -31,6 +31,9 @@ public enum  ConfigServer {
     http_zone("zone"),
     http_campus("campus"),
     http_device("device"),
+    http_road("road"),
+    http_road_segment("roadSegment"),
+    http_parking("parking"),
 
     //#methods
     //-----login----

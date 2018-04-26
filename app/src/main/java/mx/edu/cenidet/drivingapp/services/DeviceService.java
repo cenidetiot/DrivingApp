@@ -58,7 +58,8 @@ import www.fiware.org.ngsi.utilities.Functions;
 public class DeviceService extends Service implements DeviceController.DeviceResourceMethods{
     private Context context;
     private static final String STATUS = "STATUS";
-    private double longitudeGPS, latitudeGPS;
+    //private double longitudeGPS, latitudeGPS;
+    private double latitude, longitude;
     private double longitudeNetwork, latitudeNetwork;
     private double speedMS;
     private double speedKmHr;
@@ -159,24 +160,19 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0000, 0, locationListenerNetwork);
 
         //Sensor acelerometro y giroscopio
-        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        /*mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        mSensorManager.registerListener(sensors, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-        mSensorManager.registerListener(sensors, mGyroscope, SensorManager.SENSOR_DELAY_NORMAL);
+        //mSensorManager.registerListener(sensors, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        //mSensorManager.registerListener(sensors, mGyroscope, SensorManager.SENSOR_DELAY_NORMAL);*/
         return START_NOT_STICKY;
     }
 
     private final LocationListener locationListenerGPS = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            if (location != null) {
                 eventDetecion(location);
-                Log.i(STATUS, "GPS latitude: "+location.getLatitude()+" longitude: "+location.getLatitude());
-            }else {
-                Log.i(STATUS, "Error GPS...!");
-                //Toast.makeText(getBaseContext(), "Error GPS...!", Toast.LENGTH_LONG).show();
-            }
+                //Log.i(STATUS, "GPS latitude: "+location.getLatitude()+" longitude: "+location.getLatitude());
         }
 
         @Override
@@ -202,12 +198,8 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
         @Override
         public void onLocationChanged(Location location) {
-            if (location != null) {
                 eventDetecion(location);
-                 Log.i(STATUS, "NETWORK latitude: "+location.getLatitude()+" longitude: "+location.getLongitude());
-            }else{
-                Log.i(STATUS, "Error Network...!");
-            }
+                //Log.i(STATUS, "NETWORK latitude: "+location.getLatitude()+" longitude: "+location.getLongitude());
         }
 
         @Override
@@ -227,7 +219,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     };
 
     //obtener los datos del sensor de acelerometro y giroscopio
-    private final SensorEventListener sensors = new SensorEventListener() {
+    /*private final SensorEventListener sensors = new SensorEventListener() {
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         public void onSensorChanged(SensorEvent sensorEvent) {
@@ -319,7 +311,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         public void onAccuracyChanged(Sensor sensor, int i) {
 
         }
-    };
+    };*/
 
     public static double calculateAcceleration(ArrayList<Double> values) {
         double acceleration = Math.sqrt(Math.pow(values.get(0), 2)
@@ -357,6 +349,83 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     }
 
     private void eventDetecion(Location location){
+        if (location != null) {
+            latitude = (double) location.getLatitude();
+            longitude = (double) location.getLongitude();
+            speedMS = (double) location.getSpeed();
+            Intent intent = new Intent(Constants.SERVICE_CHANGE_LOCATION_DEVICE).putExtra(Constants.SERVICE_RESULT_LATITUDE, latitude)
+                    .putExtra(Constants.SERVICE_RESULT_LONGITUDE, longitude).putExtra(Constants.SERVICE_RESULT_SPEED_MS, speedMS).putExtra(Constants.SERVICE_RESULT_SPEED_KMHR, speedKmHr);
+            LocalBroadcastManager.getInstance(DeviceService.this).sendBroadcast(intent);
+
+            //Envía el Modelo de datos Device
+            sendContext(latitude, longitude);
+
+            //Log.i(STATUS, "GPS LATITUDE: " + latitudeGPS + " longitude: " + longitudeGPS);
+            //Logica para obtener location apartir de (location anterior) y location hasta (location actual)
+            if (hashMapLatLngFromTo.isEmpty() || hashMapLatLngFromTo.size() == 0) {
+                latitudeFrom = latitude;
+                longitudeFrom = longitude;
+                latitudeTo = latitude;
+                longitudeTo = longitude;
+                hashMapLatLngFromTo.put("latitudeFrom", latitudeFrom);
+                hashMapLatLngFromTo.put("longitudeFrom", longitudeFrom);
+                hashMapLatLngFromTo.put("latitudeTo", latitudeTo);
+                hashMapLatLngFromTo.put("longitudeTo", longitudeTo);
+                Log.i("STATUS", "hashMapLatLngFromTo INICIO VACIO:\nlatitudeFrom: " + hashMapLatLngFromTo.get("latitudeFrom") + " longitudeFrom: " + hashMapLatLngFromTo.get("longitudeFrom") + " latitudeTo: " + hashMapLatLngFromTo.get("latitudeTo") + " longitudeTo: " + hashMapLatLngFromTo.get("longitudeTo"));
+            } else {
+                latitudeFrom = hashMapLatLngFromTo.get("latitudeTo");
+                longitudeFrom = hashMapLatLngFromTo.get("longitudeTo");
+                latitudeTo = latitude;
+                longitudeTo = longitude;
+                hashMapLatLngFromTo.put("latitudeFrom", latitudeFrom);
+                hashMapLatLngFromTo.put("longitudeFrom", longitudeFrom);
+                hashMapLatLngFromTo.put("latitudeTo", latitudeTo);
+                hashMapLatLngFromTo.put("longitudeTo", longitudeTo);
+
+                Log.i("STATUS", "hashMapLatLngFromTo NO VACIO:\nlatitudeFrom: " + hashMapLatLngFromTo.get("latitudeFrom") + " longitudeFrom: " + hashMapLatLngFromTo.get("longitudeFrom") + " latitudeTo: " + hashMapLatLngFromTo.get("latitudeTo") + " longitudeTo: " + hashMapLatLngFromTo.get("longitudeTo"));
+            }
+
+           /* String salida= EventsDetect.oppositeDirectionDisplacement(new LatLng(hashMapLatLngFromTo.get("latitudeFrom"), hashMapLatLngFromTo.get("longitudeFrom")),
+                    new LatLng(hashMapLatLngFromTo.get("latitudeTo"), hashMapLatLngFromTo.get("longitudeTo")),new LatLng(18.8797180,-99.2216666),new LatLng(18.8794591,-99.22154322));
+
+            //if(salida.equals("wrongWay")){
+            Intent intentWrongWay = new Intent(Constants.SERVICE_CHANGE_WRONG_WAY).putExtra(Constants.SERVICE_RESULT_WRONG_WAY_OUTPUT, salida);
+            LocalBroadcastManager.getInstance(DeviceService.this).sendBroadcast(intentWrongWay);*/
+
+            //Logica para obtener la velocidad anterior y actual
+            if (hashMapSpeedFromTo.isEmpty() || hashMapSpeedFromTo.size() == 0) {
+                speedFrom = speedKmHr;
+                speedTo = speedKmHr;
+                hashMapSpeedFromTo.put("speedFrom", speedFrom);
+                hashMapSpeedFromTo.put("speedTo", speedTo);
+                Log.i("STATUS", "SPEED INICIO VACIO: speedFrom: " + hashMapSpeedFromTo.get("speedFrom") + " speedTo: " + hashMapSpeedFromTo.get("speedTo"));
+            } else {
+                speedFrom = hashMapSpeedFromTo.get("speedTo");
+                speedTo = speedKmHr;
+                hashMapSpeedFromTo.put("speedFrom", speedFrom);
+                hashMapSpeedFromTo.put("speedTo", speedTo);
+                Log.i("STATUS", "SPEED NO VACIO: speedFrom: " + hashMapSpeedFromTo.get("speedFrom") + " speedTo: " + hashMapSpeedFromTo.get("speedTo"));
+            }
+
+            // DETECTAR EVENTOS LOCATION-----
+
+            latLngFrom = new LatLng(hashMapLatLngFromTo.get("latitudeFrom"), hashMapLatLngFromTo.get("longitudeFrom"));
+            latLngTo = new LatLng(hashMapLatLngFromTo.get("latitudeTo"), hashMapLatLngFromTo.get("longitudeTo"));
+            //latLngTo = new LatLng(18.876807, -99.219968);
+            distance = SphericalUtil.computeDistanceBetween(latLngFrom, latLngTo);
+            Log.i(STATUS, "DISTANCE 1: " + distance + "m");
+
+            location.distanceBetween(latitudeLast, longitudeLast, latitude, longitude, distanceArray);
+            Log.i(STATUS, "DISTANCE 2: " + distanceArray[0] + "km");
+
+        } else {
+            Log.i(STATUS, "Error obtener valores gps o network...!");
+            //Toast.makeText(getBaseContext(), "Error GPS...!", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+  /* private void eventDetecion2(Location location){
         if (location != null) {
             if(isInArea){
                 if(isInParking){
@@ -426,14 +495,8 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
                 String salida= EventsDetect.oppositeDirectionDisplacement(new LatLng(hashMapLatLngFromTo.get("latitudeFrom"), hashMapLatLngFromTo.get("longitudeFrom")),
                         new LatLng(hashMapLatLngFromTo.get("latitudeTo"), hashMapLatLngFromTo.get("longitudeTo")),new LatLng(18.8797180,-99.2216666),new LatLng(18.8794591,-99.22154322));
 
-                //if(salida.equals("wrongWay")){
                     Intent intentWrongWay = new Intent(Constants.SERVICE_CHANGE_WRONG_WAY).putExtra(Constants.SERVICE_RESULT_WRONG_WAY_OUTPUT, salida);
                     LocalBroadcastManager.getInstance(DeviceService.this).sendBroadcast(intentWrongWay);
-              /*  }else{
-                    Intent intentWrongWay = new Intent(Constants.SERVICE_CHANGE_WRONG_WAY).putExtra(Constants.SERVICE_RESULT_WRONG_WAY_OUTPUT, "false");
-                    LocalBroadcastManager.getInstance(DeviceService.this).sendBroadcast(intentWrongWay);
-
-                }*/
                 Log.i(STATUS, "SPEED: " + speedKmHr);
                 //Logica para obtener la velocidad anterior y actual
                 if (hashMapSpeedFromTo.isEmpty() || hashMapSpeedFromTo.size() == 0) {
@@ -532,22 +595,13 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
                 // FIN DETECTAR EVENTOS LOCATION-----
 
 
-
-                /*UserLocation userLocation = updateUserLocation(HomeActivity.ID, latitudeGPS, longitudeGPS);
-                try {
-                    uLocationService.updateUserLocation(userLocation);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }*/
-                //Log.i(STATUS, "GPS latitude: "+latitudeGPS+" longitude: "+longitudeGPS);
-
             }
         } else {
             Log.i(STATUS, "Error GPS...!");
             //Toast.makeText(getBaseContext(), "Error GPS...!", Toast.LENGTH_LONG).show();
         }
 
-    }
+    }*/
 
 
     /**

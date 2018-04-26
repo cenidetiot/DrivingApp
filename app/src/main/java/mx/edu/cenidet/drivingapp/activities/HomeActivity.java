@@ -29,6 +29,16 @@ import com.github.clans.fab.FloatingActionButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+import mx.edu.cenidet.cenidetsdk.controllers.OffStreetParkingControllerSdk;
+import mx.edu.cenidet.cenidetsdk.controllers.RoadControllerSdk;
+import mx.edu.cenidet.cenidetsdk.controllers.RoadSegmentControllerSdk;
+import mx.edu.cenidet.cenidetsdk.db.SQLiteDrivingApp;
 import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
 import mx.edu.cenidet.drivingapp.R;
 import mx.edu.cenidet.drivingapp.adapters.PagerAdapter;
@@ -37,6 +47,9 @@ import mx.edu.cenidet.drivingapp.services.DeviceService;
 import mx.edu.cenidet.drivingapp.services.SendDataService;
 import www.fiware.org.ngsi.controller.AlertController;
 import www.fiware.org.ngsi.datamodel.entity.Alert;
+import www.fiware.org.ngsi.datamodel.entity.OffStreetParking;
+import www.fiware.org.ngsi.datamodel.entity.Road;
+import www.fiware.org.ngsi.datamodel.entity.RoadSegment;
 import www.fiware.org.ngsi.datamodel.entity.Zone;
 import www.fiware.org.ngsi.httpmethodstransaction.Response;
 import www.fiware.org.ngsi.utilities.ApplicationPreferences;
@@ -44,7 +57,7 @@ import www.fiware.org.ngsi.utilities.DevicePropertiesFunctions;
 import www.fiware.org.ngsi.utilities.Functions;
 import www.fiware.org.ngsi.utilities.Tools;
 
-public class HomeActivity extends AppCompatActivity implements View.OnClickListener, SendDataService.SendDataMethods, AlertController.AlertResourceMethods{
+public class HomeActivity extends AppCompatActivity implements View.OnClickListener, SendDataService.SendDataMethods, AlertController.AlertResourceMethods, RoadSegmentControllerSdk.RoadSegmentServiceMethods, RoadControllerSdk.RoadServiceMethods, OffStreetParkingControllerSdk.OffStreetParkingServiceMethods{
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     public static Context MAIN_CONTEXT = null;
@@ -53,10 +66,20 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private double latitude, longitude;
     private AlertController alertController;
     private SendDataService sendDataService;
+    private RoadControllerSdk roadControllerSdk;
+    private RoadSegmentControllerSdk roadSegmentControllerSdk;
+    private OffStreetParkingControllerSdk offStreetParkingControllerSdk;
+    private SQLiteDrivingApp sqLiteDrivingApp;
 
     private FloatingActionButton btnFloatingUnknown;
     private FloatingActionButton btnFloatingAccident;
     private FloatingActionButton btnFloatingTraffic;
+
+    //Gestión Road y RoadSegment
+    private ArrayList<Road> listRoad;
+    private ArrayList<RoadSegment> listRoadSegment;
+    private ArrayList<OffStreetParking> listOffStreetParking;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +89,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         appPreferences = new ApplicationPreferences();
         sendDataService = new SendDataService(this);
         alertController = new AlertController(this);
+        roadControllerSdk = new RoadControllerSdk(MAIN_CONTEXT, this);
+        roadSegmentControllerSdk = new RoadSegmentControllerSdk(MAIN_CONTEXT, this);
+        offStreetParkingControllerSdk = new OffStreetParkingControllerSdk(MAIN_CONTEXT, this);
+        sqLiteDrivingApp = new SQLiteDrivingApp(this);
         //Inicializa los datos de conexión
         try {
             Tools.initialize("config.properties", getApplicationContext());
@@ -191,6 +218,28 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
         //Para preguntar si el usuario se encuentra manejando
         //isDrivingUser();
+
+        //Descarga los Road y RoadSegment
+        listRoad = sqLiteDrivingApp.getAllRoad();
+        if(listRoad.size() > 0){
+            Log.i("Datos en los ROADS", "-----------------------------------------------------------------------------");
+        }else{
+            roadControllerSdk.getAllRoad();
+        }
+        //roadControllerSdk.getByResponsibleRoad("Zone_1523999247187");
+        listRoadSegment = sqLiteDrivingApp.getAllRoadSegment();
+        if(listRoadSegment.size() > 0){
+            Log.i("Datos en los ", "ROAD_SEGMENT-----------------------------------------------------------------------------");
+        }else{
+            roadSegmentControllerSdk.getAllRoadSegment();
+        }
+        listOffStreetParking = sqLiteDrivingApp.getAllOffStreetParking();
+        if (listOffStreetParking.size() > 0){
+            Log.i("Datos en los ", "PARKING-----------------------------------------------------------------------------");
+        }else {
+            offStreetParkingControllerSdk.getAllOffStreetParking();
+        }
+        //roadSegmentControllerSdk.getByrefRoadRoadSegment("Road_1524190240036");
 
         //Inicia el servicio para la captura de la posición.
         Intent deviceService = new Intent(MAIN_CONTEXT, DeviceService.class);
@@ -370,6 +419,113 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onGetEntitiesAlert(Response response) {
+
+    }
+
+    @Override
+    public void getAllRoadSegment(mx.edu.cenidet.cenidetsdk.httpmethods.Response response) {
+        //Log.i("ALLROADSegment: ", "--------------------------------------------------------\n"+response.getBodyString());
+        switch (response.getHttpCode()){
+            case 200:
+                RoadSegment roadSegment;
+                JSONArray jsonArray = response.parseJsonArray(response.getBodyString());
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    roadSegment = new RoadSegment();
+                    JSONObject object = null;
+                    try {
+                        object = jsonArray.getJSONObject(i);
+                        roadSegment.setIdRoadSegment(object.getString("idRoadSegment"));
+                        roadSegment.setType(object.getString("type"));
+                        roadSegment.setName(object.getString("name"));
+                        roadSegment.setRefRoad(object.getString("refRoad"));
+                        roadSegment.setLocation(object.getString("location"));
+                        roadSegment.setStartPoint(object.getString("startPoint"));
+                        roadSegment.setEndPoint(object.getString("endPoint"));
+                        roadSegment.setLaneUsage(object.getString("laneUsage"));
+                        roadSegment.setTotalLaneNumber(object.getInt("totalLaneNumber"));
+                        roadSegment.setMaximumAllowedSpeed(object.getInt("maximumAllowedSpeed"));
+                        roadSegment.setMinimumAllowedSpeed(object.getInt("minimumAllowedSpeed"));
+                        roadSegment.setWidth(object.getInt("width"));
+                        roadSegment.setStatus(object.getString("status"));
+                        sqLiteDrivingApp.createRoadSegment(roadSegment);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void getRoadSegmentByRefRoad(mx.edu.cenidet.cenidetsdk.httpmethods.Response response) {
+        Log.i(": ", "getRoadSegmentByRefRoad: --------------------------------------------------------\n"+response.getBodyString());
+    }
+
+    @Override
+    public void getAllRoad(mx.edu.cenidet.cenidetsdk.httpmethods.Response response) {
+        //Log.i("ALLROAD: ", "--------------------------------------------------------\n"+response.getBodyString());
+        switch (response.getHttpCode()){
+            case 200:
+                Road road;
+                JSONArray jsonArray = response.parseJsonArray(response.getBodyString());
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    road = new Road();
+                    JSONObject object;
+                    try {
+                        object = jsonArray.getJSONObject(i);
+                        road.setIdRoad(object.getString("idRoad"));
+                        road.setType(object.getString("type"));
+                        road.setName(object.getString("name"));
+                        road.setDescription(object.getString("description"));
+                        road.setResponsible(object.getString("responsible"));
+                        road.setStatus(object.getString("status"));
+                        sqLiteDrivingApp.createRoad(road);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void getRoadByResponsible(mx.edu.cenidet.cenidetsdk.httpmethods.Response response) {
+        //Log.i(": ", "getRoadByResponsible: --------------------------------------------------------\n"+response.getBodyString());
+    }
+
+    @Override
+    public void getAllOffStreetParking(mx.edu.cenidet.cenidetsdk.httpmethods.Response response) {
+        //Log.i("AllOffStreetParking: ", "--------------------------------------------------------\n"+response.getBodyString());
+        switch (response.getHttpCode()){
+            case 200:
+                OffStreetParking offStreetParking;
+                JSONArray jsonArray = response.parseJsonArray(response.getBodyString());
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    offStreetParking = new OffStreetParking();
+                    JSONObject object;
+                    try {
+                        object = jsonArray.getJSONObject(i);
+                        offStreetParking.setIdOffStreetParking(object.getString("idOffStreetParking"));
+                        offStreetParking.setType(object.getString("type"));
+                        offStreetParking.setName(object.getString("name"));
+                        offStreetParking.setCategory(object.getString("category"));
+                        offStreetParking.setLocation(object.getString("location"));
+                        offStreetParking.setDescription(object.getString("description"));
+                        offStreetParking.setAreaServed(object.getString("areaServed"));
+                        offStreetParking.setStatus(object.getString("status"));
+                        sqLiteDrivingApp.createParking(offStreetParking);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void getOffStreetParkingByAreaServed(mx.edu.cenidet.cenidetsdk.httpmethods.Response response) {
 
     }
 

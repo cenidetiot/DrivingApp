@@ -37,7 +37,7 @@ public class MyCampusFragment extends Fragment {
     private Context context;
     private MyAdapterCampus myAdapterCampus;
     private AdapterView.AdapterContextMenuInfo info;
-    private String name, location, centerPoint;
+    private String idZone, name, location, centerPoint;
 
     public MyCampusFragment() {
         // Required empty public constructor
@@ -85,10 +85,12 @@ public class MyCampusFragment extends Fragment {
         switch (item.getItemId()){
             case R.id.menu_see_map:
                 info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+                idZone = listZone.get(info.position).getIdZone();
                 name = listZone.get(info.position).getName().getValue();
                 location = listZone.get(info.position).getLocation().getValue();
                 centerPoint = listZone.get(info.position).getCenterPoint().getValue();
                 Intent intent = new Intent(context, MapDetailActivity.class);
+                intent.putExtra("idZone", idZone);
                 intent.putExtra("name", name);
                 intent.putExtra("location", location);
                 intent.putExtra("centerPoint", centerPoint);

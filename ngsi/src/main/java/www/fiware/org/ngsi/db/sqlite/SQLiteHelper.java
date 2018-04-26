@@ -74,8 +74,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     public SQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        Log.i("SQL-Query-Up: ", sqlCreateTblDataTempUpdate);
-        Log.i("SQL-Query: ", sqlCreateTblDataSensor);
+        //Log.i("SQL-Query-Up: ", sqlCreateTblDataTempUpdate);
+        //Log.i("SQL-Query: ", sqlCreateTblDataSensor);
     }
 
 
