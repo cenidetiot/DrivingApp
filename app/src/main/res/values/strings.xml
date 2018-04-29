@@ -88,13 +88,4 @@
     <string name="message_edit_text_slide">Description</string>
     <string name="message_button_send_slide">Send Alert</string>
 
-
-    <string name="next">NEXT</string>
-    <string name="skip">SKIP</string>
-    <string name="start">GOT IT</string>
-
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
 </resources>
