@@ -10,14 +10,6 @@ public class Constants {
 
     //CONSTANTES PARA LAS CONFIGURACIONES DE LAS PREFERENCIAS DEL DISPOSITIVO...
     public static final String PREFERENCE_NAME_GENERAL = "preference_name_general";
-    public static final String PREFERENCE_KEY_EMAIL = "email";
-    public static final String PREFERENCE_KEY_PASSWORD = "password";
-    public static final String PREFERENCE_KEY_REMEMBER = "remember";
-
-    //VARIABLE PARA EL LOGIN
-    public static final String PREFERENCE_KEY_TOKEN = "token";
-    public static final String PREFERENCE_KEY_MAXSPEED = "maxspeed";
-    public static final String PREFERENCE_KEY_MINSPEED = "minspeed";
 
     public static final String PREFERENCE_OFFLINE_MODE_KEY = "offline_mode";
     public static final String PREFERENCE_STATUS_OFFLINE_MODE  = "status_offline_mode";
@@ -45,6 +37,10 @@ public class Constants {
     public static final String SERVICE_RUNNING_SENSORS = "service_running_sensors";
     public static final String ACCELEROMETER_RESULT_SENSORS = "accelerometer_result_sensors";
     public static final String GYROSCOPE_RESULT_SENSORS = "gyroscope_result_sensors";
+
+    //CONSTANTES PARA LOS MODELOS DE DATOS.
+    public static final String ROAD_SEGMENT = "roadSegment";
+
 
     //Events
     public static final String SERVICE_CHANGE_WRONG_WAY = "wrong_way";

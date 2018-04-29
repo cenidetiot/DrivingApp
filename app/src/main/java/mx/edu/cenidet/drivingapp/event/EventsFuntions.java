@@ -1,6 +1,7 @@
 package mx.edu.cenidet.drivingapp.event;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.PolyUtil;
@@ -11,7 +12,9 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.List;
 
+import mx.edu.cenidet.cenidetsdk.db.SQLiteDrivingApp;
 import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
+import www.fiware.org.ngsi.datamodel.entity.OffStreetParking;
 import www.fiware.org.ngsi.datamodel.entity.Road;
 import www.fiware.org.ngsi.datamodel.entity.RoadSegment;
 import www.fiware.org.ngsi.datamodel.entity.Zone;
@@ -67,7 +70,6 @@ public class EventsFuntions {
                 zone.setDateCreated(listZone.get(i).getDateCreated());
                 zone.setDateModified(listZone.get(i).getDateModified());
                 zone.setStatus(listZone.get(i).getStatus());
-                //Log.i("Status: ", "Campus name: "+listCampus.get(i).getName());
                 try{
                     arrayLocation = new JSONArray(listZone.get(i).getLocation().getValue());
                     for (int j=0; j<arrayLocation.length(); j++){
@@ -94,30 +96,243 @@ public class EventsFuntions {
         }
     }
 
-    /**
-     * Este metodo servira para obtener todos los roadSegment de una zona.
-     * Estos roadSegment serviran para detectar en cual se encuentra
-     * @param context
-     * @return
-     */
-    public static ArrayList<RoadSegment> getAllByRefRoadRoadSegment(Context context){
-        String currentZone = applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_CURRENT_ZONE);
-        ArrayList<Road> listRoad = null;
-        ArrayList<RoadSegment> listRoadSegment = null;
-        if (currentZone.equals("undetectedZone")){
-
+    public static OffStreetParking detectedOffStreetParking(double latitude, double longitude, ArrayList<OffStreetParking> listOffStreetParking){
+        OffStreetParking auxOffStreetParking = null;
+        if(listOffStreetParking.size() > 0){
+            OffStreetParking offStreetParking;
+            JSONArray arrayLocation;
+            String originalString, clearString;
+            double latitudePolygon, longitudePolygon;
+            ArrayList<LatLng> listLatLng;
+            String[] subString;
+            for(int i=0; i<listOffStreetParking.size(); i++){
+                listLatLng = new ArrayList<>();
+                offStreetParking = new OffStreetParking();
+                offStreetParking.setIdOffStreetParking(listOffStreetParking.get(i).getIdOffStreetParking());
+                offStreetParking.setType(listOffStreetParking.get(i).getType());
+                offStreetParking.setName(listOffStreetParking.get(i).getName());
+                offStreetParking.setCategory(listOffStreetParking.get(i).getCategory());
+                offStreetParking.setLocation(listOffStreetParking.get(i).getLocation());
+                offStreetParking.setDescription(listOffStreetParking.get(i).getDescription());
+                offStreetParking.setAreaServed(listOffStreetParking.get(i).getAreaServed());
+                offStreetParking.setStatus(listOffStreetParking.get(i).getStatus());
+                try{
+                    arrayLocation = new JSONArray(listOffStreetParking.get(i).getLocation());
+                    for (int j=0; j<arrayLocation.length(); j++){
+                        originalString = arrayLocation.get(j).toString();
+                        clearString = originalString.substring(originalString.indexOf("[") + 1, originalString.indexOf("]"));
+                        subString =  clearString.split(",");
+                        latitudePolygon = Double.parseDouble(subString[0]);
+                        longitudePolygon = Double.parseDouble(subString[1]);
+                        listLatLng.add(new LatLng(latitudePolygon,longitudePolygon));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if(EventsFuntions.detectedArea(latitude, longitude, listLatLng)){
+                    auxOffStreetParking = offStreetParking;
+                    return auxOffStreetParking;
+                }
+            }
+            return auxOffStreetParking;
         }else{
-            //obtener el valor del road en que se encuentra el usuario.
+            return auxOffStreetParking;
         }
-        return listRoadSegment;
     }
-    public static RoadSegment detectedRoadSegment(){
-        RoadSegment roadSegment =  new RoadSegment();
+
+    public static RoadSegment detectedRoadSegment(Context context, double currentLatitude, double currentLongitude){
+        SQLiteDrivingApp sqLiteDrivingApp; //Para acceder a los metodos que gestionan la DB interna del dispositivo movil.
+        String currentZone = applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_CURRENT_ZONE);
+        //String currentZone = "Zone_1524284309191";//cenidet
+        RoadSegment roadSegment = null;
+        ArrayList<OffStreetParking> listOffStreetParking; //obtendra la lista de los parking que pertenecen a la zona.
+        ArrayList<Road> listRoadByIdParking; //obtendra la lista de los road que pertenecen al parking.
+        OffStreetParking offStreetParking;//para almacenar el parking donde se encuentra el dispositivo movil.
+        if(!currentZone.equals("undetectedZone")){
+            sqLiteDrivingApp = new SQLiteDrivingApp(context);
+            listOffStreetParking = sqLiteDrivingApp.getAllOffStreetParkingByAreaServed(currentZone);//obtiene la lista de parking de la zona donde se encuentra.
+            if(listOffStreetParking.size() > 0){
+                //Determina si se encuentra dentro de un parking
+                offStreetParking = EventsFuntions.detectedOffStreetParking(currentLatitude, currentLongitude, listOffStreetParking);
+                if (offStreetParking != null){//Si se encuentra dentro de un parking
+                    //Obtener todos los road del parking
+                    //listRoadByIdParking = sqLiteDrivingApp.getRoadByResponsible(offStreetParking.getIdOffStreetParking());
+                    Log.i("STATUS: ","SI SE ENCUENTRA EN UN PARKING------------------------------------------------");
+                    roadSegment = EventsFuntions.getRoadSegmentParking(currentLatitude, currentLongitude, offStreetParking, sqLiteDrivingApp);
+                    if(roadSegment != null){
+                        return roadSegment;
+                    }else{
+                        return roadSegment;
+                    }
+                }else {//Si no se encuentra dentro de un parking.
+                    roadSegment = EventsFuntions.getRoadSegmentZone(currentLatitude, currentLongitude, currentZone, sqLiteDrivingApp);
+                    if(roadSegment != null){
+                        return roadSegment;
+                    }else{
+                        return roadSegment;
+                    }
+                }//FIN Si no se encuentra dentro de un parking.
+            }else{//si no se encuentra ningun parking asignado a la zona.
+                Log.i("STATUS: ","ESTA ZONA NO CUENTA CON PARKING----------------------------------------------");
+                roadSegment = EventsFuntions.getRoadSegmentZone(currentLatitude, currentLongitude, currentZone, sqLiteDrivingApp);
+                if(roadSegment != null){
+                    return roadSegment;
+                }else{
+                    return roadSegment;
+                }
+            }
+
+        }
 
         return roadSegment;
     }
+
+    /**
+     * @param currentLatitude latitude actual en la que se encuentra el dispositivo.
+     * @param currentLongitude longitude actual en la que se encuentra el dispositivo.
+     * @param offStreetParking objeto del parking en el que se encuentra el dispositivo.
+     * @param sqLiteDrivingApp objeto para realizar consultas en la DB interna del dispositivo movil(SQLite).
+     * @return retorna el RoadSegment en el que se encuentra el dispositivo movil.
+     */
+    public static RoadSegment getRoadSegmentParking(double currentLatitude, double currentLongitude, OffStreetParking offStreetParking, SQLiteDrivingApp sqLiteDrivingApp){
+        RoadSegment auxRoadSegment = null;
+        List<LatLng> polyline; //obtiene la polilinea del RoadSegment.
+       //ArrayList<Road> listRoadByResponsible = sqLiteDrivingApp.getRoadByResponsible(offStreetParking.getIdOffStreetParking()); //obtiene la lista de los road por el responsable.
+        ArrayList<RoadSegment> listRoadSegmentByRefRoad;//obtendra la lista de los roadSegment de acuerdo a los Road.
+        LatLng point = new LatLng(currentLatitude,currentLongitude);
+        //if(listRoadByResponsible.size() > 0){
+            JSONArray arrayLocation;
+            String originalString, clearString;
+            double latitude, longitude;
+            String[] subString;
+            //for(int i=0; i<listRoadByResponsible.size(); i++){
+                //Obtiene los Road segment correspondiente a un determinado Road.
+                //listRoadSegmentByRefRoad = sqLiteDrivingApp.getAllRoadSegmentByRefRoad(listRoadByResponsible.get(i).getIdRoad());
+                listRoadSegmentByRefRoad = sqLiteDrivingApp.getAllRoadSegmentByRefRoad(offStreetParking.getIdOffStreetParking());
+                if(listRoadSegmentByRefRoad.size() > 0){
+                    for (RoadSegment iteratorRoadSegment: listRoadSegmentByRefRoad){
+                        polyline = new ArrayList<>();
+                        RoadSegment roadSegment = new RoadSegment();
+                        roadSegment.setIdRoadSegment(iteratorRoadSegment.getIdRoadSegment());
+                        roadSegment.setType(iteratorRoadSegment.getType());
+                        roadSegment.setName(iteratorRoadSegment.getName());
+                        roadSegment.setLocation(iteratorRoadSegment.getLocation());
+                        roadSegment.setRefRoad(iteratorRoadSegment.getRefRoad());
+                        roadSegment.setStartPoint(iteratorRoadSegment.getStartPoint());
+                        roadSegment.setEndPoint(iteratorRoadSegment.getEndPoint());
+                        roadSegment.setTotalLaneNumber(iteratorRoadSegment.getTotalLaneNumber());
+                        roadSegment.setMaximumAllowedSpeed(iteratorRoadSegment.getMaximumAllowedSpeed());
+                        roadSegment.setMinimumAllowedSpeed(iteratorRoadSegment.getMinimumAllowedSpeed());
+                        roadSegment.setLaneUsage(iteratorRoadSegment.getLaneUsage());
+                        roadSegment.setWidth(iteratorRoadSegment.getWidth());
+                        roadSegment.setStatus(iteratorRoadSegment.getStatus());
+                        //Log.i("STATUS: ","LOCATION: "+iteratorRoadSegment.getLocation());
+                        try {
+                            arrayLocation = new JSONArray(roadSegment.getLocation());
+                            for (int j=0; j<arrayLocation.length(); j++){
+                                originalString = arrayLocation.get(j).toString();
+                                clearString = originalString.substring(originalString.indexOf("[") + 1, originalString.indexOf("]"));
+                                subString =  clearString.split(",");
+                                latitude = Double.parseDouble(subString[0]);
+                                longitude = Double.parseDouble(subString[1]);
+                                polyline.add(new LatLng(latitude, longitude));
+                            }
+
+                            if (EventsFuntions.detectRoadSegment(point, polyline, roadSegment.getWidth()) == true){
+                                Log.i("STATUS: ","SE ENCUENTRA EN EL ROAD EN PARKING: "+roadSegment.getIdRoadSegment()+" --------------------------------------");
+                                auxRoadSegment = roadSegment;
+                                return auxRoadSegment;
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }else {
+                    Log.i("STATUS: ","ESTE PARKING NO CUENTA CON ROAD_SEGMENT--------------------PARKING: "+offStreetParking.getIdOffStreetParking());
+                    auxRoadSegment = null;
+                }
+           /* }
+        }else {
+            Log.i("STATUS: ","ESTE PARKING NO CUENTA CON ROAD--------------------PARKING: "+offStreetParking.getIdOffStreetParking());
+            auxRoadSegment = null;
+        }*/
+        Log.i("STATUS: ","DENTRO DEL PARKING Y EN NINGUN ROAD SEGMENT----------------------------------------------");
+        return auxRoadSegment;
+    }
+
+    /**
+     * @param currentLatitude latitude actual en la que se encuentra el dispositivo.
+     * @param currentLongitude longitude actual en la que se encuentra el dispositivo.
+     * @param currentZone el identificador de la zona en la que se encuentra el dispositivo movil.
+     * @param sqLiteDrivingApp objeto para realizar consultas en la DB interna del dispositivo movil(SQLite).
+     * @return retorna el RoadSegment en el que se encuentra el dispositivo movil.
+     */
+    public static RoadSegment getRoadSegmentZone(double currentLatitude, double currentLongitude, String currentZone, SQLiteDrivingApp sqLiteDrivingApp){
+        RoadSegment auxRoadSegment = null;
+        List<LatLng> polyline; //obtiene la polilinea del RoadSegment.
+        ArrayList<Road> listRoadByResponsible = sqLiteDrivingApp.getRoadByResponsible(currentZone); //obtiene la lista de los road por el responsable.
+        ArrayList<RoadSegment> listRoadSegmentByRefRoad;//obtendra la lista de los roadSegment de acuerdo a los Road.
+        LatLng point = new LatLng(currentLatitude,currentLongitude);
+        if(listRoadByResponsible.size() > 0){
+            JSONArray arrayLocation;
+            String originalString, clearString;
+            double latitude, longitude;
+            String[] subString;
+            for(int i=0; i<listRoadByResponsible.size(); i++){
+                //Obtiene los Road segment correspondiente a un determinado Road.
+                listRoadSegmentByRefRoad = sqLiteDrivingApp.getAllRoadSegmentByRefRoad(listRoadByResponsible.get(i).getIdRoad());
+                if(listRoadSegmentByRefRoad.size() > 0){
+                    for (RoadSegment iteratorRoadSegment: listRoadSegmentByRefRoad){
+                        polyline = new ArrayList<>();
+                        RoadSegment roadSegment = new RoadSegment();
+                        roadSegment.setIdRoadSegment(iteratorRoadSegment.getIdRoadSegment());
+                        roadSegment.setType(iteratorRoadSegment.getType());
+                        roadSegment.setName(iteratorRoadSegment.getName());
+                        roadSegment.setLocation(iteratorRoadSegment.getLocation());
+                        roadSegment.setRefRoad(iteratorRoadSegment.getRefRoad());
+                        roadSegment.setStartPoint(iteratorRoadSegment.getStartPoint());
+                        roadSegment.setEndPoint(iteratorRoadSegment.getEndPoint());
+                        roadSegment.setTotalLaneNumber(iteratorRoadSegment.getTotalLaneNumber());
+                        roadSegment.setMaximumAllowedSpeed(iteratorRoadSegment.getMaximumAllowedSpeed());
+                        roadSegment.setMinimumAllowedSpeed(iteratorRoadSegment.getMinimumAllowedSpeed());
+                        roadSegment.setLaneUsage(iteratorRoadSegment.getLaneUsage());
+                        roadSegment.setWidth(iteratorRoadSegment.getWidth());
+                        roadSegment.setStatus(iteratorRoadSegment.getStatus());
+                        //Log.i("STATUS: ","LOCATION: "+iteratorRoadSegment.getLocation());
+                        try {
+                            arrayLocation = new JSONArray(roadSegment.getLocation());
+                            for (int j=0; j<arrayLocation.length(); j++){
+                                originalString = arrayLocation.get(j).toString();
+                                clearString = originalString.substring(originalString.indexOf("[") + 1, originalString.indexOf("]"));
+                                subString =  clearString.split(",");
+                                latitude = Double.parseDouble(subString[0]);
+                                longitude = Double.parseDouble(subString[1]);
+                                polyline.add(new LatLng(latitude, longitude));
+                            }
+
+                            if (EventsFuntions.detectRoadSegment(point, polyline,roadSegment.getWidth()) == true){
+                                Log.i("STATUS: ","Se encuentra en el RoadSegment: "+roadSegment.getIdRoadSegment()+" --------------------------------------");
+                                auxRoadSegment =roadSegment;
+                                return auxRoadSegment;
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+            }
+        }
+        Log.i("STATUS: ","FUERA DE PARKING Y EN NINGUN ROAD SEGMENT----------------------------------------------");
+        return auxRoadSegment;
+    }
+
+
     public static boolean detectRoadSegment(LatLng point, List<LatLng> polyline, double tolerance){
-        if(PolyUtil.isLocationOnPath(point, polyline, false, tolerance) == true) {
+        if(PolyUtil.isLocationOnPath(point, polyline, false, tolerance)) {
             return true;
         }else{
             return false;

@@ -32,6 +32,7 @@ import mx.edu.cenidet.cenidetsdk.db.SQLiteDrivingApp;
 import mx.edu.cenidet.drivingapp.R;
 import mx.edu.cenidet.drivingapp.activities.HomeActivity;
 import mx.edu.cenidet.drivingapp.services.SendDataService;
+import www.fiware.org.ngsi.datamodel.entity.RoadSegment;
 import www.fiware.org.ngsi.datamodel.entity.Zone;
 
 /**
@@ -188,6 +189,11 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
         }else{
 
         }
+    }
+
+    @Override
+    public void detectRoadSegment(double latitude, double longitude, RoadSegment roadSegment) {
+
     }
 
     @Override

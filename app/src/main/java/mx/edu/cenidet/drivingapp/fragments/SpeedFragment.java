@@ -17,10 +17,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DecimalFormat;
+
 import mx.edu.cenidet.cenidetsdk.entities.Campus;
 import mx.edu.cenidet.drivingapp.R;
 import mx.edu.cenidet.drivingapp.activities.HomeActivity;
 import mx.edu.cenidet.drivingapp.services.SendDataService;
+import www.fiware.org.ngsi.datamodel.entity.RoadSegment;
 import www.fiware.org.ngsi.datamodel.entity.Zone;
 import www.fiware.org.ngsi.utilities.Constants;
 
@@ -36,6 +39,7 @@ public class SpeedFragment extends Fragment implements SendDataService.SendDataM
     private ProgressBar pbSpeed;
     //private TextView tvSpeed;
     private static final String STATUS = "Status";
+    private DecimalFormat df;
 
     private SendDataService sendDataService;
 
@@ -43,6 +47,7 @@ public class SpeedFragment extends Fragment implements SendDataService.SendDataM
         context = HomeActivity.MAIN_CONTEXT;
         sendDataService = new SendDataService(this);
         //sendDataService = HomeFragment.SENDDATASERVICE;
+        df = new DecimalFormat("0.00");
     }
 
 
@@ -65,8 +70,8 @@ public class SpeedFragment extends Fragment implements SendDataService.SendDataM
 
     @Override
     public void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr) {
-        tvLocation.setText("Lat. "+latitude+", Lon. "+longitude);
-        tvSpeed.setText(speedMS+"m/s, "+speedKmHr+"km/hr");
+        tvLocation.setText("Lat. "+latitude+"\nLng. "+longitude);
+        tvSpeed.setText(df.format(speedMS)+"m/s, "+df.format(speedKmHr)+"km/hr");
 
         //tvSpeed.setText("Latitude: " + latitude + " Longitude: " + longitude + " Velocidad: " + speedMS + "m/s  Velocidad: " + speedKmHr + "km/hr");
         //Log.i("SPEED: ", "VIEW Latitude: " + latitude + " Longitude: " + longitude + " Velocidad: " + speedMS + "m/s  Velocidad: " + speedKmHr + "km/hr");
@@ -74,6 +79,11 @@ public class SpeedFragment extends Fragment implements SendDataService.SendDataM
 
     @Override
     public void detectZone(Zone zone, boolean statusLocation) {
+
+    }
+
+    @Override
+    public void detectRoadSegment(double latitude, double longitude, RoadSegment roadSegment) {
 
     }
 

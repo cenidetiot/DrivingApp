@@ -29,6 +29,15 @@
                 android:textStyle="bold"
                 android:text="" />
 
+            <TextView
+                android:id="@+id/tvRoadSegment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textSize="@dimen/subheading"
+                android:textStyle="bold"
+                android:text="" />
+
             <!--ImageView
                 android:id="@+id/contactPhoto"
                 android:layout_width="wrap_content"

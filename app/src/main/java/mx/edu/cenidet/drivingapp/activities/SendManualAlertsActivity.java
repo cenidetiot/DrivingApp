@@ -32,6 +32,7 @@ import mx.edu.cenidet.drivingapp.services.PrefManager;
 import mx.edu.cenidet.drivingapp.services.SendDataService;
 import www.fiware.org.ngsi.controller.AlertController;
 import www.fiware.org.ngsi.datamodel.entity.Alert;
+import www.fiware.org.ngsi.datamodel.entity.RoadSegment;
 import www.fiware.org.ngsi.datamodel.entity.Zone;
 import www.fiware.org.ngsi.httpmethodstransaction.Response;
 import www.fiware.org.ngsi.utilities.DevicePropertiesFunctions;
@@ -363,6 +364,11 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
 
     @Override
     public void detectZone(Zone zone, boolean statusLocation) {
+
+    }
+
+    @Override
+    public void detectRoadSegment(double latitude, double longitude, RoadSegment roadSegment) {
 
     }
 

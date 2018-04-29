@@ -394,6 +394,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    public void detectRoadSegment(double latitude, double longitude, RoadSegment roadSegment) {
+
+    }
+
+    @Override
     public void sendDataAccelerometer(double ax, double ay, double az) {
 
     }

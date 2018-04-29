@@ -34,6 +34,7 @@ import mx.edu.cenidet.cenidetsdk.entities.Campus;
 import mx.edu.cenidet.drivingapp.R;
 import mx.edu.cenidet.drivingapp.activities.HomeActivity;
 import mx.edu.cenidet.drivingapp.services.SendDataService;
+import www.fiware.org.ngsi.datamodel.entity.RoadSegment;
 import www.fiware.org.ngsi.datamodel.entity.Zone;
 
 /**
@@ -166,6 +167,11 @@ public class MyLocationFragment extends Fragment implements OnMapReadyCallback, 
 
     @Override
     public void detectZone(Zone zone, boolean statusLocation) {
+
+    }
+
+    @Override
+    public void detectRoadSegment(double latitude, double longitude, RoadSegment roadSegment) {
 
     }
 

@@ -15,7 +15,6 @@
         <include
             android:id="@+id/toolbar"
             layout="@layout/toolbar"/>
-
         <!--Tabs-->
         <android.support.design.widget.TabLayout
             android:id="@+id/tabLayout"
@@ -35,6 +34,7 @@
             android:layout_below="@id/tabLayout"
             />
 
+
         <!-- The main content view -->
         <FrameLayout
             android:id="@+id/content_frame"
@@ -43,8 +43,8 @@
 
         </FrameLayout>
 
-
     </LinearLayout>
+
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/menuFloating"
         android:layout_width="match_parent"
@@ -85,7 +85,10 @@
             fab:fab_size="mini"
             fab:fab_label="@string/message_floating_traffic"
             style="@style/MenuButtonsTraffic"/>
+
     </com.github.clans.fab.FloatingActionMenu>
+
+
 
     <android.support.design.widget.NavigationView
         android:id="@+id/navView"

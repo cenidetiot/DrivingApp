@@ -25,6 +25,7 @@ import mx.edu.cenidet.drivingapp.activities.HomeActivity;
 import mx.edu.cenidet.drivingapp.event.EventsFuntions;
 import mx.edu.cenidet.drivingapp.fragments.HomeFragment;
 import www.fiware.org.ngsi.datamodel.entity.DeviceSensor;
+import www.fiware.org.ngsi.datamodel.entity.RoadSegment;
 import www.fiware.org.ngsi.datamodel.entity.Zone;
 import www.fiware.org.ngsi.utilities.ApplicationPreferences;
 import www.fiware.org.ngsi.utilities.Constants;
@@ -69,6 +70,7 @@ public class SendDataService {
     public interface SendDataMethods{
         void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr);
         void detectZone(Zone zone, boolean statusLocation);
+        void detectRoadSegment(double latitude, double longitude, RoadSegment roadSegment);
         void sendDataAccelerometer(double ax, double ay, double az);
         void sendEvent(String event);
     }
@@ -91,6 +93,12 @@ public class SendDataService {
                     }else {
                         //Log.i("STATUS: ","Carga los campus en el primer inicio de sesión");
                         listZone =  sqLiteDrivingApp.getAllZone();
+                    }
+                    RoadSegment roadSegment = (RoadSegment) intent.getExtras().get(Constants.ROAD_SEGMENT);
+                    if(roadSegment != null){
+                        sendDataMethods.detectRoadSegment(latitude, longitude, roadSegment);
+                    }else {
+                        sendDataMethods.detectRoadSegment(latitude, longitude, roadSegment);
                     }
                     break;
             }

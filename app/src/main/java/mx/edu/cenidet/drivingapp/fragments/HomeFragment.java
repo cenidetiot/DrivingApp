@@ -41,6 +41,7 @@ import mx.edu.cenidet.drivingapp.activities.HomeActivity;
 import mx.edu.cenidet.drivingapp.services.SendDataService;
 import www.fiware.org.ngsi.controller.AlertController;
 import www.fiware.org.ngsi.datamodel.entity.Alert;
+import www.fiware.org.ngsi.datamodel.entity.RoadSegment;
 import www.fiware.org.ngsi.datamodel.entity.Zone;
 import www.fiware.org.ngsi.httpmethodstransaction.Response;
 import www.fiware.org.ngsi.utilities.DevicePropertiesFunctions;
@@ -60,6 +61,7 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
     private Context context;
     private SendDataService sendDataService;
     private TextView tvDetailCampus;
+    private TextView tvRoadSegment;
     private ImageView imagenViewDetailCampus;
     //private FloatingActionButton btnFloating;
     private AlertController alertController;
@@ -82,6 +84,7 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
 
         tvDetailCampus = (TextView) rootView.findViewById(R.id.tvDetailCampus);
         imagenViewDetailCampus = (ImageView) rootView.findViewById(R.id.imagenViewDetailCampus);
+        tvRoadSegment = (TextView) rootView.findViewById(R.id.tvRoadSegment);
 
         //contactPhoto = (ImageView) rootView.findViewById(R.id.contactPhoto);
         /*if (contactPhoto != null)
@@ -117,6 +120,17 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
                 tvDetailCampus.setText(context.getString(R.string.message_any_campus));
             }
             //tvDetailCampus.setText("No te encuentras en ningun campus");
+        }
+    }
+
+    @Override
+    public void detectRoadSegment(double latitude, double longitude, RoadSegment roadSegment) {
+        if(tvRoadSegment != null){
+            if(roadSegment != null){
+                tvRoadSegment.setText("ID_RS: "+roadSegment.getIdRoadSegment()+"\nNAME: "+roadSegment.getName()+"\nMINIMUN: "+roadSegment.getMinimumAllowedSpeed()+"\nMAXIMUN: "+roadSegment.getMaximumAllowedSpeed());
+            }else{
+                tvRoadSegment.setText("No te encuentras en un Road_Segment...!");
+            }
         }
     }
 

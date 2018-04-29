@@ -479,7 +479,7 @@ public class SQLiteDrivingApp extends SQLiteOpenHelper {
     }
 
     public ArrayList<Road> getRoadByResponsible(String responsible) {
-        ArrayList<Road> list = new ArrayList<Road>();
+        ArrayList<Road> list = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         // Define a projection that specifies which columns from the database
         // you will actually use after this query.
@@ -615,7 +615,7 @@ public class SQLiteDrivingApp extends SQLiteOpenHelper {
         String selection = TBL_ROAD_SEGMENT_REFROAD + " = ?";
         String[] selectionArgs = {refRoad};
         Cursor cursor = db.query(
-                Tables.TBL_ROAD,                     // The table to query
+                Tables.TBL_ROAD_SEGMENT,                     // The table to query
                 projection,                               // The columns to return
                 selection,                                // The columns for the WHERE clause
                 selectionArgs,                            // The values for the WHERE clause
@@ -672,7 +672,7 @@ public class SQLiteDrivingApp extends SQLiteOpenHelper {
         String selection = TBL_ROAD_SEGMENT_REFROAD + " = ?";
         String[] selectionArgs = {refRoad};
         Cursor cursor = db.query(
-                Tables.TBL_ROAD,                     // The table to query
+                Tables.TBL_ROAD_SEGMENT,                     // The table to query
                 projection,                               // The columns to return
                 selection,                                // The columns for the WHERE clause
                 selectionArgs,                            // The values for the WHERE clause

@@ -73,6 +73,8 @@
     <!--messages Alerts-->
     <string name="message_alert_category_accident">accidente</string>
     <string name="message_alert_category_traffic">tráfico</string>
+    <string name="message_alert_description_maximum_speed">Vel. permitida</string>
+    <string name="message_alert_description_current_speed">Vel. del vehiculo </string>
 
     <!--Variables del slide-->
     <string name="message_title_accident_slide">Accidente Automovilistico</string>

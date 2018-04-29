@@ -39,6 +39,7 @@ public class EventsDetect {
         return flag;
     }
 
+
     public static String suddenStops(){
         return "";
     }
@@ -66,8 +67,43 @@ public class EventsDetect {
         return flag;
     }
 
+    /**
+     * @param maximumSpeed velocidad maxima del road segment
+     * @param speedFrom velocidad anterior.
+     * @param speedTo velocidad actual.
+     * @return la severidad del exceso de velocidad.
+     */
+    public static String speeding(double maximumSpeed, double speedFrom, double speedTo){
+        double averageSpeed;
+        double subtractSpeed;
+        //Si la velocidad anterior y actual es mayor a cero.
+        if(speedFrom > 4.5 && speedTo > 4.5){
+            averageSpeed = (speedFrom+speedTo)/2;
+            subtractSpeed = averageSpeed-maximumSpeed;
+            if(subtractSpeed < 1){
+                return "tolerance";
+            }else if (subtractSpeed<=5){
+                return "informational";
+            }else if (subtractSpeed<=8){
+                return "low";
+            }else if (subtractSpeed<=12){
+                return "medium";
+            }else if (subtractSpeed<=16){
+                return "high";
+            }else {
+                return "critical";
+            }
+        }
+        return "";
+    }
+
     public static void main(String ... arg){
-        System.out.println("Hola Mundo");
+
+        double maximumSpeed=20;
+        double speedFrom=31;
+        double speedTo=20;
+        System.out.println(speeding(maximumSpeed, speedFrom, speedTo));
+        /*System.out.println("Hola Mundo");
         LatLng latLng1 =new LatLng(0,2);
         LatLng latLng2 =new LatLng(0,1);
         LatLng start =new LatLng(0,0);
@@ -76,6 +112,6 @@ public class EventsDetect {
         double currentSpeed=20; //metros por segundos
 
        // System.out.println(oppositeDirectionDisplacement(latLng1,latLng2,end));
-        System.out.println(suddenStop(lastSpeed,currentSpeed,latLng1,latLng2));
+        System.out.println(suddenStop(lastSpeed,currentSpeed,latLng1,latLng2));*/
     }
 }
