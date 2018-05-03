@@ -3,6 +3,7 @@ package mx.edu.cenidet.drivingapp.adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 
 import mx.edu.cenidet.drivingapp.fragments.AlertsFragment;
 import mx.edu.cenidet.drivingapp.fragments.ZoneFragment;
@@ -16,13 +17,20 @@ import mx.edu.cenidet.drivingapp.fragments.SpeedFragment;
 
 public class PagerAdapter extends FragmentStatePagerAdapter {
     private int numberOfTsb;
+    private int position;
     public PagerAdapter(FragmentManager fm, int numberOfTsb) {
         super(fm);
         this.numberOfTsb = numberOfTsb;
     }
+    /*public PagerAdapter(FragmentManager fm,int numberOfTsb, int position){
+        super(fm);
+        this.numberOfTsb = numberOfTsb;
+        this.position = position;
+    }*/
 
     @Override
     public Fragment getItem(int position) {
+        Log.i("ADAPTER: ", "POSITION: -------------------"+(position));
         switch (position){
             case 0:
                 return new HomeFragment();
@@ -34,8 +42,6 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
                 return new AlertsFragment();
             case 4:
                 return new MyCampusFragment();
-            /*case 5:
-                return new MyLocationFragment();*/
             default:
                 return null;
         }

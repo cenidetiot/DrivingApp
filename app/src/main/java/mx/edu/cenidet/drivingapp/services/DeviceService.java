@@ -303,7 +303,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
             }
 
             //Envía el Modelo de datos Device
-            Log.i("COUNTSEND", "DEVICE..!"+countSendDevice);
+            Log.i("COUNTSEND", "DEVICE..!"+countSendDevice+ "speedTo: "+hashMapSpeedFromTo.get("speedTo"));
             if(countSendDevice == 0){
                 sendContext(latitude, longitude);
             }if (countSendDevice == 8){

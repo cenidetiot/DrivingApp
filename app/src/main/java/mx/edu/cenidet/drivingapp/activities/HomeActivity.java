@@ -61,6 +61,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     public static Context MAIN_CONTEXT = null;
+    private int numberTab;
     private FrameLayout frameLayout;
     private ApplicationPreferences appPreferences;
     private double latitude, longitude;
@@ -115,11 +116,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_map));//setText(R.string.menu_campus_map));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_my_alerts));//.setText(R.string.menu_alerts));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_my_campus));//setText(R.string.menu_my_campus));
+
         //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_my_location));//setText(R.string.menu_my_location));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-
         final ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
-        PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        numberTab = tabLayout.getTabCount();
+        PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), numberTab);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -127,20 +129,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
                 viewPager.setCurrentItem(position);
-                Log.i("Position: ", ""+position);
-                if(position == 0){
-                    changeDrawerMenu(position);
-                }else if(position == 1){
-                    changeDrawerMenu(position);
-                }else if(position == 2){
-                    changeDrawerMenu(position);
-                }else if(position == 3){
-                    changeDrawerMenu(position);
-                /*}else if(position == 4){
-                    changeDrawerMenu(position);*/
-                }else{
-                    changeDrawerMenu(position);
-                }
+                changeDrawerMenu(position);
+                Log.i("POSITION: ", "-------------------------------------"+position);
             }
 
             @Override
@@ -153,7 +143,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
-
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -185,11 +174,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         viewPager.setCurrentItem(4);
                         fratmentTransaction = true;
                         break;
-                    /*case R.id.menu_my_location:
-                        //fragment = new MyLocationFragment();
-                        viewPager.setCurrentItem(5);
-                        fratmentTransaction = true;
-                        break;*/
                     case R.id.menu_history:
                         drawerLayout.closeDrawers();
                         Intent intent = new Intent(getApplicationContext(), AlertHistoryActivity.class);
@@ -342,30 +326,52 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         alert.show();
     }
 
+    private void confirmAlert(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle(R.string.message_confirm_alert_title)
+                .setMessage(R.string.message_confirm_alert_subtitle)
+                .setIcon(R.drawable.ic_alert_critical)
+                .setNegativeButton(R.string.message_is_driving_user_no,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //acciones del boton No
+                            }
+                        })
+                .setPositiveButton(R.string.message_is_driving_user_yes,
+                        new DialogInterface.OnClickListener(){
+                            public void onClick(DialogInterface dialog, int id){
+                                if(latitude != 0 && longitude != 0) {
+                                    Alert alert = new Alert();
+                                    alert.setId(new DevicePropertiesFunctions().getAlertId(MAIN_CONTEXT));
+                                    alert.getAlertSource().setValue(new DevicePropertiesFunctions().getDeviceId(MAIN_CONTEXT));
+                                    alert.getCategory().setValue("UnknownAlert");
+                                    alert.getDateObserved().setValue(Functions.getActualDate());
+                                    alert.getDescription().setValue("Unknown alert");
+                                    alert.getLocation().setValue(latitude + ", " + longitude);
+                                    alert.getSeverity().setValue("critical");
+                                    alert.getSubCategory().setValue("Unknown");
+                                    alert.getValidFrom().setValue(Functions.getActualDate());
+                                    alert.getValidTo().setValue(Functions.getActualDate());
+                                    try {
+                                        alertController.createEntity(MAIN_CONTEXT, alert.getId(), alert);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        });
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btnFloatingUnknown:
                // startActivity(new Intent(HomeActivity.this, SendManualAlertsActivity.class));
                 //Toast.makeText(getApplicationContext(), "btnFloatingUnknown...!", Toast.LENGTH_LONG).show();
-                if(latitude != 0 && longitude != 0) {
-                    Alert alert = new Alert();
-                    alert.setId(new DevicePropertiesFunctions().getAlertId(MAIN_CONTEXT));
-                    alert.getAlertSource().setValue(new DevicePropertiesFunctions().getDeviceId(MAIN_CONTEXT));
-                    alert.getCategory().setValue("UnknownAlert");
-                    alert.getDateObserved().setValue(Functions.getActualDate());
-                    alert.getDescription().setValue("Unknown alert");
-                    alert.getLocation().setValue(latitude + ", " + longitude);
-                    alert.getSeverity().setValue("critical");
-                    alert.getSubCategory().setValue("Unknown");
-                    alert.getValidFrom().setValue(Functions.getActualDate());
-                    alert.getValidTo().setValue(Functions.getActualDate());
-                    try {
-                        alertController.createEntity(MAIN_CONTEXT, alert.getId(), alert);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+                confirmAlert();
                 break;
             case R.id.btnFloatingAccident:
                 Intent intentAccident = new Intent(HomeActivity.this, SendManualAlertsActivity.class);

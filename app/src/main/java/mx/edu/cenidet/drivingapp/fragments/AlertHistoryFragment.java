@@ -115,7 +115,7 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
         //callback.sendData("Code: "+response.getHttpCode()+" 2-------------------------------------");
         switch (response.getHttpCode()) {
             case 200:
-                Log.i("Test: ", "Body: " + response.getBodyString());
+                Log.i("Test: ", "Body----------: " + response.getBodyString());
                 Alert alert;
                 Log.i("Test: ", "Obtiene Datos...!: " + response.getBodyString());
                 JSONArray jsonArray = response.parseJsonArray(response.getBodyString());

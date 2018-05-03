@@ -83,6 +83,9 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
     public void currentAlertByZone(Response response) {
         Log.i("Test: ", "Code Alerts: "+response.getHttpCode());
         switch (response.getHttpCode()){
+            case 0:
+                Log.i("STATUS", "Internal Server Error 1...!");
+                break;
             case 200:
                 Log.i("Test: ", "Body: "+response.getBodyString());
                 Alert alert;
@@ -117,6 +120,9 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
                             }
                         }
                     }
+                break;
+            case 500:
+                Log.i("STATUS", "Internal Server Error 2...!");
                 break;
             case 503:
                 Log.i("STATUS", "Cuando la clave de la zona no es correcta...!");

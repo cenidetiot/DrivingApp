@@ -56,8 +56,6 @@
                 android:layout_centerInParent="true"
                 android:layout_toLeftOf="@+id/btnPhone"
                 android:layout_toStartOf="@+id/btnPhone"
-                android:enabled="false"
-                android:focusable="false"
                 android:hint="@string/phone"
                 android:inputType="phone" />
 

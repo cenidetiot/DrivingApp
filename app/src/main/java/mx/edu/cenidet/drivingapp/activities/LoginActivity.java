@@ -44,6 +44,7 @@ import java.util.Map;
 import mx.edu.cenidet.cenidetsdk.controllers.UserController;
 import mx.edu.cenidet.cenidetsdk.httpmethods.Response;
 import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
+import mx.edu.cenidet.cenidetsdk.utilities.FunctionSdk;
 import mx.edu.cenidet.drivingapp.R;
 import www.fiware.org.ngsi.utilities.ApplicationPreferences;
 import www.fiware.org.ngsi.utilities.Constants;
@@ -63,6 +64,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Context context;
     public static Context LOGIN_CONTEXT = null;
     private GoogleApiClient mGoogleApiClient;
+    private String phone;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +94,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if(!addPermission(permissionsList, Manifest.permission.ACCESS_FINE_LOCATION)){
                 String gps = this.getString(R.string.message_gps);
                 permissionsNeeded.add(gps);
+            }
+            if(!addPermission(permissionsList, Manifest.permission.READ_PHONE_STATE)){
+                String readPhone = this.getString(R.string.message_read_phone);
+                permissionsNeeded.add(readPhone);
             }
 
            /* if(!addPermission(permissionsList, Manifest.permission.WRITE_EXTERNAL_STORAGE))
@@ -129,7 +135,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void bindUI(){
         etPhone = (EditText) findViewById(R.id.etPhone);
+        etPhone.setEnabled(false);
         etLoginPassword = (EditText) findViewById(R.id.etLoginPassword);
+        //etLoginPassword.setFocusable(true);
         btnLogin = (Button) findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(this);
         btnSignUp = (Button) findViewById(R.id.btnSignUp);
@@ -154,12 +162,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RESOLVE_HINT) {
-            if (resultCode == RESULT_OK) {
-                Bundle extras = data.getExtras();
-                Credential credential = data.getParcelableExtra(Credential.EXTRA_KEY);
-                etPhone.setText(credential.getId()); //Will need to process phone number string
-                //credential.getProfilePictureUri()
+        Log.i("HOLAAA: ", "CODE: "+resultCode);
+        if(resultCode == 1002){
+            String phone1;
+            if(!TextUtils.isEmpty(appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_PHONE))){
+                phone1 = appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_PHONE);
+                etPhone.setText(phone1);
+                Log.i("HOLAAA: ", "no vacio...");
+            }else{
+                etPhone.setText(FunctionSdk.getPhoneNumber(getApplicationContext()));
+                etPhone.setEnabled(true);
+                etPhone.requestFocus(View.FOCUS_LEFT);
+            }
+        }else {
+            if (requestCode == RESOLVE_HINT) {
+                if (resultCode == RESULT_OK) {
+                    Bundle extras = data.getExtras();
+                    Credential credential = data.getParcelableExtra(Credential.EXTRA_KEY);
+                    etPhone.setText(credential.getId()); //Will need to process phone number string
+                    //credential.getProfilePictureUri()
+                }
             }
         }
     }
@@ -199,7 +221,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.btnLogin:
-                String phone = etPhone.getText().toString();
+                phone = etPhone.getText().toString();
                 String password = etLoginPassword.getText().toString();
                 String subPhone = phone.substring(1, phone.length());
                 Log.i("SubPhone", subPhone);
@@ -216,7 +238,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
         }
     }
-
 
 
     @Override
@@ -266,35 +287,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         switch (response.getHttpCode()){
             case 200:
             case 201:
-                //Toast.makeText(getApplicationContext(), "CODE:"+response.getHttpCode(), Toast.LENGTH_SHORT).show();
-                /*if((response.getBodyString().equals("") || response.getBodyString() == null)){
-                    Toast.makeText(getApplicationContext(), R.string.message_login_not_found, Toast.LENGTH_SHORT).show();
-                }else{
-                    JSONObject jsonObject = response.parseJsonObject(response.getBodyString());
-
-                    try {
-                        token = jsonObject.getString("token");
-                        email = etLoginEmail.getText().toString();
-                        Log.i("Status:", "token: "+token+" email: "+email);
-                        userController.readUser(email);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }*/
-                /*if((response.getBodyString().equals("") || response.getBodyString() == null) || (response.getxSubjectToken().equals("") || response.getxSubjectToken() == null)){
-                    Toast.makeText(getApplicationContext(), R.string.message_login_not_found, Toast.LENGTH_SHORT).show();
-                }else{
-                    token = response.getxSubjectToken();
-                    email = etLoginEmail.getText().toString();
-                    userController.readUser(email);
-                }*/
-               // Log.i("STATUS: ", "Code: "+response.getHttpCode());
-                //Log.i("STATUS: ", "Body: "+response.getBodyString());
                 if(response.getBodyString().equals("") || response.getBodyString() == null){
                     Toast.makeText(getApplicationContext(), R.string.message_login_not_found, Toast.LENGTH_SHORT).show();
                 }else{
                     JSONObject jsonObject = response.parseJsonObject(response.getBodyString());
-                    Log.i("Status:", "JSON: "+jsonObject);
+                    Log.i("Status:", "JSON-------------------------------:\n"+jsonObject);
                     try {
                         token = jsonObject.getString("token");
                         email = jsonObject.getJSONObject("user").getString("email");
@@ -307,6 +304,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         appPreferences.saveOnPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_ID, ""+id);
                         appPreferences.saveOnPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_NAME, userName);
                         appPreferences.saveOnPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_EMAIL, email);
+                        appPreferences.saveOnPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_PHONE, phone);
                         goToHome();
 
                     } catch (JSONException e) {
@@ -382,13 +380,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Map<String, Integer> perms = new HashMap<String, Integer>();
                 // Initial
                 perms.put(Manifest.permission.ACCESS_FINE_LOCATION, PackageManager.PERMISSION_GRANTED);
-                //perms.put(Manifest.permission.WRITE_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
+                perms.put(Manifest.permission.READ_PHONE_STATE, PackageManager.PERMISSION_GRANTED);
                 //perms.put(Manifest.permission.READ_PHONE_STATE, PackageManager.PERMISSION_GRANTED);
                 // Fill with results
                 for (int i = 0; i < permissions.length; i++)
                     perms.put(permissions[i], grantResults[i]);
                 // Check for ACCESS_FINE_LOCATION
-                if (perms.get(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                if (perms.get(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                        && perms.get(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
                     // All Permissions Granted
                 } else {
                     // Permission Denied

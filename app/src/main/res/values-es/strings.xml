@@ -32,7 +32,7 @@
     <!--Messages-->
     <string name="message_valid_email">El email no es válido. Inténtalo de nuevo.</string>
     <string name="message_valid_password">La contraseña no es valida, intente de nuevo.</string>
-    <string name="message_user_not_found">Email o contraseña incorrectas, intentelo de nuevo.</string>
+    <string name="message_user_not_found">Datos incorrectos, intentelo de nuevo.</string>
     <string name="message_login_not_found">Error al iniciar sesión.</string>
     <string name="message_undetected_zone">No te encuentras en ninguna zona....!</string>
     <string name="message_no_alerts_show">Esta zona no tiene alertas para mostrar...!</string>
@@ -51,6 +51,8 @@
     <string name="message_is_driving_user_title">¿Se encuentra dentro de un automóvil?</string>
     <string name="message_is_driving_user_yes">Si</string>
     <string name="message_is_driving_user_no">No</string>
+    <string name="message_confirm_alert_title">Confirmar envío de alerta</string>
+    <string name="message_confirm_alert_subtitle">¿Desea enviar la alerta?</string>
 
     <!--Message Permission -->
     <string name="message_title_showMessageOKCancel">Permisos requeridos</string>
@@ -59,11 +61,15 @@
     <string name="message_permission_denied">Algunos permisos son denegados</string>
     <string name="message_need_rationale">Debes otorgar acceso a</string>
     <string name="message_gps">GPS</string>
+    <string name="message_read_phone">Leer teléfono</string>
 
     <!--Message HomeFragment-->
     <string name="message_name_campus">Nombre del Campus</string>
     <string name="message_address_campus">Dirección</string>
     <string name="message_any_campus">No te encuentras en ningún campus..!</string>
+    <string name="message_not_road_segment">No estás en un segmento de carretera...!</string>
+    <string name="message_maximum">Máximo</string>
+    <string name="message_minimum">Mínimo</string>
 
     <!--FloatingActionButton-->
     <string name="message_floating_unknown">Emergencia desconocida</string>

@@ -16,13 +16,18 @@ import android.widget.Toast;
 import mx.edu.cenidet.cenidetsdk.controllers.UserController;
 import mx.edu.cenidet.cenidetsdk.entities.User;
 import mx.edu.cenidet.cenidetsdk.httpmethods.Response;
+import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
+import mx.edu.cenidet.cenidetsdk.utilities.FunctionSdk;
 import mx.edu.cenidet.drivingapp.R;
 import www.fiware.org.ngsi.datamodel.entity.Alert;
+import www.fiware.org.ngsi.utilities.ApplicationPreferences;
 
 import com.google.android.gms.auth.api.credentials.Credential;
+import com.google.android.gms.auth.api.credentials.CredentialPickerConfig;
 import com.google.android.gms.auth.api.credentials.Credentials;
 import com.google.android.gms.auth.api.credentials.CredentialsClient;
 import com.google.android.gms.auth.api.credentials.HintRequest;
+import com.google.android.gms.auth.api.credentials.IdentityProviders;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.auth.api.Auth;
@@ -32,22 +37,33 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
     private GoogleApiClient mGoogleApiClient;
     private EditText etFirstName, etLastName, etPhone, etEmail, etPassword, etConfirmPassword;
     private  UserController userController;
+    private ApplicationPreferences appPreferences;
+    private String phone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
+        appPreferences = new ApplicationPreferences();
+        bindEditText();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
                 .addApi(Auth.CREDENTIALS_API)
                 .build();
         userController = new UserController(getApplicationContext(), this);
+        Log.i("onCreate", "--------------------------------------------------");
     }
 
     @Override
     protected void onResume() {
-        bindEditText();
         super.onResume();
+        Log.i("onResume", "--------------------------------------------------");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i("onPause", "--------------------------------------------------");
     }
 
     private boolean createAccount(User user, String confirmPassword){
@@ -90,7 +106,8 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
     private void bindEditText() {
         etFirstName = (EditText) findViewById(R.id.etFirstName);
         etLastName = (EditText) findViewById(R.id.etLastName);
-        etPhone = (EditText) findViewById(R.id.etPhone);
+        etPhone = (EditText) findViewById(R.id.etPhoneCreate);
+        etPhone.setEnabled(false);
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPassword = (EditText) findViewById(R.id.etPassword);
         etConfirmPassword = (EditText) findViewById(R.id.etConfirmPassword);
@@ -98,7 +115,6 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
 
     // Construct a request for phone numbers and show the picker
     private void requestHint() {
-        //CredentialsClient mCredentialsClient = Credentials.getClient(this);
         HintRequest hintRequest = new HintRequest.Builder()
                 .setPhoneNumberIdentifierSupported(true)
                 .build();
@@ -114,11 +130,18 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RESOLVE_HINT) {
-            if (resultCode == RESULT_OK) {
-                Bundle extras = data.getExtras();
-                Credential credential = data.getParcelableExtra(Credential.EXTRA_KEY);
-                etPhone.setText(credential.getId()); //Will need to process phone number string
+        Log.i("RESULT: ", "------------------------------Result Code: "+resultCode+" Request Code: "+requestCode);
+        if(resultCode == 1002){
+            etPhone.setText(FunctionSdk.getPhoneNumber(getApplicationContext()));
+            etPhone.setEnabled(true);
+            etPhone.requestFocus(View.FOCUS_LEFT);
+        }else {
+            if (requestCode == RESOLVE_HINT) {
+                if (resultCode == RESULT_OK) {
+                    Bundle extras = data.getExtras();
+                    Credential credential = data.getParcelableExtra(Credential.EXTRA_KEY);
+                    etPhone.setText(credential.getId()); //Will need to process phone number string
+                }
             }
         }
     }
@@ -129,11 +152,11 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
                 //CODIGO PARA CREAR CUENTA
                 //CODIGO PARA CREAR CUENTA
                 //CODIGO PARA CREAR CUENTA
-                Log.i("STATUS: ", "MENSAJE -----------: "+TextUtils.isEmpty(etFirstName.getText().toString()));
                 User user = new User();
                 user.setFirstName(etFirstName.getText().toString());
                 user.setLastName(etLastName.getText().toString());
-                user.setPhoneNumber(etPhone.getText().toString());
+                phone = etPhone.getText().toString();
+                user.setPhoneNumber(phone);
                 user.setEmail(etEmail.getText().toString());
                 user.setPassword(etPassword.getText().toString());
                 String confirmPassword = etConfirmPassword.getText().toString();
@@ -156,8 +179,9 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
 
     @Override
     public void createUser(Response response) {
-        Log.i("CODE: ", "CREATE USER:------------------------------------: "+response.getHttpCode());
+        Log.i("CODE: ", "CREATE USER:------------------------------------: "+response.getHttpCode()+" PHONE: "+phone);
         if(response.getHttpCode() == 201){
+            appPreferences.saveOnPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_PHONE, phone);
             Toast.makeText(getApplicationContext(), R.string.message_account_generated, Toast.LENGTH_LONG).show();
         }else if(response.getHttpCode() == 409){
             Toast.makeText(getApplicationContext(), R.string.message_user_exists, Toast.LENGTH_LONG).show();

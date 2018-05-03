@@ -127,9 +127,10 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
     public void detectRoadSegment(double latitude, double longitude, RoadSegment roadSegment) {
         if(tvRoadSegment != null){
             if(roadSegment != null){
-                tvRoadSegment.setText("ID_RS: "+roadSegment.getIdRoadSegment()+"\nNAME: "+roadSegment.getName()+"\nMINIMUN: "+roadSegment.getMinimumAllowedSpeed()+"\nMAXIMUN: "+roadSegment.getMaximumAllowedSpeed());
+                tvRoadSegment.setText("ID: "+roadSegment.getIdRoadSegment()+"\n"+context.getString(R.string.name)+": "+roadSegment.getName()+"\n"+context.getString(R.string.message_minimum)+": "+roadSegment.getMinimumAllowedSpeed()+"km/h\n"+context.getString(R.string.message_maximum)+": "+roadSegment.getMaximumAllowedSpeed()+"km/h");
+                //tvRoadSegment.setText("ID: "+roadSegment.getIdRoadSegment()+"\nName: "+roadSegment.getName()+"\nMinimum: "+roadSegment.getMinimumAllowedSpeed()+"km/h\nMaximum: "+roadSegment.getMaximumAllowedSpeed()+"km/h");
             }else{
-                tvRoadSegment.setText("No te encuentras en un Road_Segment...!");
+                tvRoadSegment.setText(context.getString(R.string.message_not_road_segment));
             }
         }
     }

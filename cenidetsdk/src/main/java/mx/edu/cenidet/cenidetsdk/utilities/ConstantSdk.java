@@ -14,6 +14,7 @@ public class ConstantSdk {
     public static final String PREFERENCE_KEY_USER_NAME = "user";
     public static final String PREFERENCE_KEY_USER_EMAIL = "email";
     public static final String PREFERENCE_KEY_FCMTOKEN = "fcmToken";
+    public static final String PREFERENCE_KEY_PHONE = "phone";
 
     //CONSTANTES PARA LOS Intent DE LOS SERVICIOS DE LOS SENSORES
     public static final String SERVICE_CHANGE_LOCATION_DEVICE = "service_change_location_device";

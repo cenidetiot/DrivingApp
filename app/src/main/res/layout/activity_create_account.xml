@@ -48,15 +48,13 @@
             android:layout_marginBottom="8dp">
 
             <EditText
-                android:id="@+id/etPhone"
+                android:id="@+id/etPhoneCreate"
                 style="@style/EditTextStyleOne"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_toLeftOf="@+id/btnPhone"
                 android:layout_toStartOf="@+id/btnPhone"
-                android:enabled="false"
-                android:focusable="false"
                 android:hint="@string/phone"
                 android:inputType="phone" />
 

@@ -30,7 +30,7 @@
     <!--Messages-->
     <string name="message_valid_email">Email is not valid, please try again.</string>
     <string name="message_valid_password">Password is not valid, please try again.</string>
-    <string name="message_user_not_found">Incorrect email or password, try again.</string>
+    <string name="message_user_not_found">Incorrect data, try again.</string>
     <string name="message_login_not_found">Failed to login.</string>
     <string name="message_undetected_zone">You are not in any zone...!</string>
     <string name="message_no_alerts_show">This area has no alerts to show...!</string>
@@ -49,6 +49,8 @@
     <string name="message_is_driving_user_title">Are you inside a car?</string>
     <string name="message_is_driving_user_yes">Yes</string>
     <string name="message_is_driving_user_no">No</string>
+    <string name="message_confirm_alert_title">Confirm alert sending</string>
+    <string name="message_confirm_alert_subtitle">Do you want to send the alert?</string>
 
     <!--Message Permission -->
     <string name="message_title_showMessageOKCancel">Required Permissions</string>
@@ -57,11 +59,15 @@
     <string name="message_permission_denied">Some Permission is Denied</string>
     <string name="message_need_rationale">You need to grant access to</string>
     <string name="message_gps">GPS</string>
+    <string name="message_read_phone">READ PHONE</string>
 
     <!--Message HomeFragment-->
     <string name="message_name_campus">Name Campus</string>
     <string name="message_address_campus">Address</string>
     <string name="message_any_campus">You are not in any campus..!</string>
+    <string name="message_not_road_segment">You are not in a road segment...!</string>
+    <string name="message_maximum">Maximum</string>
+    <string name="message_minimum">Minimum</string>
 
     <!--FloatingActionButton-->
     <string name="message_floating_unknown">Unknown emergency</string>
