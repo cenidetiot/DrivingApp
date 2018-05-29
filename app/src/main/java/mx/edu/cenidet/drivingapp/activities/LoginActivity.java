@@ -162,13 +162,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.i("HOLAAA: ", "CODE: "+resultCode);
         if(resultCode == 1002){
             String phone1;
             if(!TextUtils.isEmpty(appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_PHONE))){
                 phone1 = appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_PHONE);
                 etPhone.setText(phone1);
-                Log.i("HOLAAA: ", "no vacio...");
             }else{
                 etPhone.setText(FunctionSdk.getPhoneNumber(getApplicationContext()));
                 etPhone.setEnabled(true);
@@ -191,6 +189,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Toast.makeText(getApplicationContext(), R.string.message_valid_email, Toast.LENGTH_SHORT).show();
             return false;
         }else */
+       
         if(!isValidPassword(password)){
             Toast.makeText(getApplicationContext(), R.string.message_valid_password, Toast.LENGTH_SHORT).show();
             return false;
@@ -224,7 +223,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 phone = etPhone.getText().toString();
                 String password = etLoginPassword.getText().toString();
                 String subPhone = phone.substring(1, phone.length());
-                Log.i("SubPhone", subPhone);
                 if(login(subPhone, password)){
                     userController.logInUser(subPhone, password);
                 }

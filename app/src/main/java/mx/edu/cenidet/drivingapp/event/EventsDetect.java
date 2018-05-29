@@ -19,20 +19,24 @@ public class EventsDetect {
     private static double brakingTolerance=0; //% de tolerancia que se aplicara a la distancia de frenado
 
     public static String oppositeDirectionDisplacement(LatLng lastPoint, LatLng currentPoint, LatLng startPoint, LatLng endPoint){
-        String flag="undefined";
-        double distanceTotal=SphericalUtil.computeDistanceBetween(startPoint, endPoint);
+        String flag = "undefined";
+        double distanceTotal = SphericalUtil.computeDistanceBetween(startPoint, endPoint);
 
-        double distance1Endpoint=SphericalUtil.computeDistanceBetween(lastPoint,endPoint);
-        double distance2Endpoint=SphericalUtil.computeDistanceBetween(currentPoint,endPoint);
-        double distance2StartPoint=SphericalUtil.computeDistanceBetween(currentPoint,startPoint);
-        double distance1StartPoint=SphericalUtil.computeDistanceBetween(lastPoint,startPoint);
-        if(PolyUtil.distanceToLine(currentPoint,startPoint,endPoint)<5) {
-            if ( distanceTotal + 3 >= distance2StartPoint + distance2Endpoint){
+        double distance1Endpoint = SphericalUtil.computeDistanceBetween(lastPoint,endPoint);
+        double distance2Endpoint = SphericalUtil.computeDistanceBetween(currentPoint,endPoint);
+        double distance2StartPoint = SphericalUtil.computeDistanceBetween(currentPoint,startPoint);
+        double distance1StartPoint = SphericalUtil.computeDistanceBetween(lastPoint,startPoint);
+
+        if( PolyUtil.distanceToLine(currentPoint,startPoint,endPoint) < 5) {
+
+            if (distanceTotal + 3 >= distance2StartPoint + distance2Endpoint){
+
                 if(distance2Endpoint > distance1Endpoint){
-                    flag="wrongWay";
+                    flag = "wrongWay";
                 }else if(distance2Endpoint < distance1Endpoint){
-                    flag="correctWay";
+                    flag = "correctWay";
                 }
+                
             }
 
         }
