@@ -386,9 +386,12 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
     public void speeding(double maximumSpeed, double speedFrom, double speedTo, double latitude, double longitude){
         String severitySpeeding = EventsDetect.speeding(maximumSpeed, speedFrom, speedTo);
+
         String description = this.getString(R.string.message_alert_description_maximum_speed)+" "+maximumSpeed+"km/h. "+this.getString(R.string.message_alert_description_current_speed)+" "+speedTo+"km/h.";
         String severity = "";
+
         String subCategory = "UnauthorizedSpeeDetection";
+
         switch (severitySpeeding){
             case "tolerance":
                 break;
@@ -495,8 +498,8 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     }
 
     private DeviceUpdateModel updateDevice(Double latitude, Double longitude){
+        
         String actualDate = Functions.getActualDate();
-
         DeviceUpdateModel deviceUpdateModel = new DeviceUpdateModel();
         deviceUpdateModel.getCategory().setValue("smartphone");
         deviceUpdateModel.getOsVersion().setValue(deviceProperties.getOSVersion());
@@ -507,6 +510,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         deviceUpdateModel.getSerialNumber().setValue(deviceProperties.getSerialNumber());
         deviceUpdateModel.getOwner().setValue(owner);
         deviceUpdateModel.getLocation().setValue(latitude + ", " + longitude);
+
         return  deviceUpdateModel;
     }
 
@@ -514,24 +518,27 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     public void onCreateEntity(Response response) {
         //Toast.makeText(this, "Code Device: " + response.getHttpCode(), Toast.LENGTH_SHORT).show();
         if(response.getHttpCode() == 201){
-            //Toast.makeText(this, "Entity Device created successfully", Toast.LENGTH_SHORT).show();
+
             Intent localIntent = new Intent(Constants.SERVICE_RUNNING_DEVICE).putExtra(Constants.SERVICE_RESULT_DEVICE, "Entity Device created successfully...!");
             LocalBroadcastManager.getInstance(DeviceService.this).sendBroadcast(localIntent);
             sqLiteController.updateStatusActiveByKeywordTempCreate(device.getId());
             Log.i("CONTEXT 201: ", "Entity Device created successfully...!");
             Log.i("ID device: ", device.getId());
+
         }else if(response.getHttpCode() == 422){
-            //Toast.makeText(this, "The Device already exists....!", Toast.LENGTH_SHORT).show();
+
             Intent localIntent = new Intent(Constants.SERVICE_RUNNING_DEVICE).putExtra(Constants.SERVICE_RESULT_DEVICE, "The Device already exists....!");
             LocalBroadcastManager.getInstance(DeviceService.this).sendBroadcast(localIntent);
             sqLiteController.updateStatusActiveByKeywordTempCreate(device.getId());
             Log.i("CONTEXT 422: ", "The Device already exists....!");
             Log.i("ID device: ", device.getId());
+
         }else{
-            //Toast.makeText(this, "Error sending data...!", Toast.LENGTH_SHORT).show();
+
             Intent localIntent = new Intent(Constants.SERVICE_RUNNING_DEVICE).putExtra(Constants.SERVICE_RESULT_DEVICE, "Error sending data...!");
             LocalBroadcastManager.getInstance(DeviceService.this).sendBroadcast(localIntent);
             Log.i("ERROR CREATE: ", "Error sending data...!");
+
         }
     }
 
@@ -542,16 +549,19 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
     @Override
     public void onUpdateEntity(Response response) {
+
         if(response.getHttpCode()==204 || response.getHttpCode()==200){
             //Toast.makeText(this, "Successful Device Update...!", Toast.LENGTH_SHORT).show();
             Intent localIntent = new Intent(Constants.SERVICE_RUNNING_DEVICE).putExtra(Constants.SERVICE_RESULT_DEVICE, "Successful Device Update...!");
             LocalBroadcastManager.getInstance(DeviceService.this).sendBroadcast(localIntent);
             Log.i("UPDATE: ", "Successful Device Update...!");
+
         } else{
             //Toast.makeText(this, "Error updating...!"+response.getHttpCode(), Toast.LENGTH_SHORT).show();
             Intent localIntent = new Intent(Constants.SERVICE_RUNNING_DEVICE).putExtra(Constants.SERVICE_RESULT_DEVICE, "Error updating...!");
             LocalBroadcastManager.getInstance(DeviceService.this).sendBroadcast(localIntent);
             Log.i("ERROR UPDATE: ", "Error updating...!");
+
         }
     }
 

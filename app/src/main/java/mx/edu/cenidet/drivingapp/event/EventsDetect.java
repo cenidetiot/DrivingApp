@@ -19,13 +19,15 @@ public class EventsDetect {
     private static double brakingTolerance=0; //% de tolerancia que se aplicara a la distancia de frenado
 
     public static String oppositeDirectionDisplacement(LatLng lastPoint, LatLng currentPoint, LatLng startPoint, LatLng endPoint){
+        
         String flag = "undefined";
+        
         double distanceTotal = SphericalUtil.computeDistanceBetween(startPoint, endPoint);
-
-        double distance1Endpoint = SphericalUtil.computeDistanceBetween(lastPoint,endPoint);
-        double distance2Endpoint = SphericalUtil.computeDistanceBetween(currentPoint,endPoint);
-        double distance2StartPoint = SphericalUtil.computeDistanceBetween(currentPoint,startPoint);
-        double distance1StartPoint = SphericalUtil.computeDistanceBetween(lastPoint,startPoint);
+        
+        double distance1Endpoint = SphericalUtil.computeDistanceBetween(lastPoint, endPoint);
+        double distance2Endpoint = SphericalUtil.computeDistanceBetween(currentPoint, endPoint);
+        double distance2StartPoint = SphericalUtil.computeDistanceBetween(currentPoint, startPoint);
+        double distance1StartPoint = SphericalUtil.computeDistanceBetween(lastPoint, startPoint);
 
         if( PolyUtil.distanceToLine(currentPoint, startPoint, endPoint) < 5) {
 
@@ -50,14 +52,14 @@ public class EventsDetect {
 
     public static boolean suddenStop(double lastSpeed, double currentSpeed, LatLng lastPoint,LatLng currrentPoint){
         boolean flag=false;
-        double distanceTraveled= SphericalUtil.computeDistanceBetween(lastPoint,currrentPoint);
-        double reactionDistance = lastSpeed*reactionTime; //La distancia de reacción es igual a la velocidad de dezplazamiento por el tiempo de reaccion del conductor
-        double perceptionDistance = lastSpeed*perceptionTime;
-        double brakedDistance=(Math.pow(lastSpeed,2)*segmentInclination)/(2*frictionCoefficient*gravity);
-        double distanceTolerance=(reactionDistance+brakedDistance)*brakingTolerance;
-        double minimumDistanceAcceptable=reactionDistance+perceptionDistance+brakedDistance-distanceTolerance;
+        double distanceTraveled= SphericalUtil.computeDistanceBetween(lastPoint, currrentPoint);
+        double reactionDistance = lastSpeed * reactionTime; //La distancia de reacción es igual a la velocidad de dezplazamiento por el tiempo de reaccion del conductor
+        double perceptionDistance = lastSpeed * perceptionTime;
+        double brakedDistance=( Math.pow(lastSpeed, 2) * segmentInclination) / (2 * frictionCoefficient * gravity);
+        double distanceTolerance=( reactionDistance + brakedDistance) * brakingTolerance;
+        double minimumDistanceAcceptable=reactionDistance + perceptionDistance + brakedDistance - distanceTolerance;
 
-        if(distanceTraveled<minimumDistanceAcceptable) flag=true;
+        if(distanceTraveled < minimumDistanceAcceptable) flag=true;
 
         System.out.println("Distancia Recorrida:  " +distanceTraveled);
         System.out.println("Distancia de percepción: "+perceptionDistance);
