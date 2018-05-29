@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/backgroundDefault"
     android:orientation="vertical"
-    tools:context="mx.edu.cenidet.drivingapp.activities.SendManualAlertsActivity">
+    tools:context="mx.edu.cenidet.app.activities.SendManualAlertsActivity">
 
 
     <!--include

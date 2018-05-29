@@ -8,12 +8,51 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:564465875993:android:1b2dd07800780537",
+        "android_client_info": {
+          "package_name": "mx.edu.cenidet.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "564465875993-cijdts6o4qo2n8ls6q4ecrc7k0vcomht.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "564465875993-cijdts6o4qo2n8ls6q4ecrc7k0vcomht.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhG_ofvnyIiqI5LsnDwqD1T7yjxIgHxDo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:564465875993:android:8690fc1fad4d7a14",
         "android_client_info": {
           "package_name": "mx.edu.cenidet.drivingapp"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "564465875993-cijdts6o4qo2n8ls6q4ecrc7k0vcomht.apps.googleusercontent.com",
+          "client_type": 3
+        },
         {
           "client_id": "564465875993-cijdts6o4qo2n8ls6q4ecrc7k0vcomht.apps.googleusercontent.com",
           "client_type": 3

@@ -4,13 +4,6 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-    <!-- Screens background color-->
-    <!--color name="bg_screen1">#0B3861</color>
-    <color name="bg_screen2">#0B3861</color>
-    <color name="bg_screen3">#f1c40f</color>
-    <color name="bg_screen4">#0B3861</color>
-    <color name="bg_screen5">#0B3861</color-->
-
     <color name="bg_screen1">#3498db</color>
     <color name="bg_screen2">#2c3e50</color>
     <color name="bg_screen3">#f1c40f</color>

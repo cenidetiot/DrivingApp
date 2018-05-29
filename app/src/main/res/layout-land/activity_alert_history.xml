@@ -4,13 +4,13 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="mx.edu.cenidet.drivingapp.activities.AlertHistoryActivity">
+    tools:context="mx.edu.cenidet.app.activities.AlertHistoryActivity">
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar"/>
     <fragment
         android:id="@+id/mapHistoryFragment"
-        android:name="mx.edu.cenidet.drivingapp.fragments.MapHistoryFragment"
+        android:name="mx.edu.cenidet.app.fragments.MapHistoryFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/detailsFragment"
-        android:name="mx.edu.cenidet.drivingapp.fragments.AlertHistoryFragment"
+        android:name="mx.edu.cenidet.app.fragments.AlertHistoryFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
