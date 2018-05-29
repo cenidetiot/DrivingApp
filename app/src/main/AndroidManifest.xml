@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="mx.edu.cenidet.drivingapp">
+    package="mx.edu.cenidet.app">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -16,47 +16,47 @@
     -->
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_drive"
+        android:icon="@mipmap/ic_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_drive_round"
+        android:roundIcon="@mipmap/ic_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.LoginActivity">
+        <activity android:name="mx.edu.cenidet.app.activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.HomeActivity" />
+        <activity android:name="mx.edu.cenidet.app.activities.HomeActivity" />
         <activity
-            android:name=".activities.SplashActivity"
+            android:name="mx.edu.cenidet.app.activities.SplashActivity"
             android:theme="@style/SplashScreen" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <service android:name=".services.DeviceService" />
+        <service android:name="mx.edu.cenidet.app.services.DeviceService" />
 
-        <activity android:name=".activities.MapDetailActivity" />
+        <activity android:name="mx.edu.cenidet.app.activities.MapDetailActivity" />
 
-        <service android:name=".services.DrivingFirebaseMessagingService">
+        <service android:name="mx.edu.cenidet.app.services.DrivingFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".services.MyFirebaseInstanceIDService">
+        <service android:name="mx.edu.cenidet.app.services.MyFirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
-        <activity android:name=".activities.AlertMapDetailActivity" />
-        <activity android:name=".activities.AlertHistoryActivity" />
-        <activity android:name=".activities.SendManualAlertsActivity" />
-        <activity android:name=".activities.CreateAccountActivity" />
-        <activity android:name=".activities.MyProfileActivity"></activity>
+        <activity android:name="mx.edu.cenidet.app.activities.AlertMapDetailActivity" />
+        <activity android:name="mx.edu.cenidet.app.activities.AlertHistoryActivity" />
+        <activity android:name="mx.edu.cenidet.app.activities.SendManualAlertsActivity" />
+        <activity android:name="mx.edu.cenidet.app.activities.CreateAccountActivity" />
+        <activity android:name="mx.edu.cenidet.app.activities.MyProfileActivity"></activity>
     </application>
 
 </manifest>

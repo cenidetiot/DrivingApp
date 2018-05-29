@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgroundDefault"
-    tools:context="mx.edu.cenidet.drivingapp.activities.CreateAccountActivity">
+    tools:context="mx.edu.cenidet.app.activities.CreateAccountActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
