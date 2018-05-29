@@ -27,7 +27,7 @@ public class EventsDetect {
         double distance2StartPoint = SphericalUtil.computeDistanceBetween(currentPoint,startPoint);
         double distance1StartPoint = SphericalUtil.computeDistanceBetween(lastPoint,startPoint);
 
-        if( PolyUtil.distanceToLine(currentPoint,startPoint,endPoint) < 5) {
+        if( PolyUtil.distanceToLine(currentPoint, startPoint, endPoint) < 5) {
 
             if (distanceTotal + 3 >= distance2StartPoint + distance2Endpoint){
 
@@ -36,7 +36,7 @@ public class EventsDetect {
                 }else if(distance2Endpoint < distance1Endpoint){
                     flag = "correctWay";
                 }
-                
+
             }
 
         }
