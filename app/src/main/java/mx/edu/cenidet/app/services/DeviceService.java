@@ -374,7 +374,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     }
 
     public void speeding(double maximumSpeed, double speedFrom, double speedTo, double latitude, double longitude){
-        String severitySpeeding = EventsDetect.speeding(maximumSpeed, speedFrom, speedTo);
+        String severitySpeeding =  EventsDetect.speeding(maximumSpeed, speedFrom, speedTo);
 
         String description = this.getString(R.string.message_alert_description_maximum_speed)+" "+maximumSpeed+"km/h. "+this.getString(R.string.message_alert_description_current_speed)+" "+speedTo+"km/h.";
         String severity = "";

@@ -2,23 +2,37 @@ package mx.edu.cenidet.app.event;
 
 import com.google.maps.android.PolyUtil;
 import com.google.maps.android.SphericalUtil;
+
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+import java.text.SimpleDateFormat;
+import android.util.Log;
 /**
  * Created by Alberne on 04/04/2018.
  */
 
 public class EventsDetect {
 
-    private static double perceptionTime=0.0; //valor en segundos del tiempo que se tarda en reaccionar el actor despues de percibir el evento
+    //private static double perceptionTime=0.0; //valor en segundos del tiempo que se tarda en reaccionar el actor despues de percibir el evento
     private static double reactionTime=1; //valor en segundos del tiempo que se tarda en reaccionar el actor despues de percibir el evento
     private static double gravity=9.81; // valor en m/s
-    private static double frictionCoefficient=0.8; //coeficiente de friccion entre los neumaticos y el piso
-    private static double segmentInclination=1; // pendiente que tiene la calle
-    private static double brakingTolerance=0; //% de tolerancia que se aplicara a la distancia de frenado
+    private static double frictionCoefficient=0.95; //coeficiente de friccion entre los neumaticos y el piso
+    //private static double segmentInclination=1; // pendiente que tiene la calle
+    //private static double brakingTolerance=0; //% de tolerancia que se aplicara a la distancia de frenado
+
+    private static double initialVelocity = 0;
+    private static double finalVelocity = 0;
+    private static Date initialDate = new Date();
+    private static Date finalDate = new Date();
+    private static boolean isStoping = false;
+    
+    private static double speedReached = 0;
+    private static Date dateSpeedReached = new Date();
 
     public static String oppositeDirectionDisplacement(LatLng lastPoint, LatLng currentPoint, LatLng startPoint, LatLng endPoint){
-        
+    
         String flag = "undefined";
         
         double distanceTotal = SphericalUtil.computeDistanceBetween(startPoint, endPoint);
@@ -45,20 +59,56 @@ public class EventsDetect {
     }
 
 
-    public static String suddenStops(){
-        return "";
-    }
+    public static boolean suddenStop(double currentSpeed , Date currentDate){
+     
+        initialVelocity = finalVelocity;
+        finalVelocity = currentSpeed;
+        initialDate = finalDate;
+        finalDate = currentDate;
 
-    public static boolean suddenStop(double lastSpeed, double currentSpeed, LatLng lastPoint,LatLng currrentPoint){
-        boolean flag=false;
+        
+        //Long acelerationDetonating = (finalVelocity - initialVelocity) / (TimeUnit.MILLISECONDS.toSeconds( finalDate.getTime() - initialDate.getTime() )); 
+        
+        if (finalVelocity < initialVelocity){
+             
+            if (!isStoping){
+                speedReached = initialVelocity;
+                dateSpeedReached = initialDate;
+                isStoping = true;
+            }
+        
+            if (finalVelocity == 0){ // Se detuvo
+                //Calcular Distacia de frenado ideal
+                double idealDistance = 0;
+                idealDistance = (speedReached * reactionTime) + ((Math.pow(speedReached, 2) / (2 * frictionCoefficient * gravity)));
+                double aceleration = 0;
+                aceleration = (finalVelocity - speedReached) / (TimeUnit.MILLISECONDS.toSeconds( finalDate.getTime() - initialDate.getTime() ));
+                double realDistance = 0;
+                realDistance = (speedReached * reactionTime) + (Math.pow(speedReached, 2) / (2 * aceleration) );
+                double errorConstant = idealDistance / 3 ;
+                if (realDistance <= errorConstant ){
+                    Log.i("suddenStop", "Parada repetina CRITICAL ");
+                } else if(realDistance < (errorConstant * 2) && realDistance > errorConstant ) {
+                    Log.i("suddenStop", "Parada repetina HIGH ");
+                }else if(realDistance < (errorConstant * 2) && realDistance > (errorConstant  * 2)) {
+                    Log.i("suddenStop", "Parada repetina MEDIUM ");
+                }
+            }
+
+        }
+        return true;
+
+        /*boolean flag = false;
         double distanceTraveled= SphericalUtil.computeDistanceBetween(lastPoint, currrentPoint);
+       
         double reactionDistance = lastSpeed * reactionTime; //La distancia de reacción es igual a la velocidad de dezplazamiento por el tiempo de reaccion del conductor
+        
         double perceptionDistance = lastSpeed * perceptionTime;
         double brakedDistance=( Math.pow(lastSpeed, 2) * segmentInclination) / (2 * frictionCoefficient * gravity);
         double distanceTolerance=( reactionDistance + brakedDistance) * brakingTolerance;
-        double minimumDistanceAcceptable=reactionDistance + perceptionDistance + brakedDistance - distanceTolerance;
+        double minimumDistanceAcceptable= reactionDistance + perceptionDistance + brakedDistance - distanceTolerance;
 
-        if(distanceTraveled < minimumDistanceAcceptable) flag=true;
+        if(distanceTraveled < minimumDistanceAcceptable) flag = true;
 
         System.out.println("Distancia Recorrida:  " +distanceTraveled);
         System.out.println("Distancia de percepción: "+perceptionDistance);
@@ -70,6 +120,7 @@ public class EventsDetect {
 
 
         return flag;
+        */
     }
 
     /**
