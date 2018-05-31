@@ -43,8 +43,6 @@ public class SendDataService {
         context = context = HomeActivity.MAIN_CONTEXT;
         this.sendDataMethods = sendDataMethods;
         filter = new IntentFilter(Constants.SERVICE_CHANGE_LOCATION_DEVICE);
-        /*filter.addAction(Constants.SERVICE_RUNNING_SENSORS);
-        filter.addAction(Constants.SERVICE_CHANGE_WRONG_WAY);*/
         ResponseReceiver receiver = new ResponseReceiver();
         // Registrar el receiver y su filtro
         LocalBroadcastManager.getInstance(context).registerReceiver(receiver, filter);
@@ -64,8 +62,6 @@ public class SendDataService {
         void sendEvent(String event);
     }
 
-
-
     private class ResponseReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -80,7 +76,6 @@ public class SendDataService {
                     if(listZone.size() > 0) {
                         detectZone(latitude, longitude, listZone);
                     }else {
-                        //Log.i("STATUS: ","Carga los campus en el primer inicio de sesión");
                         listZone =  sqLiteDrivingApp.getAllZone();
                     }
                     RoadSegment roadSegment = (RoadSegment) intent.getExtras().get(Constants.ROAD_SEGMENT);

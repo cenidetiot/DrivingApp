@@ -44,7 +44,7 @@ public class MyViewPagerAdapter extends android.support.v4.view.PagerAdapter {
             container.addView(view);
         }*/
         view = layoutInflater.inflate(layouts[auxPosition], container, false);
-        Log.i("VIEW", "Position------------------------------------------"+position);
+        //Log.i("VIEW", "Position------------------------------------------"+position);
         container.addView(view);
 
         return view;
@@ -52,7 +52,7 @@ public class MyViewPagerAdapter extends android.support.v4.view.PagerAdapter {
 
     @Override
     public int getCount() {
-        Log.i("VIEW", "Length------------------------------------------"+layouts.length);
+        //Log.i("VIEW", "Length------------------------------------------"+layouts.length);
         return layouts.length;
     }
 
