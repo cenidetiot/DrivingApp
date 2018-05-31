@@ -25,7 +25,11 @@ import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
 import mx.edu.cenidet.app.R;
 import  mx.edu.cenidet.app.event.EventsDetect;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 import mx.edu.cenidet.app.activities.HomeActivity;
@@ -256,6 +260,16 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
             longitude = (double) location.getLongitude();
             speedMS = (double) location.getSpeed();
             speedKmHr = (double) (location.getSpeed() * 3.6);
+            Log.i("TIME", "--------------------------------"+location.getTime());
+
+            Date date = new Date(location.getTime());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
+            Log.i("FECHA", "--------------------------------"+sdf.format(date));
+
+            Calendar calendar = new GregorianCalendar();
+            calendar.setTimeInMillis(location.getTime());
+            int hour = calendar.get(Calendar.HOUR_OF_DAY);
+            Log.i("HORA", "--------------------------------"+hour);
 
             //Logica para obtener location apartir de (location anterior) y location hasta (location actual)
             if (hashMapLatLngFromTo.isEmpty() || hashMapLatLngFromTo.size() == 0) {

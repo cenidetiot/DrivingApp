@@ -161,6 +161,7 @@ public class SplashActivity extends AppCompatActivity implements DeviceTokenCont
                 //Log.i("Status: ", "BODY Array: "+jsonArray);
                 for (int i = 0; i < jsonArray.length(); i++) {
                     try {
+                        Log.i("Status: ", "Body "+i+" :"+jsonArray.getJSONObject(i));
                         zone = new Zone();
                         JSONObject object = jsonArray.getJSONObject(i);
                         zone.setIdZone(object.getString("idZone"));
