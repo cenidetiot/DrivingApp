@@ -21,16 +21,16 @@
             android:progressDrawable="@drawable/circle_1"
             android:rotation="-90"
             style="?android:attr/progressBarStyleHorizontal"/>
-        <TextView
+        <!-- <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tvLocation"
-            android:text="Location"
+            android:text="Location" 
             android:textColor="#ffff"
             android:layout_gravity="center"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:layout_marginBottom="40dp"/>
+            android:layout_marginBottom="40dp"/> -->
 
         <TextView
             android:layout_width="wrap_content"

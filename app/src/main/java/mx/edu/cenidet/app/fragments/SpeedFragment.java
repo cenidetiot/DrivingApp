@@ -50,7 +50,7 @@ public class SpeedFragment extends Fragment implements SendDataService.SendDataM
         //tvSpeed = rootView.findViewById(R.id.tvSpeed);
         tvSpeed = (TextView) rootView.findViewById(R.id.tvSpeed);
         tvAcceleration = (TextView) rootView.findViewById(R.id.tvAcceleration);
-        tvLocation = (TextView) rootView.findViewById(R.id.tvLocation);
+        //tvLocation = (TextView) rootView.findViewById(R.id.tvLocation);
         return rootView;
     }
 
@@ -62,7 +62,7 @@ public class SpeedFragment extends Fragment implements SendDataService.SendDataM
 
     @Override
     public void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr) {
-        tvLocation.setText("Lat. "+latitude+"\nLng. "+longitude);
+        //tvLocation.setText("Lat. "+latitude+"\nLng. "+longitude);
         tvSpeed.setText(df.format(speedMS)+"m/s, "+df.format(speedKmHr)+"km/hr");
 
         //tvSpeed.setText("Latitude: " + latitude + " Longitude: " + longitude + " Velocidad: " + speedMS + "m/s  Velocidad: " + speedKmHr + "km/hr");

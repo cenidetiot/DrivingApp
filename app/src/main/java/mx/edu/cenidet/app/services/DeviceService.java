@@ -313,12 +313,13 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
             //Apatzingán 1
             //roadSegment = EventsFuntions.detectedRoadSegment(context, 18.87942, -99.2208032);
 
+            EventsDetect.suddenStop(speedMS, location.getTime(), context);
             if(roadSegment != null){
                 Response response1 = new Response();
                 //Codigo de la deteccion de eventos por cada roadSegment
                 //Detección del exceso de velocidad.
                 speeding(roadSegment.getMaximumAllowedSpeed(), hashMapSpeedFromTo.get("speedFrom"), hashMapSpeedFromTo.get("speedTo"), latitude, longitude);
-
+               
                 //INICIO TEST PRUEBAS-----------
                 //Apatzingán 1
                     /*if(countSendAlert == 0){

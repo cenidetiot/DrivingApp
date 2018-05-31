@@ -14,6 +14,7 @@ import android.util.Log;
  */
 
 public class EventsDetect {
+    
 
     //private static double perceptionTime=0.0; //valor en segundos del tiempo que se tarda en reaccionar el actor despues de percibir el evento
     private static double reactionTime=1; //valor en segundos del tiempo que se tarda en reaccionar el actor despues de percibir el evento
@@ -59,14 +60,15 @@ public class EventsDetect {
     }
 
 
-    public static boolean suddenStop(double currentSpeed , Date currentDate){
+    public static boolean suddenStop(double currentSpeed , Long current){
+       
+        Date currentDate = new Date(current);
      
         initialVelocity = finalVelocity;
         finalVelocity = currentSpeed;
         initialDate = finalDate;
         finalDate = currentDate;
 
-        
         //Long acelerationDetonating = (finalVelocity - initialVelocity) / (TimeUnit.MILLISECONDS.toSeconds( finalDate.getTime() - initialDate.getTime() )); 
         
         if (finalVelocity < initialVelocity){
@@ -86,15 +88,15 @@ public class EventsDetect {
                 double realDistance = 0;
                 realDistance = (speedReached * reactionTime) + (Math.pow(speedReached, 2) / (2 * aceleration) );
                 double errorConstant = idealDistance / 3 ;
+        
                 if (realDistance <= errorConstant ){
-                    Log.i("suddenStop", "Parada repetina CRITICAL ");
+                    Log.i("SUDDEN", "Parada repetina CRITICAL ");
                 } else if(realDistance < (errorConstant * 2) && realDistance > errorConstant ) {
-                    Log.i("suddenStop", "Parada repetina HIGH ");
+                    Log.i("SUDDEN", "Parada repetina HIGH ");
                 }else if(realDistance < (errorConstant * 2) && realDistance > (errorConstant  * 2)) {
-                    Log.i("suddenStop", "Parada repetina MEDIUM ");
+                    Log.i("SUDDEN", "Parada repetina MEDIUM ");
                 }
             }
-
         }
         return true;
 
