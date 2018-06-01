@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import mx.edu.cenidet.app.R;
 import mx.edu.cenidet.app.activities.HomeActivity;
@@ -113,6 +114,7 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
 
     @Override
     public void sendEvent(String event) {
+
     }
 
 

@@ -314,9 +314,10 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
                 countSendDevice = 0;
             }
             countSendDevice++;
+            String StopingStatus = EventsDetect.suddenStop(speedMS, location.getTime());
 
             Intent intent = new Intent(Constants.SERVICE_CHANGE_LOCATION_DEVICE).putExtra(Constants.SERVICE_RESULT_LATITUDE, latitude)
-                    .putExtra(Constants.SERVICE_RESULT_LONGITUDE, longitude).putExtra(Constants.SERVICE_RESULT_SPEED_MS, speedMS).putExtra(Constants.SERVICE_RESULT_SPEED_KMHR, speedKmHr);
+                    .putExtra(Constants.SERVICE_RESULT_LONGITUDE, longitude).putExtra(Constants.SERVICE_RESULT_SPEED_MS, speedMS).putExtra(Constants.SERVICE_RESULT_SPEED_KMHR, speedKmHr).putExtra(Constants.SERVICE_RESULT_STOPING, StopingStatus);
             //obtiene el roadSegment en el que se encuentra el dipositivo movil.
             roadSegment = EventsFuntions.detectedRoadSegment(context, latitude, longitude);
 
@@ -327,7 +328,8 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
             //Apatzingán 1
             //roadSegment = EventsFuntions.detectedRoadSegment(context, 18.87942, -99.2208032);
 
-            EventsDetect.suddenStop(speedMS, location.getTime(), context);
+
+
             if(roadSegment != null){
                 Response response1 = new Response();
                 //Codigo de la deteccion de eventos por cada roadSegment

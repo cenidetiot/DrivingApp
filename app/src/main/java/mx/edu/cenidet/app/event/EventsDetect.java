@@ -60,10 +60,10 @@ public class EventsDetect {
     }
 
 
-    public static boolean suddenStop(double currentSpeed , Long current){
+    public static String suddenStop(double currentSpeed , Long current){
        
         Date currentDate = new Date(current);
-     
+        String result = null;
         initialVelocity = finalVelocity;
         finalVelocity = currentSpeed;
         initialDate = finalDate;
@@ -90,15 +90,22 @@ public class EventsDetect {
                 double errorConstant = idealDistance / 3 ;
         
                 if (realDistance <= errorConstant ){
-                    Log.i("SUDDEN", "Parada repetina CRITICAL ");
+                    result = "Parada repetina CRITICAL realDistance:"+realDistance+" idealDistance: "+idealDistance+" speedReached: "+speedReached;
+                    //Log.i("SUDDEN", "Parada repetina CRITICAL realDistance:"+realDistance+" idealDistance: "+idealDistance+"--------------------");
                 } else if(realDistance < (errorConstant * 2) && realDistance > errorConstant ) {
-                    Log.i("SUDDEN", "Parada repetina HIGH ");
+                    result = "Parada repetina HIGH realDistance:"+realDistance+" idealDistance: "+idealDistance+" speedReached: "+speedReached;
+                    //Log.i("SUDDEN", "Parada repetina HIGH realDistance:"+realDistance+" idealDistance: "+idealDistance+"--------------------");
                 }else if(realDistance < (errorConstant * 2) && realDistance > (errorConstant  * 2)) {
-                    Log.i("SUDDEN", "Parada repetina MEDIUM ");
+                    result = "Parada repetina MEDIUM realDistance:"+realDistance+" idealDistance: "+idealDistance+" speedReached: "+speedReached;
+                    //Log.i("SUDDEN", "Parada repetina MEDIUM realDistance:"+realDistance+" idealDistance: "+idealDistance+"--------------------");
                 }
             }
+        }else{
+            speedReached = 0;
+            dateSpeedReached = new Date();
+            isStoping = false;
         }
-        return true;
+        return result;
 
         /*boolean flag = false;
         double distanceTraveled= SphericalUtil.computeDistanceBetween(lastPoint, currrentPoint);

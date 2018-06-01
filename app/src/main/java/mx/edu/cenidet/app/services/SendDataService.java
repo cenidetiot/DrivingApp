@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -28,6 +29,7 @@ public class SendDataService {
     private double latitude, longitude;
     private double speedMS, speedKmHr;
     private IntentFilter filter;
+    private String stopingStatus;
     //Dectar Campus
     //private ArrayList<Campus> listCampus;
     private ArrayList<Zone> listZone;
@@ -71,7 +73,13 @@ public class SendDataService {
                     longitude = intent.getDoubleExtra(Constants.SERVICE_RESULT_LONGITUDE, 0);
                     speedMS = intent.getDoubleExtra(Constants.SERVICE_RESULT_SPEED_MS, 0);
                     speedKmHr = intent.getDoubleExtra(Constants.SERVICE_RESULT_SPEED_KMHR, 0);
+                    stopingStatus = intent.getStringExtra(Constants.SERVICE_RESULT_STOPING);
+                    if(stopingStatus != null) {
+                        Log.i("SUDDEN", stopingStatus);
+                        sendDataMethods.sendEvent(stopingStatus);
+                    }
                     sendDataMethods.sendLocationSpeed(latitude, longitude, speedMS, speedKmHr);
+
                     //Detecta Zona
                     if(listZone.size() > 0) {
                         detectZone(latitude, longitude, listZone);

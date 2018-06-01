@@ -28,6 +28,7 @@ public class Constants {
     public static final String SERVICE_RESULT_LONGITUDE = "longitude";
     public static final String SERVICE_RESULT_SPEED_MS = "device_speed_ms";
     public static final String SERVICE_RESULT_SPEED_KMHR = "device_speed_kmhr";
+    public static final String SERVICE_RESULT_STOPING = "stoping";
     public static final String SERVICE_RUNNING_DEVICE = "service_running_device";
     public static final String SERVICE_RESULT_DEVICE = "service_result_device";
     public static final String DEVICE_LATITUDE = "device_latitude";
