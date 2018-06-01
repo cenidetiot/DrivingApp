@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#2E2E2E"
+    android:background="#3498db"
     tools:context="mx.edu.cenidet.app.fragments.SpeedFragment">
     <!--TextView
         android:id="@+id/tvSpeed"
@@ -18,7 +18,7 @@
             android:indeterminate="false"
             android:max="100"
             android:progress="100"
-            android:progressDrawable="@drawable/circle_1"
+            android:progressDrawable="@drawable/circle_1" 
             android:rotation="-90"
             style="?android:attr/progressBarStyleHorizontal"/>
         <!-- <TextView
@@ -37,10 +37,13 @@
             android:layout_height="wrap_content"
             android:id="@+id/tvSpeed"
             android:text="Speeed"
-            android:textColor="#ffff"
             android:layout_gravity="center"
             android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true" />
+            android:layout_centerVertical="true" 
+            android:textColor="@color/white"
+            android:textSize="@dimen/title"
+            android:textStyle="bold"
+            />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

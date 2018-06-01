@@ -64,7 +64,8 @@ public class SpeedFragment extends Fragment implements SendDataService.SendDataM
     public void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr) {
         //tvLocation.setText("Lat. "+latitude+"\nLng. "+longitude);
         tvSpeed.setText(df.format(speedMS)+"m/s, "+df.format(speedKmHr)+"km/hr");
-
+        //tvSpeed.setText(df.format(speedKmHr)+"km/hr");
+        //tvAcceleration.setText(df.format(speedMS)+"m/s");
         //tvSpeed.setText("Latitude: " + latitude + " Longitude: " + longitude + " Velocidad: " + speedMS + "m/s  Velocidad: " + speedKmHr + "km/hr");
         //Log.i("SPEED: ", "VIEW Latitude: " + latitude + " Longitude: " + longitude + " Velocidad: " + speedMS + "m/s  Velocidad: " + speedKmHr + "km/hr");
     }
