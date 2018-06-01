@@ -83,22 +83,29 @@ public class EventsDetect {
                 //Calcular Distacia de frenado ideal
                 double idealDistance = 0;
                 idealDistance = (speedReached * reactionTime) + ((Math.pow(speedReached, 2) / (2 * frictionCoefficient * gravity)));
+                
                 double aceleration = 0;
-                aceleration = (finalVelocity - speedReached) / (TimeUnit.MILLISECONDS.toSeconds( finalDate.getTime() - initialDate.getTime() ));
-                double realDistance = 0;
+                aceleration = (finalVelocity - speedReached) / (TimeUnit.MILLISECONDS.toSeconds( finalDate.getTime() - dateSpeedReached.getTime() ));
+                double realDistance = 0, realDistance1 = 0, realDistance2 = 0;
                 realDistance = (speedReached * reactionTime) + (Math.pow(speedReached, 2) / (2 * aceleration) );
+
+                realDistance1 = (speedReached * reactionTime) + (((finalVelocity + speedReached )  / 2) * (TimeUnit.MILLISECONDS.toSeconds( finalDate.getTime() - dateSpeedReached.getTime() ))) ;
+                realDistance2 = (speedReached * reactionTime) + (speedReached * TimeUnit.MILLISECONDS.toSeconds( finalDate.getTime() - dateSpeedReached.getTime()));
+                
                 double errorConstant = idealDistance / 3 ;
-        
-                if (realDistance <= errorConstant ){
+                String times = " T inicial: "+ TimeUnit.MILLISECONDS.toSeconds(dateSpeedReached.getTime()) + "T Final: " + TimeUnit.MILLISECONDS.toSeconds(finalDate.getTime()) + "Dif :" + TimeUnit.MILLISECONDS.toSeconds( finalDate.getTime() - dateSpeedReached.getTime() ); 
+                /*if (realDistance <= errorConstant ){
                     result = "Parada repetina CRITICAL realDistance:"+realDistance+" idealDistance: "+idealDistance+" speedReached: "+speedReached;
-                    //Log.i("SUDDEN", "Parada repetina CRITICAL realDistance:"+realDistance+" idealDistance: "+idealDistance+"--------------------");
                 } else if(realDistance < (errorConstant * 2) && realDistance > errorConstant ) {
                     result = "Parada repetina HIGH realDistance:"+realDistance+" idealDistance: "+idealDistance+" speedReached: "+speedReached;
-                    //Log.i("SUDDEN", "Parada repetina HIGH realDistance:"+realDistance+" idealDistance: "+idealDistance+"--------------------");
-                }else if(realDistance < (errorConstant * 2) && realDistance > (errorConstant  * 2)) {
+                }else if(realDistance < (errorConstant * 3) && realDistance > (errorConstant  * 2)) {
                     result = "Parada repetina MEDIUM realDistance:"+realDistance+" idealDistance: "+idealDistance+" speedReached: "+speedReached;
-                    //Log.i("SUDDEN", "Parada repetina MEDIUM realDistance:"+realDistance+" idealDistance: "+idealDistance+"--------------------");
-                }
+                }else {
+                    result = "realDistance:"+realDistance+" idealDistance: "+idealDistance+" speedReached: "+speedReached;
+                }*/
+                result = "realDistance:"+realDistance;
+                result += "realDistance1:"+realDistance1 +"realDistance2:"+realDistance2 +"idealDistance: " +idealDistance+" speedReached: "+speedReached;
+                result += times;
             }
         }else{
             speedReached = 0;
@@ -107,29 +114,6 @@ public class EventsDetect {
         }
         return result;
 
-        /*boolean flag = false;
-        double distanceTraveled= SphericalUtil.computeDistanceBetween(lastPoint, currrentPoint);
-       
-        double reactionDistance = lastSpeed * reactionTime; //La distancia de reacción es igual a la velocidad de dezplazamiento por el tiempo de reaccion del conductor
-        
-        double perceptionDistance = lastSpeed * perceptionTime;
-        double brakedDistance=( Math.pow(lastSpeed, 2) * segmentInclination) / (2 * frictionCoefficient * gravity);
-        double distanceTolerance=( reactionDistance + brakedDistance) * brakingTolerance;
-        double minimumDistanceAcceptable= reactionDistance + perceptionDistance + brakedDistance - distanceTolerance;
-
-        if(distanceTraveled < minimumDistanceAcceptable) flag = true;
-
-        System.out.println("Distancia Recorrida:  " +distanceTraveled);
-        System.out.println("Distancia de percepción: "+perceptionDistance);
-        System.out.println("Distancia de reaccion: "+reactionDistance);
-        System.out.println("Distancia de frenado: " + brakedDistance);
-        System.out.println("Distancia de tolerancia: " + distanceTolerance);
-        System.out.println("Distancia total de frenado: "+minimumDistanceAcceptable);
-        System.out.println("Frenado repentino?: " + flag);
-
-
-        return flag;
-        */
     }
 
     /**

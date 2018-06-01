@@ -16,4 +16,4 @@ adb install -r  app/build/outputs/apk/debug/app-debug.apk
 
 echo "Running app"
 
-adb shell am start mx.edu.cenidet.app/mx.edu.cenidet.app.activities.HomeActivity
+adb shell am start mx.edu.cenidet.app/mx.edu.cenidet.app.activities.LoginActivity
