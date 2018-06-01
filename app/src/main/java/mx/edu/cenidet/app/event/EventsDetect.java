@@ -63,6 +63,7 @@ public class EventsDetect {
     public static String suddenStop(double currentSpeed , Long current){
        
         Date currentDate = new Date(current);
+
         String result = null;
         initialVelocity = finalVelocity;
         finalVelocity = currentSpeed;
@@ -73,7 +74,7 @@ public class EventsDetect {
         
         if (finalVelocity < initialVelocity){
              
-            if (!isStoping){
+            if (isStoping == false){
                 speedReached = initialVelocity;
                 dateSpeedReached = initialDate;
                 isStoping = true;
@@ -81,30 +82,26 @@ public class EventsDetect {
         
             if (finalVelocity == 0){ // Se detuvo
                 //Calcular Distacia de frenado ideal
+
                 double idealDistance = 0;
-                idealDistance = (speedReached * reactionTime) + ((Math.pow(speedReached, 2) / (2 * frictionCoefficient * gravity)));
+                speedReached = 30;
+
+                idealDistance =((Math.pow(speedReached, 2) / (2 * frictionCoefficient * gravity)));
                 
                 double aceleration = 0;
-                aceleration = (finalVelocity - speedReached) / (TimeUnit.MILLISECONDS.toSeconds( finalDate.getTime() - dateSpeedReached.getTime() ));
-                double realDistance = 0, realDistance1 = 0, realDistance2 = 0;
-                realDistance = (speedReached * reactionTime) + (Math.pow(speedReached, 2) / (2 * aceleration) );
 
-                realDistance1 = (speedReached * reactionTime) + (((finalVelocity + speedReached )  / 2) * (TimeUnit.MILLISECONDS.toSeconds( finalDate.getTime() - dateSpeedReached.getTime() ))) ;
-                realDistance2 = (speedReached * reactionTime) + (speedReached * TimeUnit.MILLISECONDS.toSeconds( finalDate.getTime() - dateSpeedReached.getTime()));
+                aceleration = (finalVelocity - speedReached) / (10);
+                double realDistance = 0, realDistance1 = 0, realDistance2 = 0;
+
+                realDistance = (Math.pow(speedReached, 2) / (2 * aceleration) );
+
+                realDistance1 = ((finalVelocity + speedReached )  / 2) * (10) ;
                 
                 double errorConstant = idealDistance / 3 ;
                 String times = " T inicial: "+ TimeUnit.MILLISECONDS.toSeconds(dateSpeedReached.getTime()) + "T Final: " + TimeUnit.MILLISECONDS.toSeconds(finalDate.getTime()) + "Dif :" + TimeUnit.MILLISECONDS.toSeconds( finalDate.getTime() - dateSpeedReached.getTime() ); 
-                /*if (realDistance <= errorConstant ){
-                    result = "Parada repetina CRITICAL realDistance:"+realDistance+" idealDistance: "+idealDistance+" speedReached: "+speedReached;
-                } else if(realDistance < (errorConstant * 2) && realDistance > errorConstant ) {
-                    result = "Parada repetina HIGH realDistance:"+realDistance+" idealDistance: "+idealDistance+" speedReached: "+speedReached;
-                }else if(realDistance < (errorConstant * 3) && realDistance > (errorConstant  * 2)) {
-                    result = "Parada repetina MEDIUM realDistance:"+realDistance+" idealDistance: "+idealDistance+" speedReached: "+speedReached;
-                }else {
-                    result = "realDistance:"+realDistance+" idealDistance: "+idealDistance+" speedReached: "+speedReached;
-                }*/
+               
                 result = "realDistance:"+realDistance;
-                result += "realDistance1:"+realDistance1 +"realDistance2:"+realDistance2 +"idealDistance: " +idealDistance+" speedReached: "+speedReached;
+                result += "realDistance1:"+realDistance1 +"idealDistance: " + idealDistance +" speedReached: "+speedReached;
                 result += times;
             }
         }else{
