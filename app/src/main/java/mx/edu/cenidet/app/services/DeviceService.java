@@ -314,7 +314,8 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
                 countSendDevice = 0;
             }
             countSendDevice++;
-            String StopingStatus = EventsDetect.suddenStop(speedMS, location.getTime());
+            
+            String StopingStatus = EventsDetect.suddenStop(speedMS, new Date().getTime());
 
             Intent intent = new Intent(Constants.SERVICE_CHANGE_LOCATION_DEVICE).putExtra(Constants.SERVICE_RESULT_LATITUDE, latitude)
                     .putExtra(Constants.SERVICE_RESULT_LONGITUDE, longitude).putExtra(Constants.SERVICE_RESULT_SPEED_MS, speedMS).putExtra(Constants.SERVICE_RESULT_SPEED_KMHR, speedKmHr).putExtra(Constants.SERVICE_RESULT_STOPING, StopingStatus);

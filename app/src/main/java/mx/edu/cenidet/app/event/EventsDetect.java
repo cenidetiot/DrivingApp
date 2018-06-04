@@ -25,12 +25,12 @@ public class EventsDetect {
 
     private static double initialVelocity = 0;
     private static double finalVelocity = 0;
-    private static Date initialDate = new Date();
-    private static Date finalDate = new Date();
+    private static long initialDate = 0;
+    private static long finalDate = 0;
     private static boolean isStoping = false;
     
     private static double speedReached = 0;
-    private static Date dateSpeedReached = new Date();
+    private static long dateSpeedReached = 0;
 
     public static String oppositeDirectionDisplacement(LatLng lastPoint, LatLng currentPoint, LatLng startPoint, LatLng endPoint){
     
@@ -60,53 +60,55 @@ public class EventsDetect {
     }
 
 
-    public static String suddenStop(double currentSpeed , Long current){
+    public static String suddenStop(double currentSpeed , long currentDate){
        
-        Date currentDate = new Date(current);
-
         String result = null;
+
         initialVelocity = finalVelocity;
+
         finalVelocity = currentSpeed;
+
         initialDate = finalDate;
+
         finalDate = currentDate;
 
-        //Long acelerationDetonating = (finalVelocity - initialVelocity) / (TimeUnit.MILLISECONDS.toSeconds( finalDate.getTime() - initialDate.getTime() )); 
-        
         if (finalVelocity < initialVelocity){
              
             if (isStoping == false){
-                speedReached = initialVelocity;
-                dateSpeedReached = initialDate;
-                isStoping = true;
+                    speedReached = initialVelocity;
+                    dateSpeedReached = initialDate;
+                    isStoping = true;
             }
         
-            if (finalVelocity == 0){ // Se detuvo
-                //Calcular Distacia de frenado ideal
+            if (finalVelocity == 0){ 
 
                 double idealDistance = 0;
-                speedReached = 30;
 
                 idealDistance =((Math.pow(speedReached, 2) / (2 * frictionCoefficient * gravity)));
+  
+                double realDistance = 0;
                 
-                double aceleration = 0;
+                long diffDate = finalDate - dateSpeedReached;
 
-                aceleration = (finalVelocity - speedReached) / (10);
-                double realDistance = 0, realDistance1 = 0, realDistance2 = 0;
+                long time = TimeUnit.MILLISECONDS.toSeconds(diffDate);
 
-                realDistance = (Math.pow(speedReached, 2) / (2 * aceleration) );
-
-                realDistance1 = ((finalVelocity + speedReached )  / 2) * (10) ;
+                realDistance = ((finalVelocity + speedReached )  / 2) * (time) ;
                 
                 double errorConstant = idealDistance / 3 ;
-                String times = " T inicial: "+ TimeUnit.MILLISECONDS.toSeconds(dateSpeedReached.getTime()) + "T Final: " + TimeUnit.MILLISECONDS.toSeconds(finalDate.getTime()) + "Dif :" + TimeUnit.MILLISECONDS.toSeconds( finalDate.getTime() - dateSpeedReached.getTime() ); 
+
+                String times = " T inicial: "+ TimeUnit.MILLISECONDS.toSeconds(dateSpeedReached) + "T Final: " + TimeUnit.MILLISECONDS.toSeconds(finalDate) + "Dif :" +  time; 
                
-                result = "realDistance:"+realDistance;
-                result += "realDistance1:"+realDistance1 +"idealDistance: " + idealDistance +" speedReached: "+speedReached;
+                result = "realDistance : " + realDistance;
+
+                result += "idealDistance : " + idealDistance + " speedReached : " + speedReached;
+
                 result += times;
             }
-        }else{
+        } else{
             speedReached = 0;
-            dateSpeedReached = new Date();
+
+            dateSpeedReached = 0;
+
             isStoping = false;
         }
         return result;
