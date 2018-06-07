@@ -76,10 +76,7 @@ public class SendDataService {
 
                     stopingStatus = intent.getStringExtra(Constants.SERVICE_RESULT_STOPING);
                     if(stopingStatus != "") {
-
-                        Log.i("SUDDEN", stopingStatus);
                         sendDataMethods.sendEvent(stopingStatus);
-
                     }
 
                     sendDataMethods.sendLocationSpeed(latitude, longitude, speedMS, speedKmHr);

@@ -87,7 +87,7 @@ public class EventsDetect {
                 realDistance = ((finalVelocity + speedReached )  / 2) * (time) ;
                 idealDistance = Math.round(idealDistance);
                 realDistance = Math.round(realDistance);
-                double errorConstant = idealDistance / 3 ;
+                //double errorConstant = idealDistance / 3 ;
 
                 if (idealDistance > realDistance){
                     result = "PARADA REPENTINA";
@@ -162,21 +162,5 @@ public class EventsDetect {
         return "";
     }
 
-    public static void main(String ... arg){
-
-        double maximumSpeed=20;
-        double speedFrom=31;
-        double speedTo=20;
-        System.out.println(speeding(maximumSpeed, speedFrom, speedTo));
-        /*System.out.println("Hola Mundo");
-        LatLng latLng1 =new LatLng(0,2);
-        LatLng latLng2 =new LatLng(0,1);
-        LatLng start =new LatLng(0,0);
-        LatLng end =new LatLng(0,3);
-        double lastSpeed=2.77; //metros por segundo
-        double currentSpeed=20; //metros por segundos
-
-       // System.out.println(oppositeDirectionDisplacement(latLng1,latLng2,end));
-        System.out.println(suddenStop(lastSpeed,currentSpeed,latLng1,latLng2));*/
-    }
+   
 }

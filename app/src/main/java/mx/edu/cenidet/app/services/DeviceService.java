@@ -310,9 +310,10 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
             countSendDevice++;
 
             Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
             String cadena = latitude + "," + longitude + "," + speedMS + ","+ speedKmHr;// + "," + sdf.format(date) ;
             String StopingStatus = EventsDetect.suddenStop(speedMS, date.getTime());
-            cadena += "," + StopingStatus;
+            cadena += "," + sdf.format(date) + "," + StopingStatus;
             Functions.saveToFile(csv, cadena);
 
             Intent intent = new Intent(Constants.SERVICE_CHANGE_LOCATION_DEVICE)
@@ -479,7 +480,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     @Override
     public void onCreateEntity(Response response) {
         if(response.getHttpCode() == 201){
-            
+
             Intent localIntent = new Intent(Constants.SERVICE_RUNNING_DEVICE).putExtra(Constants.SERVICE_RESULT_DEVICE, "Entity Device created successfully...!");
             LocalBroadcastManager.getInstance(DeviceService.this).sendBroadcast(localIntent);
             sqLiteController.updateStatusActiveByKeywordTempCreate(device.getId());

@@ -91,6 +91,7 @@ public class SpeedFragment extends Fragment implements SendDataService.SendDataM
         if(tvAcceleration != null){
             tvAcceleration.setText(event);
         }
+        
        /* if(event.equals("true")){
             Toast.makeText(getContext(), "Usted va en sentido contrario", Toast.LENGTH_SHORT).show();
         }else{
