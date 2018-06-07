@@ -119,7 +119,7 @@ public class Functions {
         try {
             FileOutputStream fOut = context.openFileOutput(fileName, Context.MODE_PRIVATE);
             OutputStreamWriter osw = new OutputStreamWriter(fOut);
-            // Write the string to the file
+            // Write the string to the file 
             osw.write(value);
             // save and close
             osw.flush();
@@ -161,12 +161,14 @@ public class Functions {
             fileOutputStream.flush();
             fileOutputStream.close();
         }  catch(FileNotFoundException ex) {
+            
+            ex.printStackTrace();
             return false;
-            //ex.printStackTrace();
         }  catch(IOException ex) {
-            return false;
-           // ex.printStackTrace();
+            
+           ex.printStackTrace();
            // Log.d(TAG, ex.getMessage());
+           return false;
         }
         return  true;
     }

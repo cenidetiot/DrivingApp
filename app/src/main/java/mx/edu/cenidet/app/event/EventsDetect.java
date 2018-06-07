@@ -16,25 +16,27 @@ import android.util.Log;
 public class EventsDetect {
     
 
-    //private static double perceptionTime=0.0; //valor en segundos del tiempo que se tarda en reaccionar el actor despues de percibir el evento
-    private static double reactionTime=1; //valor en segundos del tiempo que se tarda en reaccionar el actor despues de percibir el evento
     private static double gravity=9.81; // valor en m/s
     private static double frictionCoefficient=0.95; //coeficiente de friccion entre los neumaticos y el piso
-    //private static double segmentInclination=1; // pendiente que tiene la calle
-    //private static double brakingTolerance=0; //% de tolerancia que se aplicara a la distancia de frenado
-
     private static double initialVelocity = 0;
     private static double finalVelocity = 0;
     private static long initialDate = 0;
     private static long finalDate = 0;
     private static boolean isStoping = false;
-    
+    private static boolean stoped = false;
+    private static long stopedSeconds = 0 ;
     private static double speedReached = 0;
     private static long dateSpeedReached = 0;
 
-    public static String oppositeDirectionDisplacement(LatLng lastPoint, LatLng currentPoint, LatLng startPoint, LatLng endPoint){
+    //private static LatLng lastPoint = null;
+
+    public static String oppositeDirectionDisplacement(LatLng lastPoint ,LatLng currentPoint, LatLng startPoint, LatLng endPoint){
     
-        String flag = "undefined";
+        String flag = "";
+
+        if (lastPoint != null){
+            
+        }
         
         double distanceTotal = SphericalUtil.computeDistanceBetween(startPoint, endPoint);
         
@@ -61,58 +63,46 @@ public class EventsDetect {
 
 
     public static String suddenStop(double currentSpeed , long currentDate){
-       
-        String result = null;
-
+        String result = "";
         initialVelocity = finalVelocity;
-
         finalVelocity = currentSpeed;
-
         initialDate = finalDate;
-
         finalDate = currentDate;
-
-        if (finalVelocity < initialVelocity){
-             
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
+        if ( finalVelocity < initialVelocity ){
             if (isStoping == false){
                     speedReached = initialVelocity;
                     dateSpeedReached = initialDate;
                     isStoping = true;
             }
-        
             if (finalVelocity == 0){ 
-
                 double idealDistance = 0;
-
                 idealDistance =((Math.pow(speedReached, 2) / (2 * frictionCoefficient * gravity)));
-  
                 double realDistance = 0;
-                
                 long diffDate = finalDate - dateSpeedReached;
-
                 long time = TimeUnit.MILLISECONDS.toSeconds(diffDate);
-
                 realDistance = ((finalVelocity + speedReached )  / 2) * (time) ;
-                
+                idealDistance = Math.round(idealDistance);
+                realDistance = Math.round(realDistance);
                 double errorConstant = idealDistance / 3 ;
 
-                String times = " T inicial: "+ TimeUnit.MILLISECONDS.toSeconds(dateSpeedReached) + "T Final: " + TimeUnit.MILLISECONDS.toSeconds(finalDate) + "Dif :" +  time; 
-               
-                result = "realDistance : " + realDistance;
-
-                result += "idealDistance : " + idealDistance + " speedReached : " + speedReached;
-
-                result += times;
+                if (idealDistance > realDistance){
+                    result = "PARADA REPENTINA";
+                    stoped = true; 
+                    stopedSeconds = TimeUnit.MILLISECONDS.toSeconds(new Date().getTime() - finalDate);
+                }else {
+                    result += "PARADA";
+                }
+                
+                return result + ",Actual : "+ sdf.format(currentDate) +",Alcazada :" + speedReached + ",Fecha  :" + sdf.format(dateSpeedReached);
             }
         } else{
             speedReached = 0;
-
             dateSpeedReached = 0;
-
             isStoping = false;
-        }
-        return result;
 
+        }
+        return null;
     }
 
     /**
@@ -124,6 +114,7 @@ public class EventsDetect {
     public static String speeding(double maximumSpeed, double speedFrom, double speedTo){
         double averageSpeed;
         double subtractSpeed;
+
         //Si la velocidad anterior y actual es mayor a cero.
         if(speedFrom > 4.5 && speedTo > 4.5){
             averageSpeed = (speedFrom+speedTo)/2;

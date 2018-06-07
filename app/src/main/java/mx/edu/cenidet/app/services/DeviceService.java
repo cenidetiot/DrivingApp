@@ -114,6 +114,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     private double timeMinInferiorSpeed=180; //Tiempo minimo en segundos para determinarlo como una velocidad por debajo del limite minimo establecido
     private double timeStampLastMinSpeedReading=-1.0; //Marca de tiempo que permite identificar el tiempo de la ultima lectura realizada, el valor esta en milisegundos.
 
+    private String csv = "velocidades.csv";
     //Medir distancias
     float[] distanceArray;
     public void onCreate() {
@@ -157,6 +158,8 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListenerGPS);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListenerNetwork);
+
+        
 
         //Sensor acelerometro y giroscopio
         /*mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -260,16 +263,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
             longitude = (double) location.getLongitude();
             speedMS = (double) location.getSpeed();
             speedKmHr = (double) (location.getSpeed() * 3.6);
-            Log.i("TIME", "--------------------------------"+location.getTime());
-
-            Date date = new Date(location.getTime());
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
-            Log.i("FECHA", "--------------------------------"+sdf.format(date));
-
-            Calendar calendar = new GregorianCalendar();
-            calendar.setTimeInMillis(location.getTime());
-            int hour = calendar.get(Calendar.HOUR_OF_DAY);
-            Log.i("HORA", "--------------------------------"+hour);
 
             //Logica para obtener location apartir de (location anterior) y location hasta (location actual)
             if (hashMapLatLngFromTo.isEmpty() || hashMapLatLngFromTo.size() == 0) {
@@ -314,79 +307,32 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
                 countSendDevice = 0;
             }
             countSendDevice++;
+
+            Date date = new Date();
+            String cadena = latitude + "," + longitude + "," + speedMS + ","+ speedKmHr;// + "," + sdf.format(date) ;
+            String StopingStatus = EventsDetect.suddenStop(speedMS, date.getTime());
+            cadena += "," + StopingStatus;
+            Functions.saveToFile(csv, cadena);
+
+            Intent intent = new Intent(Constants.SERVICE_CHANGE_LOCATION_DEVICE)
+                .putExtra(Constants.SERVICE_RESULT_LATITUDE, latitude)
+                .putExtra(Constants.SERVICE_RESULT_LONGITUDE, longitude)
+                .putExtra(Constants.SERVICE_RESULT_SPEED_MS, speedMS)
+                .putExtra(Constants.SERVICE_RESULT_SPEED_KMHR, speedKmHr)
+                .putExtra(Constants.SERVICE_RESULT_STOPING, StopingStatus);
             
-            String StopingStatus = EventsDetect.suddenStop(speedMS, new Date().getTime());
-
-            Intent intent = new Intent(Constants.SERVICE_CHANGE_LOCATION_DEVICE).putExtra(Constants.SERVICE_RESULT_LATITUDE, latitude)
-                    .putExtra(Constants.SERVICE_RESULT_LONGITUDE, longitude).putExtra(Constants.SERVICE_RESULT_SPEED_MS, speedMS).putExtra(Constants.SERVICE_RESULT_SPEED_KMHR, speedKmHr).putExtra(Constants.SERVICE_RESULT_STOPING, StopingStatus);
-            //obtiene el roadSegment en el que se encuentra el dipositivo movil.
+    
             roadSegment = EventsFuntions.detectedRoadSegment(context, latitude, longitude);
-
-            //Seencuentra en el parking entrada principal Apatzingan.
-            //roadSegment = EventsFuntions.detectedRoadSegment(context, 18.879855,-99.221599);
-            //intent.putExtra(Constants.ROAD_SEGMENT, roadSegment);
-
-            //Apatzingán 1
-            //roadSegment = EventsFuntions.detectedRoadSegment(context, 18.87942, -99.2208032);
-
-
-
             if(roadSegment != null){
                 Response response1 = new Response();
-                //Codigo de la deteccion de eventos por cada roadSegment
-                //Detección del exceso de velocidad.
                 speeding(roadSegment.getMaximumAllowedSpeed(), hashMapSpeedFromTo.get("speedFrom"), hashMapSpeedFromTo.get("speedTo"), latitude, longitude);
-               
-                //INICIO TEST PRUEBAS-----------
-                //Apatzingán 1
-                    /*if(countSendAlert == 0){
-                        //informacional
-                        speedFrom = 20;
-                        speedTo = 25;
-                        speeding(roadSegment.getMaximumAllowedSpeed(), speedFrom, speedTo, latitude, longitude);
-                    }else if(countSendAlert == 5){
-                        //low
-                        speedFrom = 20;
-                        speedTo = 31;
-                        speeding(roadSegment.getMaximumAllowedSpeed(), speedFrom, speedTo, latitude, longitude);
-                    }else if(countSendAlert == 10){
-                        //medium
-                        speedFrom = 20;
-                        speedTo = 40;
-                        speeding(roadSegment.getMaximumAllowedSpeed(), speedFrom, speedTo, latitude, longitude);
-                        countSendAlert = 0;
-                    }
-                    countSendAlert++;*/
-                //FIN TEST PRUEBAS------
                 intent.putExtra(Constants.ROAD_SEGMENT, roadSegment);
             }else {
                 intent.putExtra(Constants.ROAD_SEGMENT, roadSegment);
             }
             LocalBroadcastManager.getInstance(DeviceService.this).sendBroadcast(intent);
-            //Se encuentra en un parking
-            //EventsFuntions.detectedRoadSegment(context, 18.879698, -99.221604);
-            //Fuera de los parking y en ningun roadSegment
-            //EventsFuntions.detectedRoadSegment(context, 18.878270, -99.219773);
-            //Fuera de los parking en un RoadSegment
-            //EventsFuntions.detectedRoadSegment(context, 18.879508, -99.220777);
-            //Fuera del parking en un RoadSegment
-            //EventsFuntions.detectedRoadSegment(context, 18.87942, -99.2208032);
-
-
-
-
-            /*// DETECTAR EVENTOS LOCATION-----
-            latLngFrom = new LatLng(hashMapLatLngFromTo.get("latitudeFrom"), hashMapLatLngFromTo.get("longitudeFrom"));
-            latLngTo = new LatLng(hashMapLatLngFromTo.get("latitudeTo"), hashMapLatLngFromTo.get("longitudeTo"));
-            //latLngTo = new LatLng(18.876807, -99.219968);
-            distance = SphericalUtil.computeDistanceBetween(latLngFrom, latLngTo);
-            Log.i(STATUS, "DISTANCE 1: " + distance + "m");
-
-            location.distanceBetween(latitudeLast, longitudeLast, latitude, longitude, distanceArray);
-            Log.i(STATUS, "DISTANCE 2: " + distanceArray[0] + "km");*/
         } else {
-            Log.i(STATUS, "Error obtener valores gps o network...!");
-            //Toast.makeText(getBaseContext(), "Error GPS...!", Toast.LENGTH_LONG).show();
+            Log.i(STATUS, "Error obtener valores gps o network...!");;
         }
 
     }
@@ -449,7 +395,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //Toast.makeText(context, "Accident, position "+auxPosition+" Lat, Lon :"+latitude+", "+longitude, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -462,7 +407,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     }
 
     private void sendContext(Double latitude, Double longitude){
-        //Objeto Device
         device = createDevice(latitude, longitude);
         tblTemp.setKeyword(device.getId());
         deviceValidateExists = sqLiteController.getByKeywordTempCreate(tblTemp);
@@ -472,7 +416,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
                 deviceController.createEntity(context, device.getId(),device);
             } catch (Exception e) {
                 Log.i(STATUS, "Exception Device...!");
-                //Toast.makeText(getBaseContext(), "Exception Device...!", Toast.LENGTH_LONG).show();
             }
         } else {
             //Objeto Device para actualizarlo
@@ -481,7 +424,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
                 deviceController.updateEntity(context, device.getId(), deviceUpdateModel);
             } catch (Exception e) {
                 Log.i(STATUS, "Exception Device Update...!");
-                //Toast.makeText(getBaseContext(), "Exception Device Update...!", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -505,7 +447,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     }
 
     private DeviceUpdateModel updateDevice(Double latitude, Double longitude){
-        
         String actualDate = Functions.getActualDate();
         DeviceUpdateModel deviceUpdateModel = new DeviceUpdateModel();
         deviceUpdateModel.getCategory().setValue("smartphone");
@@ -523,7 +464,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
     @Override
     public void onCreateEntity(Response response) {
-        //Toast.makeText(this, "Code Device: " + response.getHttpCode(), Toast.LENGTH_SHORT).show();
         if(response.getHttpCode() == 201){
 
             Intent localIntent = new Intent(Constants.SERVICE_RUNNING_DEVICE).putExtra(Constants.SERVICE_RESULT_DEVICE, "Entity Device created successfully...!");
@@ -558,13 +498,11 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     public void onUpdateEntity(Response response) {
 
         if(response.getHttpCode()==204 || response.getHttpCode()==200){
-            //Toast.makeText(this, "Successful Device Update...!", Toast.LENGTH_SHORT).show();
             Intent localIntent = new Intent(Constants.SERVICE_RUNNING_DEVICE).putExtra(Constants.SERVICE_RESULT_DEVICE, "Successful Device Update...!");
             LocalBroadcastManager.getInstance(DeviceService.this).sendBroadcast(localIntent);
             Log.i("UPDATE: ", "Successful Device Update...!");
 
         } else{
-            //Toast.makeText(this, "Error updating...!"+response.getHttpCode(), Toast.LENGTH_SHORT).show();
             Intent localIntent = new Intent(Constants.SERVICE_RUNNING_DEVICE).putExtra(Constants.SERVICE_RESULT_DEVICE, "Error updating...!");
             LocalBroadcastManager.getInstance(DeviceService.this).sendBroadcast(localIntent);
             Log.i("ERROR UPDATE: ", "Error updating...!");
