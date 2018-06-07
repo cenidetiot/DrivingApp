@@ -258,6 +258,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
     private void eventDetecion(Location location){
         if (location != null) {
+
             RoadSegment roadSegment;
             latitude = (double) location.getLatitude();
             longitude = (double) location.getLongitude();
@@ -323,14 +324,23 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
             
     
             roadSegment = EventsFuntions.detectedRoadSegment(context, latitude, longitude);
+
             if(roadSegment != null){
                 Response response1 = new Response();
-                speeding(roadSegment.getMaximumAllowedSpeed(), hashMapSpeedFromTo.get("speedFrom"), hashMapSpeedFromTo.get("speedTo"), latitude, longitude);
+                speeding(
+                    roadSegment.getMaximumAllowedSpeed(),
+                    hashMapSpeedFromTo.get("speedFrom"),
+                    hashMapSpeedFromTo.get("speedTo"),
+                    latitude,
+                    longitude
+                );
                 intent.putExtra(Constants.ROAD_SEGMENT, roadSegment);
             }else {
                 intent.putExtra(Constants.ROAD_SEGMENT, roadSegment);
             }
+
             LocalBroadcastManager.getInstance(DeviceService.this).sendBroadcast(intent);
+
         } else {
             Log.i(STATUS, "Error obtener valores gps o network...!");;
         }
@@ -338,8 +348,8 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     }
 
     public void speeding(double maximumSpeed, double speedFrom, double speedTo, double latitude, double longitude){
+        
         String severitySpeeding =  EventsDetect.speeding(maximumSpeed, speedFrom, speedTo);
-
         String description = this.getString(R.string.message_alert_description_maximum_speed)+" "+maximumSpeed+"km/h. "+this.getString(R.string.message_alert_description_current_speed)+" "+speedTo+"km/h.";
         String severity = "";
 

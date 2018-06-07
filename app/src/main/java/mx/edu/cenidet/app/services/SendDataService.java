@@ -73,11 +73,15 @@ public class SendDataService {
                     longitude = intent.getDoubleExtra(Constants.SERVICE_RESULT_LONGITUDE, 0);
                     speedMS = intent.getDoubleExtra(Constants.SERVICE_RESULT_SPEED_MS, 0);
                     speedKmHr = intent.getDoubleExtra(Constants.SERVICE_RESULT_SPEED_KMHR, 0);
+
                     stopingStatus = intent.getStringExtra(Constants.SERVICE_RESULT_STOPING);
-                    if(stopingStatus != null) {
+                    if(stopingStatus != "") {
+
                         Log.i("SUDDEN", stopingStatus);
                         sendDataMethods.sendEvent(stopingStatus);
+
                     }
+
                     sendDataMethods.sendLocationSpeed(latitude, longitude, speedMS, speedKmHr);
 
                     //Detecta Zona

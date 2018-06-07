@@ -64,12 +64,15 @@ public class EventsDetect {
 
     public static String suddenStop(double currentSpeed , long currentDate){
         String result = "";
+
         initialVelocity = finalVelocity;
         finalVelocity = currentSpeed;
         initialDate = finalDate;
         finalDate = currentDate;
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
         if ( finalVelocity < initialVelocity ){
+
             if (isStoping == false){
                     speedReached = initialVelocity;
                     dateSpeedReached = initialDate;
@@ -93,16 +96,39 @@ public class EventsDetect {
                 }else {
                     result += "PARADA";
                 }
-                
+
                 return result + ",Actual : "+ sdf.format(currentDate) +",Alcazada :" + speedReached + ",Fecha  :" + sdf.format(dateSpeedReached);
             }
         } else{
+
             speedReached = 0;
             dateSpeedReached = 0;
             isStoping = false;
 
+            if(finalVelocity > 0 ){
+                if(stoped){
+
+                    if(stopedSeconds > 0 && stopedSeconds <= 2 ){ // Enviar informational
+
+                    } else if(stopedSeconds > 2 && stopedSeconds <=4){ // Low
+
+                    } else if(stopedSeconds > 4 && stopedSeconds <=6){ // Medium
+
+                    } else if(stopedSeconds > 6 && stopedSeconds <=8){ // High
+
+                    } else { // Critical
+
+                    }
+                }
+            }else{
+                stopedSeconds ++;
+                if(stopedSeconds > 10){ // Alerta Critica
+
+                }
+            }
+
         }
-        return null;
+        return "";
     }
 
     /**
