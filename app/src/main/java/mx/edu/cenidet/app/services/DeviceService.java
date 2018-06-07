@@ -300,7 +300,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
             }
 
             //Envía el Modelo de datos Device
-            Log.i("COUNTSEND", "DEVICE..!"+countSendDevice+ "speedTo: "+hashMapSpeedFromTo.get("speedTo"));
+            
             if(countSendDevice == 0){
                 sendContext(latitude, longitude);
             }if (countSendDevice == 8){
@@ -350,12 +350,15 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     public void speeding(double maximumSpeed, double speedFrom, double speedTo, double latitude, double longitude){
         
         String severitySpeeding =  EventsDetect.speeding(maximumSpeed, speedFrom, speedTo);
-        String description = this.getString(R.string.message_alert_description_maximum_speed)+" "+maximumSpeed+"km/h. "+this.getString(R.string.message_alert_description_current_speed)+" "+speedTo+"km/h.";
+        String description = 
+            this.getString( R.string.message_alert_description_maximum_speed ) + " " + maximumSpeed + "km/h. " +
+            this.getString( R.string.message_alert_description_current_speed ) + " " + speedTo + "km/h.";
         String severity = "";
 
         String subCategory = "UnauthorizedSpeeDetection";
 
         switch (severitySpeeding){
+
             case "tolerance":
                 break;
             case "informational":
@@ -378,6 +381,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
                 severity = "critical";
                 structureAlert(description, severity, subCategory, latitude, longitude);
                 break;
+
         }
     }
 
@@ -401,7 +405,9 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         alert.getValidFrom().setValue(Functions.getActualDate());
         alert.getValidTo().setValue(Functions.getActualDate());
         try {
+
            alertController.createEntity(context, alert.getId(), alert);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -440,7 +446,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
     private Device createDevice(Double latitude, Double longitude){
         String actualDate = Functions.getActualDate();
-
         Device device = new Device();
         device.setId(deviceProperties.getDeviceId(context));
         device.getCategory().setValue("smartphone");
@@ -468,14 +473,13 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         deviceUpdateModel.getSerialNumber().setValue(deviceProperties.getSerialNumber());
         deviceUpdateModel.getOwner().setValue(owner);
         deviceUpdateModel.getLocation().setValue(latitude + ", " + longitude);
-
         return  deviceUpdateModel;
     }
 
     @Override
     public void onCreateEntity(Response response) {
         if(response.getHttpCode() == 201){
-
+            
             Intent localIntent = new Intent(Constants.SERVICE_RUNNING_DEVICE).putExtra(Constants.SERVICE_RESULT_DEVICE, "Entity Device created successfully...!");
             LocalBroadcastManager.getInstance(DeviceService.this).sendBroadcast(localIntent);
             sqLiteController.updateStatusActiveByKeywordTempCreate(device.getId());
