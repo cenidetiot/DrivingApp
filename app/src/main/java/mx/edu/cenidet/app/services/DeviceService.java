@@ -156,17 +156,9 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListenerGPS);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListenerNetwork);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, locationListenerGPS);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListenerNetwork);
 
-        
-
-        //Sensor acelerometro y giroscopio
-        /*mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        //mSensorManager.registerListener(sensors, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-        //mSensorManager.registerListener(sensors, mGyroscope, SensorManager.SENSOR_DELAY_NORMAL);*/
         return START_NOT_STICKY;
     }
 
@@ -174,26 +166,19 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         @Override
         public void onLocationChanged(Location location) {
                 eventDetecion(location);
-                //Log.i("STATUS", "hashMapLatLngFromTo EJECUCION----------------:\nlatitudeFrom: " + hashMapLatLngFromTo.get("latitudeFrom") + " longitudeFrom: " + hashMapLatLngFromTo.get("longitudeFrom") + " latitudeTo: " + hashMapLatLngFromTo.get("latitudeTo") + " longitudeTo: " + hashMapLatLngFromTo.get("longitudeTo"));
-                //Log.i(STATUS, "GPS latitude: "+location.getLatitude()+" longitude: "+location.getLatitude());
         }
-
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
 
         }
-
         @Override
         public void onProviderEnabled(String provider) {
 
         }
-
         @Override
         public void onProviderDisabled(String provider) {
 
         }
-
-
     };
 
 
@@ -202,7 +187,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         @Override
         public void onLocationChanged(Location location) {
                 eventDetecion(location);
-                //Log.i(STATUS, "NETWORK latitude: "+location.getLatitude()+" longitude: "+location.getLongitude());
         }
 
         @Override
@@ -257,8 +241,8 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     }
 
     private void eventDetecion(Location location){
-        if (location != null) {
 
+        if (location != null) {
             RoadSegment roadSegment;
             latitude = (double) location.getLatitude();
             longitude = (double) location.getLongitude();
@@ -312,7 +296,9 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
             Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
             String cadena = latitude + "," + longitude + "," + speedMS + ","+ speedKmHr;// + "," + sdf.format(date) ;
-            String StopingStatus = EventsDetect.suddenStop(speedMS, date.getTime());
+            
+            String StopingStatus = EventsDetect.suddenStop(speedMS, date.getTime(), location);
+
             cadena += "," + sdf.format(date) + "," + StopingStatus;
             Functions.saveToFile(csv, cadena);
 
@@ -356,7 +342,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
             this.getString( R.string.message_alert_description_current_speed ) + " " + speedTo + "km/h.";
         String severity = "";
 
-        String subCategory = "UnauthorizedSpeeDetection";
+        String subCategory = "UnauthorizedSpeedDetection";
 
         switch (severitySpeeding){
 
@@ -364,23 +350,23 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
                 break;
             case "informational":
                 severity = "informational";
-                structureAlert(description, severity, subCategory, latitude, longitude);
+                sendAlert(description, severity, subCategory, latitude, longitude);
                 break;
             case "low":
                 severity = "low";
-                structureAlert(description, severity, subCategory, latitude, longitude);
+                sendAlert(description, severity, subCategory, latitude, longitude);
                 break;
             case "medium":
                 severity = "medium";
-                structureAlert(description, severity, subCategory, latitude, longitude);
+                sendAlert(description, severity, subCategory, latitude, longitude);
                 break;
             case "high":
                 severity = "high";
-                structureAlert(description, severity, subCategory, latitude, longitude);
+                sendAlert(description, severity, subCategory, latitude, longitude);
                 break;
             case "critical":
                 severity = "critical";
-                structureAlert(description, severity, subCategory, latitude, longitude);
+                sendAlert(description, severity, subCategory, latitude, longitude);
                 break;
 
         }
@@ -393,7 +379,8 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
      * @param latitude
      * @param longitude
      */
-    private void structureAlert(String description, String severity, String subCategory, double latitude, double longitude){
+    private void sendAlert(String description, String severity, String subCategory, double latitude, double longitude){
+        
         Alert alert = new Alert();
         alert.setId(new DevicePropertiesFunctions().getAlertId(context));
         alert.getAlertSource().setValue(new DevicePropertiesFunctions().getDeviceId(context));
@@ -406,22 +393,13 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         alert.getValidFrom().setValue(Functions.getActualDate());
         alert.getValidTo().setValue(Functions.getActualDate());
         try {
-
            alertController.createEntity(context, alert.getId(), alert);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    /**
-     *
-     * @param code codigo que informa si se debe generar una nueva alerta (1), actializar el estado de una alerta(2) o dar por finalizada la alerta (3). El codigo 3 solo se utiliza con alertas que perduran en el tiempo
-     * @param data Array que contiene los datos con los cuales se debe llenar la alerta. ¡¡¡¡¡ IMPORTANTE !!!!!  debe cambiarse a un objeto de tipo alerta
-     */
-    private void sentAlert(int code, String ... data){
-
-    }
+    
 
     private void sendContext(Double latitude, Double longitude){
         device = createDevice(latitude, longitude);

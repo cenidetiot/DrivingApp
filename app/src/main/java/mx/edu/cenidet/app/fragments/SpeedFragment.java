@@ -62,12 +62,7 @@ public class SpeedFragment extends Fragment implements SendDataService.SendDataM
 
     @Override
     public void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr) {
-        //tvLocation.setText("Lat. "+latitude+"\nLng. "+longitude);
         tvSpeed.setText(df.format(speedMS)+"m/s, "+df.format(speedKmHr)+"km/hr");
-        //tvSpeed.setText(df.format(speedKmHr)+"km/hr");
-        //tvAcceleration.setText(df.format(speedMS)+"m/s");
-        //tvSpeed.setText("Latitude: " + latitude + " Longitude: " + longitude + " Velocidad: " + speedMS + "m/s  Velocidad: " + speedKmHr + "km/hr");
-        //Log.i("SPEED: ", "VIEW Latitude: " + latitude + " Longitude: " + longitude + " Velocidad: " + speedMS + "m/s  Velocidad: " + speedKmHr + "km/hr");
     }
 
     @Override
@@ -83,7 +78,6 @@ public class SpeedFragment extends Fragment implements SendDataService.SendDataM
     @Override
     public void sendDataAccelerometer(double ax, double ay, double az) {
         tvAcceleration.setText("ax: "+ax+"\nay: "+ay+"\naz: "+az);
-        //Log.i("STATUS 2: ","ax: "+ax+" ay: "+ay+" az: "+az);
     }
 
     @Override
@@ -91,12 +85,6 @@ public class SpeedFragment extends Fragment implements SendDataService.SendDataM
         if(tvAcceleration != null){
             tvAcceleration.setText(event);
         }
-        
-       /* if(event.equals("true")){
-            Toast.makeText(getContext(), "Usted va en sentido contrario", Toast.LENGTH_SHORT).show();
-        }else{
-            Toast.makeText(getContext(), "Usted va en dirección correcta", Toast.LENGTH_SHORT).show();
-        }*/
     }
 
 }

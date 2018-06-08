@@ -39,10 +39,6 @@ public class DevicePropertiesFunctions {
         return "DeviceModel_"+functions.getReplaceParent(getBrand())+"_"+functions.getReplaceParent(getModel());
     }
 
-    /**
-     * @param context contexto donde se ejecutara el metodo.
-     * @return el identificador unico de la alerta.
-     */
     public String getAlertId(Context context){
         Date currentDate = new Date();
         Long date = currentDate.getTime() / 1000;
