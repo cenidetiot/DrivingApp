@@ -128,6 +128,10 @@ public class EventsDetect {
         return flag;
     }*/
 
+    public static void writeFile(String text){
+        Functions.saveToFile(fileName, text);
+    } 
+
     public final static double AVERAGE_RADIUS_OF_EARTH = 6371;
     public static float calculateDistance(double userLat, double userLng, double venueLat, double venueLng) {
 
@@ -147,6 +151,15 @@ public class EventsDetect {
     }
 
     public static String suddenStop(double currentSpeed , long currentDate, Location currentP){
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
+        
+        String comunData = 
+            currentP.getLatitude() + "," +
+            currentP.getLongitude() + "," +
+            currentSpeed + "," +
+            "Fecha Actual : "+ sdf.format(currentDate) + ",";
+
         String result = "";
 
         initialVelocity = finalVelocity;
@@ -157,12 +170,10 @@ public class EventsDetect {
 
         LatLng currentPoint = new LatLng(currentP.getLatitude(), currentP.getLongitude());
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
-
         if ( finalVelocity < initialVelocity ){
 
             distancePoints += SphericalUtil.computeDistanceBetween(lastPoint, currentPoint);
-            
+        
             if (isStoping == false){
                 speedReached = initialVelocity;
                 dateSpeedReached = initialDate;
@@ -180,20 +191,24 @@ public class EventsDetect {
                 //realDistance = Math.round(realDistance);
 
                 if (idealDistance > realDistance){
-                    result = "PARADA REPENTINA";
+                    result += "PARADA REPENTINA,";
                     stoped = true; 
                     stopedSeconds = TimeUnit.MILLISECONDS.toSeconds(new Date().getTime() - finalDate);
                 }else {
-                    result += "PARADA a TIEMPO";
+                    result += "PARADA NORMAL,";
                 }
 
-                return result + 
-                    ",Distancia ideal : " +  idealDistance+
-                    ",Distancia Real : " + realDistance +
-                    ",Distancia Puntos : " + distancePoints + 
-                    ",Fecha Actual : "+ sdf.format(currentDate) + 
-                    ",Alcanzada : " + speedReached + ",Fecha A :" + 
-                    sdf.format(dateSpeedReached);
+                result += 
+                    "Distancia ideal : " +  idealDistance + "," +
+                    "Distancia Real : " + realDistance + "," + 
+                    "Distancia Puntos : " + distancePoints + "," +
+                    "Alcanzada : " + speedReached + "," +
+                    "Fecha Alcanzada:" + sdf.format(dateSpeedReached);
+
+                writeFile(comunData + result);
+
+                return result;
+                
             }
 
         } else{
@@ -228,11 +243,6 @@ public class EventsDetect {
         return result;
     }
 
-
-    public static void Write(String text){
-        Functions.saveToFile(fileName, cadena);
-    } 
-    
     /**
      * @param maximumSpeed velocidad maxima del road segment
      * @param speedFrom velocidad anterior.

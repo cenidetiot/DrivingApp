@@ -114,7 +114,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     private double timeMinInferiorSpeed=180; //Tiempo minimo en segundos para determinarlo como una velocidad por debajo del limite minimo establecido
     private double timeStampLastMinSpeedReading=-1.0; //Marca de tiempo que permite identificar el tiempo de la ultima lectura realizada, el valor esta en milisegundos.
 
-    private String csv = "velocidades.csv";
+    
     //Medir distancias
     float[] distanceArray;
     public void onCreate() {
@@ -291,16 +291,14 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
                 sendContext(latitude, longitude);
                 countSendDevice = 0;
             }
+
             countSendDevice++;
 
-            Date date = new Date();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
-            String cadena = latitude + "," + longitude + "," + speedMS + ","+ speedKmHr;// + "," + sdf.format(date) ;
-            
-            String StopingStatus = EventsDetect.suddenStop(speedMS, date.getTime(), location);
 
-            cadena += "," + sdf.format(date) + "," + StopingStatus;
-            Functions.saveToFile(csv, cadena);
+            
+            String StopingStatus = EventsDetect.suddenStop(speedMS, new Date().getTime(), location);
+
+            
 
             Intent intent = new Intent(Constants.SERVICE_CHANGE_LOCATION_DEVICE)
                 .putExtra(Constants.SERVICE_RESULT_LATITUDE, latitude)
