@@ -29,9 +29,9 @@ import www.fiware.org.ngsi.utilities.DevicePropertiesFunctions;
 public class EventsDetect {
 
     private static Context context; 
+    private static String fileName = "velocidades.csv";
 
     private static String idDevice ;
-
     private AlertController alertController;
 
     private static double gravity=9.81; // valor en m/s
@@ -47,7 +47,7 @@ public class EventsDetect {
     private static long dateSpeedReached = 0;
 
     private static double distancePoints = 0; 
-    private static Location lastPoint = null;
+    private static LatLng lastPoint = null;
 
     public EventsDetect (Context _context) {
         context = _context ;
@@ -146,7 +146,7 @@ public class EventsDetect {
 
     }
 
-    public static String suddenStop(double currentSpeed , long currentDate, Location currentPoint){
+    public static String suddenStop(double currentSpeed , long currentDate, Location currentP){
         String result = "";
 
         initialVelocity = finalVelocity;
@@ -155,19 +155,13 @@ public class EventsDetect {
         finalDate = currentDate;
 
 
-        //LatLng currentPoint = new LatLng(currentP.getLatitude(), currentP.getLongitude());
+        LatLng currentPoint = new LatLng(currentP.getLatitude(), currentP.getLongitude());
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
 
         if ( finalVelocity < initialVelocity ){
-            
-            //distancePoints += SphericalUtil.computeDistanceBetween(lastPoint, currentPoint);
-            distancePoints += calculateDistance(
-                (double) currentPoint.getLatitude(),
-                (double)  currentPoint.getLongitude(),
-                (double) lastPoint.getLatitude(),
-                (double) lastPoint.getLongitude()
-                 );
+
+            distancePoints += SphericalUtil.computeDistanceBetween(lastPoint, currentPoint);
             
             if (isStoping == false){
                 speedReached = initialVelocity;
@@ -194,11 +188,11 @@ public class EventsDetect {
                 }
 
                 return result + 
-                    ",Distancia ideal" +  idealDistance+
-                    ",Distacia Real" + realDistance +
-                    ",Distancia Puntos" + distancePoints + 
+                    ",Distancia ideal : " +  idealDistance+
+                    ",Distancia Real : " + realDistance +
+                    ",Distancia Puntos : " + distancePoints + 
                     ",Fecha Actual : "+ sdf.format(currentDate) + 
-                    ",Alcanzada :" + speedReached + ",Fecha A :" + 
+                    ",Alcanzada : " + speedReached + ",Fecha A :" + 
                     sdf.format(dateSpeedReached);
             }
 
@@ -225,19 +219,20 @@ public class EventsDetect {
             if(stoped){
                 stopedSeconds ++;
                 if(stopedSeconds > 8 ){ //Critical
-
                     stoped = false;
                 }
             }
 
         }
-        
+        lastPoint = currentPoint;
         return result;
     }
 
 
+    public static void Write(String text){
+        Functions.saveToFile(fileName, cadena);
+    } 
     
-
     /**
      * @param maximumSpeed velocidad maxima del road segment
      * @param speedFrom velocidad anterior.
