@@ -9,6 +9,7 @@ import android.location.Location;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import mx.edu.cenidet.app.activities.HomeActivity;
 
 import android.content.Context;
 
@@ -28,7 +29,7 @@ import www.fiware.org.ngsi.utilities.DevicePropertiesFunctions;
 
 public class EventsDetect {
 
-    private static Context context; 
+    private static Context context = null; 
     private static String fileName = "velocidades.csv";
 
     private static String idDevice ;
@@ -49,20 +50,12 @@ public class EventsDetect {
     private static double distancePoints = 0; 
     private static LatLng lastPoint = null;
 
-    public EventsDetect (Context _context) {
-        context = _context ;
-        idDevice = new DevicePropertiesFunctions().getAlertId(context);
+    public  EventsDetect () {
+        context = HomeActivity.MAIN_CONTEXT;
+        //this.idDevice = new DevicePropertiesFunctions().getAlertId(context);
     }
     
-    /**
-     * @param context contexto donde se ejecutara el metodo.
-     * @return el identificador unico de la alerta.
-    */
-    public String getAlertId(){
-        Date currentDate = new Date();
-        Long date = currentDate.getTime() / 1000;
-        return "Alert:Device_Smartphone_" + idDevice + ":" + date; 
-    }
+    
 
     /**
      * @param description La velocidad máxima permitida es 20 km/h. Velocidad actual del vehiculo es 25 km/h.
@@ -71,26 +64,20 @@ public class EventsDetect {
      * @param latitude
      * @param longitude
      */
-    private void sendAlert(
-        String description, 
-        String severity, 
-        String subCategory, 
-        double latitude, 
-        double longitude){
 
-        String date = Functions.getActualDate();
+    private void sendAlert(String description, String severity, String subCategory, double latitude, double longitude){
+        
         Alert alert = new Alert();
-        alert.setId(getAlertId());
-        alert.getAlertSource().setValue(idDevice);
+        alert.setId(new DevicePropertiesFunctions().getAlertId(context));
+        alert.getAlertSource().setValue(new DevicePropertiesFunctions().getDeviceId(context));
         alert.getCategory().setValue("Traffic");
-        alert.getDateObserved().setValue(date);
+        alert.getDateObserved().setValue(Functions.getActualDate());
         alert.getDescription().setValue(description);
         alert.getLocation().setValue(latitude+", "+longitude);
         alert.getSeverity().setValue(severity);
         alert.getSubCategory().setValue(subCategory);
-        alert.getValidFrom().setValue(date);
-        alert.getValidTo().setValue(date);
-
+        alert.getValidFrom().setValue(Functions.getActualDate());
+        alert.getValidTo().setValue(Functions.getActualDate());
         try {
            alertController.createEntity(context, alert.getId(), alert);
         } catch (Exception e) {
@@ -98,68 +85,26 @@ public class EventsDetect {
         }
     }
 
-    /*public static String oppositeDirectionDisplacement(LatLng lastPoint ,LatLng currentPoint, LatLng startPoint, LatLng endPoint){
-    
-        String flag = "";
-
-        if (lastPoint != null){
-            
-        }
-        double distanceTotal = SphericalUtil.computeDistanceBetween(startPoint, endPoint);
-        
-        double distance1Endpoint = SphericalUtil.computeDistanceBetween(lastPoint, endPoint);
-        double distance2Endpoint = SphericalUtil.computeDistanceBetween(currentPoint, endPoint);
-        double distance2StartPoint = SphericalUtil.computeDistanceBetween(currentPoint, startPoint);
-        double distance1StartPoint = SphericalUtil.computeDistanceBetween(lastPoint, startPoint);
-
-        if( PolyUtil.distanceToLine(currentPoint, startPoint, endPoint) < 5) {
-
-            if (distanceTotal + 3 >= distance2StartPoint + distance2Endpoint){
-
-                if(distance2Endpoint > distance1Endpoint){
-                    flag = "wrongWay";
-                }else if(distance2Endpoint < distance1Endpoint){
-                    flag = "correctWay";
-                }
-
-            }
-
-        }
-        return flag;
-    }*/
-
-    public static void writeFile(String text){
+    public void writeFile(String text){
         Functions.saveToFile(fileName, text);
     } 
 
-    public final static double AVERAGE_RADIUS_OF_EARTH = 6371;
-    public static float calculateDistance(double userLat, double userLng, double venueLat, double venueLng) {
-
-        double latDistance = Math.toRadians(userLat - venueLat);
-        double lngDistance = Math.toRadians(userLng - venueLng);
-
-        double a = (Math.sin(latDistance / 2) * Math.sin(latDistance / 2)) +
-                        (Math.cos(Math.toRadians(userLat))) *
-                        (Math.cos(Math.toRadians(venueLat))) *
-                        (Math.sin(lngDistance / 2)) *
-                        (Math.sin(lngDistance / 2));
-
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-        return (float) (Math.round(AVERAGE_RADIUS_OF_EARTH * c));
-
-    }
-
-    public static String suddenStop(double currentSpeed , long currentDate, Location currentP){
+    
+    public String suddenStop(double currentSpeed , long currentDate, Location currentP){
         
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
+
+        
+
         String comunData = 
             currentP.getLatitude() + "," +
             currentP.getLongitude() + "," +
             currentSpeed + "," +
             "Fecha Actual : "+ sdf.format(currentDate) + ",";
+            
 
         String result = "";
+        
 
         initialVelocity = finalVelocity;
         finalVelocity = currentSpeed;
@@ -170,6 +115,8 @@ public class EventsDetect {
         LatLng currentPoint = new LatLng(currentP.getLatitude(), currentP.getLongitude());
 
         if ( finalVelocity < initialVelocity ){
+
+            sendAlert("SUDDEN", "low", "SuddenStop", currentP.getLatitude(), currentP.getLongitude());
 
             distancePoints += SphericalUtil.computeDistanceBetween(lastPoint, currentPoint);
         
@@ -203,6 +150,8 @@ public class EventsDetect {
                     "Distancia Puntos : " + distancePoints + "," +
                     "Alcanzada : " + speedReached + "," +
                     "Fecha Alcanzada:" + sdf.format(dateSpeedReached);
+
+                    
                 
             }
 
@@ -214,16 +163,21 @@ public class EventsDetect {
                 dateSpeedReached = 0;
                 isStoping = false;
 
-                if(stoped){
-                    if(stopedSeconds > 1 && stopedSeconds <= 2 ){ // Enviar informational
-
+                if(!stoped){
+                    String severity =  "";
+                    stopedSeconds = 6 ;
+                    if(stopedSeconds > 1 && stopedSeconds <= 2 ){ //informational
+                        severity = "informational";
                     } else if(stopedSeconds > 2 && stopedSeconds <=4){ // Low
-
+                        severity = "low";
                     } else if(stopedSeconds > 4 && stopedSeconds <=6){ // Medium
-
+                        severity = "medium";
                     } else if(stopedSeconds > 6 && stopedSeconds <=8){ // High
-
+                        severity = "high";
                     } else if(stopedSeconds > 8 ) { // Critical
+                        severity = "critical";
+                    }
+                    if (severity != "") {
                         
                     }
                     stoped = false;
@@ -233,6 +187,7 @@ public class EventsDetect {
             if(stoped){
                 stopedSeconds ++;
                 if(stopedSeconds > 8 ){ //Critical
+                    
                     stoped = false;
                 }
             }

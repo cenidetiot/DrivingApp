@@ -58,7 +58,7 @@ import www.fiware.org.ngsi.utilities.Functions;
  * Created by Cipriano on 3/3/2018.
  */
 
-public class DeviceService extends Service implements DeviceController.DeviceResourceMethods, AlertController.AlertResourceMethods, SensorEventListener{
+public class DeviceService extends Service implements DeviceController.DeviceResourceMethods, AlertController.AlertResourceMethods{
     private Context context;
     private static final String STATUS = "STATUS";
     //private double longitudeGPS, latitudeGPS;
@@ -141,13 +141,13 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         device = new Device();
 
 
-        /* Sensor Accelerometer*/
+        /* Sensor Accelerometer
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
+        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        */
 
-
-        events = new EventsDetect(context);
+        events = new EventsDetect();
         
         if (appPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_ID) != null){
             owner = appPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_ID);
@@ -309,8 +309,10 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
             countSendDevice++;
 
             String StopingStatus = events.suddenStop(speedMS, new Date().getTime(), location);
-            if(StopingStatus != "")
-                StopingStatus += "ax"+ ax + "ay" + ay + "az" + az;
+            if(StopingStatus != ""){
+                //sendAlert("Automatic Sudden Stop", "critical", "suddenStop", latitude, longitude);
+            }
+
 
             Intent intent = new Intent(Constants.SERVICE_CHANGE_LOCATION_DEVICE)
                 .putExtra(Constants.SERVICE_RESULT_LATITUDE, latitude)
@@ -323,7 +325,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
             roadSegment = EventsFuntions.detectedRoadSegment(context, latitude, longitude);
 
             if(roadSegment != null){
-                Response response1 = new Response();
                 speeding(
                     roadSegment.getMaximumAllowedSpeed(),
                     hashMapSpeedFromTo.get("speedFrom"),
@@ -339,7 +340,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
             LocalBroadcastManager.getInstance(DeviceService.this).sendBroadcast(intent);
 
         } else {
-            Log.i(STATUS, "Error obtener valores gps o network...!");;
+            Log.i(STATUS, "Error obtener valores gps o network...!");
         }
 
     }
@@ -515,51 +516,16 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     }
 
     @Override
-    public void onUpdateEntitySaveOffline(Response response) {
-
-    }
-
+    public void onUpdateEntitySaveOffline(Response response) {}
     @Override
-    public void onDeleteEntity(Response response) {
-
-    }
-
+    public void onDeleteEntity(Response response) {}
     @Override
-    public void onGetEntities(Response response) {
-
-    }
-
+    public void onGetEntities(Response response) {}
     @Override
-    public void onCreateEntityAlert(Response response) {
-        Log.i("EVENT: ", "RESPUESTA DEL ENVIO DE LA ALERTA: "+response.getHttpCode());
-    }
-
+    public void onCreateEntityAlert(Response response) {}
     @Override
-    public void onUpdateEntityAlert(Response response) {
-
-    }
-
+    public void onUpdateEntityAlert(Response response) {}
     @Override
-    public void onGetEntitiesAlert(Response response) {
+    public void onGetEntitiesAlert(Response response) {}
 
-    }
-    @Override
-    public void onSensorChanged(SensorEvent sensorEvent) {
-        Sensor mySensor = sensorEvent.sensor;
-     
-        if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            float x = sensorEvent.values[0];
-            float y = sensorEvent.values[1];
-            float z = sensorEvent.values[2];
-
-            ax = x;
-            ay = y;
-            az = z;
-        }
-    }
-    
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-    
-    }
 }
