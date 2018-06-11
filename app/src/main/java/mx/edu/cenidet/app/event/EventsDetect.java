@@ -136,9 +136,7 @@ public class EventsDetect {
                     "Alcanzada : " + speedReached + "," +
                     "Fecha Alcanzada:" + sdf.format(dateSpeedReached);
                     
-                //alert  = makeAlert( result, "critical", "SuddenStop", currentP.getLatitude(), currentP.getLongitude());
-                
-
+                alert  = makeAlert( comunData + result, "critical", "SuddenStop", currentP.getLatitude(), currentP.getLongitude());
             }
 
         } else{
@@ -149,9 +147,8 @@ public class EventsDetect {
                 dateSpeedReached = 0;
                 isStoping = false;
 
-                if(!stoped){
+                if(stoped){
                     String severity =  "";
-                    stopedSeconds = 6 ;
                     if(stopedSeconds > 1 && stopedSeconds <= 2 ){ //informational
                         severity = "informational";
                     } else if(stopedSeconds > 2 && stopedSeconds <=4){ // Low
@@ -164,7 +161,7 @@ public class EventsDetect {
                         severity = "critical";
                     }
                     if (severity != "") {
-                        alert  = makeAlert( result, severity, "suddenStop", currentP.getLatitude(), currentP.getLongitude());
+                        alert  = makeAlert( comunData, severity, "suddenStop", currentP.getLatitude(), currentP.getLongitude());
                     }
                     stoped = false;
                 }
@@ -173,7 +170,7 @@ public class EventsDetect {
             if(stoped){
                 stopedSeconds ++;
                 if(stopedSeconds > 8 ){ //Critical
-                    alert  = makeAlert( result, "critical", "suddenStop", currentP.getLatitude(), currentP.getLongitude());
+                    alert  = makeAlert( comunData, "critical", "suddenStop", currentP.getLatitude(), currentP.getLongitude());
                     stoped = false;
                 }
             }
@@ -181,8 +178,6 @@ public class EventsDetect {
         }
         writeFile(comunData + result);
         lastPoint = currentPoint;
-
-
 
         return alert;
     }

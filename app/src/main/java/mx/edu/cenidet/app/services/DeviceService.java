@@ -298,7 +298,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
             }
 
             //Envía el Modelo de datos Device
-            
             if(countSendDevice == 0){
                 sendContext(latitude, longitude);
             }if (countSendDevice == 8){
@@ -308,13 +307,13 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
             countSendDevice++;
 
-            Alert suddenStop = events.suddenStop(speedMS, new Date().getTime(), location);
-            if(suddenStop != null){
-                sendAlert1(suddenStop);
-            }
+            Alert suddenStopAlert = events.suddenStop(speedMS, new Date().getTime(), location);
             String StopingStatus = "";
-
-
+            
+            if(suddenStopAlert != null){
+                sendAlert1(suddenStopAlert);
+                StopingStatus  = suddenStopAlert.getDescription().getValue();
+            }
 
             Intent intent = new Intent(Constants.SERVICE_CHANGE_LOCATION_DEVICE)
                 .putExtra(Constants.SERVICE_RESULT_LATITUDE, latitude)
@@ -323,7 +322,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
                 .putExtra(Constants.SERVICE_RESULT_SPEED_KMHR, speedKmHr)
                 .putExtra(Constants.SERVICE_RESULT_STOPING, StopingStatus);
             
-    
             roadSegment = EventsFuntions.detectedRoadSegment(context, latitude, longitude);
 
             if(roadSegment != null){
@@ -338,7 +336,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
             }
             
             intent.putExtra(Constants.ROAD_SEGMENT, roadSegment);
-
             LocalBroadcastManager.getInstance(DeviceService.this).sendBroadcast(intent);
 
         } else {
@@ -513,7 +510,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
     @Override
     public void onCreateEntitySaveOffline(Response response) {
-
     }
 
     @Override
