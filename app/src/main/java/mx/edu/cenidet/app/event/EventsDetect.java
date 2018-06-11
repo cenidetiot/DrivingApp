@@ -153,7 +153,6 @@ public class EventsDetect {
     public static String suddenStop(double currentSpeed , long currentDate, Location currentP){
         
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
-        
         String comunData = 
             currentP.getLatitude() + "," +
             currentP.getLongitude() + "," +
@@ -204,17 +203,12 @@ public class EventsDetect {
                     "Distancia Puntos : " + distancePoints + "," +
                     "Alcanzada : " + speedReached + "," +
                     "Fecha Alcanzada:" + sdf.format(dateSpeedReached);
-
-                writeFile(comunData + result);
-
-                return result;
                 
             }
 
         } else{
 
             distancePoints = 0;
-
             if(finalVelocity > 0){
                 speedReached = 0;
                 dateSpeedReached = 0;
@@ -222,10 +216,15 @@ public class EventsDetect {
 
                 if(stoped){
                     if(stopedSeconds > 1 && stopedSeconds <= 2 ){ // Enviar informational
+
                     } else if(stopedSeconds > 2 && stopedSeconds <=4){ // Low
+
                     } else if(stopedSeconds > 4 && stopedSeconds <=6){ // Medium
+
                     } else if(stopedSeconds > 6 && stopedSeconds <=8){ // High
+
                     } else if(stopedSeconds > 8 ) { // Critical
+                        
                     }
                     stoped = false;
                 }
@@ -237,8 +236,9 @@ public class EventsDetect {
                     stoped = false;
                 }
             }
-
+            
         }
+        writeFile(comunData + result);
         lastPoint = currentPoint;
         return result;
     }
@@ -254,8 +254,8 @@ public class EventsDetect {
         double subtractSpeed;
 
         if(speedFrom > 4.5 && speedTo > 4.5){
-            averageSpeed = (speedFrom+speedTo)/2;
-            subtractSpeed = averageSpeed-maximumSpeed;
+            averageSpeed = ( speedFrom + speedTo ) / 2;
+            subtractSpeed = averageSpeed - maximumSpeed;
             if(subtractSpeed < 1){
                 return "tolerance";
             }else if (subtractSpeed<=5){

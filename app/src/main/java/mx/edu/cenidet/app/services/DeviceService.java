@@ -5,8 +5,13 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorEvent;
+
+
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -53,7 +58,7 @@ import www.fiware.org.ngsi.utilities.Functions;
  * Created by Cipriano on 3/3/2018.
  */
 
-public class DeviceService extends Service implements DeviceController.DeviceResourceMethods, AlertController.AlertResourceMethods{
+public class DeviceService extends Service implements DeviceController.DeviceResourceMethods, AlertController.AlertResourceMethods, SensorEventListener{
     private Context context;
     private static final String STATUS = "STATUS";
     //private double longitudeGPS, latitudeGPS;
@@ -100,7 +105,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
 
     /** variables de control y configuración**/
-
     private boolean isDrivingUser=true; // Variable para determinar si una persona va manejando
     private boolean isMonitoring=false; // Variable para determinar si se deben monitorear los eventos relacionados con la velocidad
     private boolean isInArea=true; //Variable para saber si una persona se encuentra dentro de un area
@@ -114,17 +118,17 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     private double timeMinInferiorSpeed=180; //Tiempo minimo en segundos para determinarlo como una velocidad por debajo del limite minimo establecido
     private double timeStampLastMinSpeedReading=-1.0; //Marca de tiempo que permite identificar el tiempo de la ultima lectura realizada, el valor esta en milisegundos.
 
+    private EventsDetect events ; 
     
     //Medir distancias
     float[] distanceArray;
+
     public void onCreate() {
         super.onCreate();
         context = HomeActivity.MAIN_CONTEXT;
         hashMapSpeedFromTo = new HashMap<String, Double>();
         hashMapLatLngFromTo = new HashMap<String, Double>();
         distanceArray = new float[2];
-        //uLocationService = new UsersLocationService(context,this);
-        //id = HomeActivity.ID;
         deviceSensor = new DeviceSensor();
         alertController = new AlertController(this);
         //Modelo de datos Device, DeviceModel.
@@ -136,6 +140,15 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         sqLiteController = new SQLiteController(context);
         device = new Device();
 
+
+        /* Sensor Accelerometer*/
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
+
+
+        events = new EventsDetect(context);
+        
         if (appPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_ID) != null){
             owner = appPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_ID);
         }else{
@@ -158,7 +171,8 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, locationListenerGPS);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListenerNetwork);
-
+        
+        
         return START_NOT_STICKY;
     }
 
@@ -294,11 +308,9 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
             countSendDevice++;
 
-
-            
-            String StopingStatus = EventsDetect.suddenStop(speedMS, new Date().getTime(), location);
-
-            
+            String StopingStatus = events.suddenStop(speedMS, new Date().getTime(), location);
+            if(StopingStatus != "")
+                StopingStatus += "ax"+ ax + "ay" + ay + "az" + az;
 
             Intent intent = new Intent(Constants.SERVICE_CHANGE_LOCATION_DEVICE)
                 .putExtra(Constants.SERVICE_RESULT_LATITUDE, latitude)
@@ -319,10 +331,10 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
                     latitude,
                     longitude
                 );
-                intent.putExtra(Constants.ROAD_SEGMENT, roadSegment);
-            }else {
-                intent.putExtra(Constants.ROAD_SEGMENT, roadSegment);
+                
             }
+            
+            intent.putExtra(Constants.ROAD_SEGMENT, roadSegment);
 
             LocalBroadcastManager.getInstance(DeviceService.this).sendBroadcast(intent);
 
@@ -335,6 +347,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     public void speeding(double maximumSpeed, double speedFrom, double speedTo, double latitude, double longitude){
         
         String severitySpeeding =  EventsDetect.speeding(maximumSpeed, speedFrom, speedTo);
+
         String description = 
             this.getString( R.string.message_alert_description_maximum_speed ) + " " + maximumSpeed + "km/h. " +
             this.getString( R.string.message_alert_description_current_speed ) + " " + speedTo + "km/h.";
@@ -529,5 +542,24 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     @Override
     public void onGetEntitiesAlert(Response response) {
 
+    }
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        Sensor mySensor = sensorEvent.sensor;
+     
+        if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            float x = sensorEvent.values[0];
+            float y = sensorEvent.values[1];
+            float z = sensorEvent.values[2];
+
+            ax = x;
+            ay = y;
+            az = z;
+        }
+    }
+    
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    
     }
 }
