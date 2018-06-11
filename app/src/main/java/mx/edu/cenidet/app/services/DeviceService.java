@@ -308,10 +308,12 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
             countSendDevice++;
 
-            String StopingStatus = events.suddenStop(speedMS, new Date().getTime(), location);
-            if(StopingStatus != ""){
-                //sendAlert("Automatic Sudden Stop", "critical", "suddenStop", latitude, longitude);
+            Alert suddenStop = events.suddenStop(speedMS, new Date().getTime(), location);
+            if(suddenStop != null){
+                sendAlert1(suddenStop);
             }
+            String StopingStatus = "";
+
 
 
             Intent intent = new Intent(Constants.SERVICE_CHANGE_LOCATION_DEVICE)
@@ -354,7 +356,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
             this.getString( R.string.message_alert_description_current_speed ) + " " + speedTo + "km/h.";
         String severity = "";
 
-        String subCategory = "UnauthorizedSpeedDetection";
+        String subCategory = "unauthorizedSpeedDetection";
 
         switch (severitySpeeding){
 
@@ -402,6 +404,21 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         alert.getLocation().setValue(latitude+", "+longitude);
         alert.getSeverity().setValue(severity);
         alert.getSubCategory().setValue(subCategory);
+        alert.getValidFrom().setValue(Functions.getActualDate());
+        alert.getValidTo().setValue(Functions.getActualDate());
+        try {
+           alertController.createEntity(context, alert.getId(), alert);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendAlert1(Alert alert){
+
+        alert.setId(new DevicePropertiesFunctions().getAlertId(context));
+        alert.getAlertSource().setValue(new DevicePropertiesFunctions().getDeviceId(context));
+        alert.getCategory().setValue("traffic");
+        alert.getDateObserved().setValue(Functions.getActualDate());
         alert.getValidFrom().setValue(Functions.getActualDate());
         alert.getValidTo().setValue(Functions.getActualDate());
         try {
