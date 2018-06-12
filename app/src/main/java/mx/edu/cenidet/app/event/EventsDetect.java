@@ -55,6 +55,26 @@ public class EventsDetect {
         //this.idDevice = new DevicePropertiesFunctions().getAlertId(context);
     }
     
+    public static String oppositeDirectionDisplacement(LatLng lastPoint, LatLng currentPoint, LatLng startPoint, LatLng endPoint){
+        String flag="undefined";
+        double distanceTotal=SphericalUtil.computeDistanceBetween(startPoint, endPoint);
+
+        double distance1Endpoint=SphericalUtil.computeDistanceBetween(lastPoint,endPoint);
+        double distance2Endpoint=SphericalUtil.computeDistanceBetween(currentPoint,endPoint);
+        double distance2StartPoint=SphericalUtil.computeDistanceBetween(currentPoint,startPoint);
+        double distance1StartPoint=SphericalUtil.computeDistanceBetween(lastPoint,startPoint);
+        if(PolyUtil.distanceToLine(currentPoint,startPoint,endPoint)<5) {
+            if ( distanceTotal + 3 >= distance2StartPoint + distance2Endpoint){
+                if(distance2Endpoint > distance1Endpoint){
+                    flag="wrongWay";
+                }else if(distance2Endpoint < distance1Endpoint){
+                    flag="correctWay";
+                }
+            }
+
+        }
+        return flag;
+    }
     
 
     /**
