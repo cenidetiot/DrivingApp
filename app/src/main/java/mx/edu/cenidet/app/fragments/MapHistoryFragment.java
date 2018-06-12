@@ -133,11 +133,11 @@ public class MapHistoryFragment extends Fragment implements OnMapReadyCallback {
                 arrayPoint = new JSONArray(centerPoint);
                 double centerLatitude = arrayPoint.getDouble(0);
                 double centerLongitude = arrayPoint.getDouble(1);
-                zoomToLocation(centerLatitude, centerLongitude);
-                if(gMap != null){
+               /* if(gMap != null){
                     gMap.addPolygon(new PolygonOptions()
                             .addAll(listLocation).strokeColor(Color.RED));
-                }
+                }*/
+                zoomToLocation(centerLatitude, centerLongitude);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -158,7 +158,7 @@ public class MapHistoryFragment extends Fragment implements OnMapReadyCallback {
 
         if(alert != null){
             String severity = alert.getSeverity().getValue();
-            String category = alert.getCategory().getValue();
+            String subcategory = alert.getSubCategory().getValue();
             String description = alert.getDescription().getValue();
             String[] subString;
             subString =  alert.getLocation().getValue().split(",");
@@ -166,19 +166,19 @@ public class MapHistoryFragment extends Fragment implements OnMapReadyCallback {
             double centerLongitude = Double.parseDouble(subString[1]);
             switch (severity){
                 case "informational":
-                    marker = gMap.addMarker(new MarkerOptions().position(new LatLng(centerLatitude, centerLongitude)).title(category).snippet(description).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_location_informational)));
+                    marker = gMap.addMarker(new MarkerOptions().position(new LatLng(centerLatitude, centerLongitude)).title(subcategory).snippet(description).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_location_informational)));
                     break;
                 case "low":
-                    marker = gMap.addMarker(new MarkerOptions().position(new LatLng(centerLatitude, centerLongitude)).title(category).snippet(description).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_location_low)));
+                    marker = gMap.addMarker(new MarkerOptions().position(new LatLng(centerLatitude, centerLongitude)).title(subcategory).snippet(description).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_location_low)));
                     break;
                 case "medium":
-                    marker = gMap.addMarker(new MarkerOptions().position(new LatLng(centerLatitude, centerLongitude)).title(category).snippet(description).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_location_medium)));
+                    marker = gMap.addMarker(new MarkerOptions().position(new LatLng(centerLatitude, centerLongitude)).title(subcategory).snippet(description).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_location_medium)));
                     break;
                 case "high":
-                    marker = gMap.addMarker(new MarkerOptions().position(new LatLng(centerLatitude, centerLongitude)).title(category).snippet(description).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_location_high)));
+                    marker = gMap.addMarker(new MarkerOptions().position(new LatLng(centerLatitude, centerLongitude)).title(subcategory).snippet(description).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_location_high)));
                     break;
                 case "critical":
-                    marker = gMap.addMarker(new MarkerOptions().position(new LatLng(centerLatitude, centerLongitude)).title(category).snippet(description).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_location_critical)));
+                    marker = gMap.addMarker(new MarkerOptions().position(new LatLng(centerLatitude, centerLongitude)).title(subcategory).snippet(description).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_location_critical)));
                     break;
             }
             //marker = gMap.addMarker(new MarkerOptions().position(new LatLng(centerLatitude, centerLongitude)));

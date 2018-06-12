@@ -113,10 +113,10 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
 
     private void createOrUpdateMarkerByLocation(double latitude, double longitude){
         if(markerZone == null){
-            markerZone = gMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).draggable(true));
+            //markerZone = gMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).draggable(true));
             zoomToLocation(latitude, longitude);
         }else{
-            markerZone.setPosition(new LatLng(latitude, longitude));
+            //markerZone.setPosition(new LatLng(latitude, longitude));
         }
     }
 

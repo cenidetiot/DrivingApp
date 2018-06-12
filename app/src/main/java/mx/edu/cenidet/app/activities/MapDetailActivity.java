@@ -108,7 +108,7 @@ public class MapDetailActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     private void createOrUpdateMarkerByLocation(double latitude, double longitude, String name){
-        if(marker == null){
+        if(marker == null) {
             marker = gMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(name));
             zoomToLocation(latitude, longitude);
         }else{
