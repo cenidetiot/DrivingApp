@@ -257,6 +257,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     private void eventDetecion(Location location){
 
         if (location != null) {
+            
             RoadSegment roadSegment;
             latitude = (double) location.getLatitude();
             longitude = (double) location.getLongitude();
@@ -309,7 +310,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
             Alert suddenStopAlert = events.suddenStop(speedMS, new Date().getTime(), location);
             String StopingStatus = "";
-            
+
             if(suddenStopAlert != null){
                 sendAlert1(suddenStopAlert);
                 StopingStatus  = suddenStopAlert.getDescription().getValue();

@@ -94,18 +94,21 @@ public class EventsDetect {
 
         String result = "";
         
-
         initialVelocity = finalVelocity;
         finalVelocity = currentSpeed;
         initialDate = finalDate;
         finalDate = currentDate;
 
-
-        LatLng currentPoint = new LatLng(currentP.getLatitude(), currentP.getLongitude());
+        /* Arregla errorde tiempo */
+        long diff = finalDate - initialDate;
+        long timeDif = TimeUnit.MILLISECONDS.toSeconds(diff);
+        if(timeDif < 0){
+            if(finalVelocity > initialVelocity )
+                initialVelocity = finalVelocity;
+            return null;
+        }
 
         if ( finalVelocity < initialVelocity ){
-
-            distancePoints += SphericalUtil.computeDistanceBetween(lastPoint, currentPoint);
         
             if (isStoping == false){
                 speedReached = initialVelocity;
@@ -119,6 +122,7 @@ public class EventsDetect {
                 double realDistance = 0;
                 long diffDate = finalDate - dateSpeedReached;
                 long time = TimeUnit.MILLISECONDS.toSeconds(diffDate);
+            
                 realDistance = ((finalVelocity + speedReached )  / 2) * (time) ;
 
                 if (idealDistance > realDistance){
@@ -132,7 +136,6 @@ public class EventsDetect {
                 result += 
                     "Distancia ideal : " +  idealDistance + "," +
                     "Distancia Real : " + realDistance + "," + 
-                    "Distancia Puntos : " + distancePoints + "," +
                     "Alcanzada : " + speedReached + "," +
                     "Fecha Alcanzada:" + sdf.format(dateSpeedReached);
                     
