@@ -16,6 +16,7 @@ public class AlertHistoryActivity extends AppCompatActivity implements AlertHist
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alert_history);
+        setToolbar();
     }
 
     private void setToolbar(){
@@ -23,6 +24,7 @@ public class AlertHistoryActivity extends AppCompatActivity implements AlertHist
         setSupportActionBar(myToolbar);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_return);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Últimas alertas");
     }
 
     @Override

@@ -385,33 +385,31 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     }
 
     /**
-     * @param description La velocidad máxima permitida es 20 km/h. Velocidad actual del vehiculo es 25 km/h.
+     * @param description Velocidad máxima permitida: 20 km/h. Velocidad actual del vehiculo es 25 km/h.
      * @param severity
      * @param subCategory UnauthorizedSpeeDetection
      * @param latitude
      * @param longitude
      */
-    private void sendAlert(String description, String severity, String subCategory, double latitude, double longitude){
-        
+    private void sendAlert(String description, String severity, String subCategory, double latitude, double longitude) {
+
         Alert alert = new Alert();
         alert.setId(new DevicePropertiesFunctions().getAlertId(context));
         alert.getAlertSource().setValue(new DevicePropertiesFunctions().getDeviceId(context));
         alert.getCategory().setValue("security");
         alert.getDateObserved().setValue(Functions.getActualDate());
         alert.getDescription().setValue(description);
-        alert.getLocation().setValue(latitude+", "+longitude);
+        alert.getLocation().setValue(latitude + ", " + longitude);
         alert.getSeverity().setValue(severity);
         alert.getSubCategory().setValue(subCategory);
         alert.getValidFrom().setValue(Functions.getActualDate());
         alert.getValidTo().setValue(Functions.getActualDate());
         try {
-           alertController.createEntity(context, alert.getId(), alert);
+            alertController.createEntity(context, alert.getId(), alert);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-    
 
     private void sendContext(Double latitude, Double longitude){
         device = createDevice(latitude, longitude);
