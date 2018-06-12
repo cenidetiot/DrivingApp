@@ -159,7 +159,7 @@ public class EventsDetect {
                     "Alcanzada : " + speedReached + "," +
                     "Fecha Alcanzada:" + sdf.format(dateSpeedReached);
                     
-                alert  = makeAlert( comunData + result, "critical", "SuddenStop", currentP.getLatitude(), currentP.getLongitude());
+                //alert  = makeAlert( comunData + result, "critical", "SuddenStop", currentP.getLatitude(), currentP.getLongitude());
             }
 
         } else{
