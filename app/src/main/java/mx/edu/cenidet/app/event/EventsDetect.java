@@ -46,9 +46,9 @@ public class EventsDetect {
     private static long stopedSeconds = 0 ;
     private static double speedReached = 0;
     private static long dateSpeedReached = 0;
-
     private static double distancePoints = 0; 
     private static LatLng lastPoint = null;
+    private static String suddenDescription ="";
 
     public  EventsDetect () {
         context = HomeActivity.MAIN_CONTEXT;
@@ -65,24 +65,14 @@ public class EventsDetect {
      * @param longitude
      */
 
-    private void sendAlert(String description, String severity, String subCategory, double latitude, double longitude){
+    private Alert makeAlert(String description, String severity, String subCategory, double latitude, double longitude){
         
         Alert alert = new Alert();
-        alert.setId(new DevicePropertiesFunctions().getAlertId(context));
-        alert.getAlertSource().setValue(new DevicePropertiesFunctions().getDeviceId(context));
-        alert.getCategory().setValue("Traffic");
-        alert.getDateObserved().setValue(Functions.getActualDate());
         alert.getDescription().setValue(description);
         alert.getLocation().setValue(latitude+", "+longitude);
         alert.getSeverity().setValue(severity);
         alert.getSubCategory().setValue(subCategory);
-        alert.getValidFrom().setValue(Functions.getActualDate());
-        alert.getValidTo().setValue(Functions.getActualDate());
-        try {
-           alertController.createEntity(context, alert.getId(), alert);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        return alert;
     }
 
     public void writeFile(String text){
@@ -90,11 +80,10 @@ public class EventsDetect {
     } 
 
     
-    public String suddenStop(double currentSpeed , long currentDate, Location currentP){
+    public Alert suddenStop(double currentSpeed , long currentDate, Location currentP){
         
+        Alert alert = null ;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
-
-        
 
         String comunData = 
             currentP.getLatitude() + "," +
@@ -105,20 +94,21 @@ public class EventsDetect {
 
         String result = "";
         
-
         initialVelocity = finalVelocity;
         finalVelocity = currentSpeed;
         initialDate = finalDate;
         finalDate = currentDate;
 
-
-        LatLng currentPoint = new LatLng(currentP.getLatitude(), currentP.getLongitude());
+        /* Arregla errorde tiempo */
+        long diff = finalDate - initialDate;
+        long timeDif = TimeUnit.MILLISECONDS.toSeconds(diff);
+        if(timeDif < 0){
+            if(finalVelocity > initialVelocity )
+                initialVelocity = finalVelocity;
+            return null;
+        }
 
         if ( finalVelocity < initialVelocity ){
-
-            sendAlert("SUDDEN", "low", "SuddenStop", currentP.getLatitude(), currentP.getLongitude());
-
-            distancePoints += SphericalUtil.computeDistanceBetween(lastPoint, currentPoint);
         
             if (isStoping == false){
                 speedReached = initialVelocity;
@@ -132,9 +122,8 @@ public class EventsDetect {
                 double realDistance = 0;
                 long diffDate = finalDate - dateSpeedReached;
                 long time = TimeUnit.MILLISECONDS.toSeconds(diffDate);
+            
                 realDistance = ((finalVelocity + speedReached )  / 2) * (time) ;
-                //idealDistance = Math.round(idealDistance);
-                //realDistance = Math.round(realDistance);
 
                 if (idealDistance > realDistance){
                     result += "PARADA REPENTINA,";
@@ -147,12 +136,10 @@ public class EventsDetect {
                 result += 
                     "Distancia ideal : " +  idealDistance + "," +
                     "Distancia Real : " + realDistance + "," + 
-                    "Distancia Puntos : " + distancePoints + "," +
                     "Alcanzada : " + speedReached + "," +
                     "Fecha Alcanzada:" + sdf.format(dateSpeedReached);
-
                     
-                
+                alert  = makeAlert( comunData + result, "critical", "SuddenStop", currentP.getLatitude(), currentP.getLongitude());
             }
 
         } else{
@@ -163,9 +150,8 @@ public class EventsDetect {
                 dateSpeedReached = 0;
                 isStoping = false;
 
-                if(!stoped){
+                if(stoped){
                     String severity =  "";
-                    stopedSeconds = 6 ;
                     if(stopedSeconds > 1 && stopedSeconds <= 2 ){ //informational
                         severity = "informational";
                     } else if(stopedSeconds > 2 && stopedSeconds <=4){ // Low
@@ -178,7 +164,7 @@ public class EventsDetect {
                         severity = "critical";
                     }
                     if (severity != "") {
-                        
+                        alert  = makeAlert( comunData, severity, "suddenStop", currentP.getLatitude(), currentP.getLongitude());
                     }
                     stoped = false;
                 }
@@ -187,15 +173,16 @@ public class EventsDetect {
             if(stoped){
                 stopedSeconds ++;
                 if(stopedSeconds > 8 ){ //Critical
-                    
+                    alert  = makeAlert( comunData, "critical", "suddenStop", currentP.getLatitude(), currentP.getLongitude());
                     stoped = false;
                 }
             }
             
         }
         writeFile(comunData + result);
-        lastPoint = currentPoint;
-        return result;
+        //lastPoint = currentPoint;
+
+        return alert;
     }
 
     /**

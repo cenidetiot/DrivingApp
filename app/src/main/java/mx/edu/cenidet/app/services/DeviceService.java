@@ -257,6 +257,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     private void eventDetecion(Location location){
 
         if (location != null) {
+            
             RoadSegment roadSegment;
             latitude = (double) location.getLatitude();
             longitude = (double) location.getLongitude();
@@ -298,7 +299,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
             }
 
             //Envía el Modelo de datos Device
-            
             if(countSendDevice == 0){
                 sendContext(latitude, longitude);
             }if (countSendDevice == 8){
@@ -308,11 +308,13 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
             countSendDevice++;
 
-            String StopingStatus = events.suddenStop(speedMS, new Date().getTime(), location);
-            if(StopingStatus != ""){
-                //sendAlert("Automatic Sudden Stop", "critical", "suddenStop", latitude, longitude);
-            }
+            Alert suddenStopAlert = events.suddenStop(speedMS, new Date().getTime(), location);
+            String StopingStatus = "";
 
+            if(suddenStopAlert != null){
+                sendAlert1(suddenStopAlert);
+                StopingStatus  = suddenStopAlert.getDescription().getValue();
+            }
 
             Intent intent = new Intent(Constants.SERVICE_CHANGE_LOCATION_DEVICE)
                 .putExtra(Constants.SERVICE_RESULT_LATITUDE, latitude)
@@ -321,7 +323,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
                 .putExtra(Constants.SERVICE_RESULT_SPEED_KMHR, speedKmHr)
                 .putExtra(Constants.SERVICE_RESULT_STOPING, StopingStatus);
             
-    
             roadSegment = EventsFuntions.detectedRoadSegment(context, latitude, longitude);
 
             if(roadSegment != null){
@@ -336,7 +337,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
             }
             
             intent.putExtra(Constants.ROAD_SEGMENT, roadSegment);
-
             LocalBroadcastManager.getInstance(DeviceService.this).sendBroadcast(intent);
 
         } else {
@@ -354,7 +354,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
             this.getString( R.string.message_alert_description_current_speed ) + " " + speedTo + "km/h.";
         String severity = "";
 
-        String subCategory = "UnauthorizedSpeedDetection";
+        String subCategory = "unauthorizedSpeedDetection";
 
         switch (severitySpeeding){
 
@@ -410,6 +410,23 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
             e.printStackTrace();
         }
     }
+
+    private void sendAlert1(Alert alert){
+
+        alert.setId(new DevicePropertiesFunctions().getAlertId(context));
+        alert.getAlertSource().setValue(new DevicePropertiesFunctions().getDeviceId(context));
+        alert.getCategory().setValue("traffic");
+        alert.getDateObserved().setValue(Functions.getActualDate());
+        alert.getValidFrom().setValue(Functions.getActualDate());
+        alert.getValidTo().setValue(Functions.getActualDate());
+        try {
+           alertController.createEntity(context, alert.getId(), alert);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    
 
     private void sendContext(Double latitude, Double longitude){
         device = createDevice(latitude, longitude);
@@ -494,7 +511,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
     @Override
     public void onCreateEntitySaveOffline(Response response) {
-
     }
 
     @Override
