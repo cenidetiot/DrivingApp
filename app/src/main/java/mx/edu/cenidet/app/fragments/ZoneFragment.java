@@ -49,6 +49,7 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
     private MapView mapView;
     private GoogleMap gMap;
     private Marker marker, markerZone;
+    private double latitude = 0, longitude = 0;
     private CameraPosition camera;
     private Context context;
     private String name, location,  centerPoint;
@@ -104,7 +105,6 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
         gMap.setMyLocationEnabled(true);
         //Ocultar el boton
         gMap.getUiSettings().setMyLocationButtonEnabled(false);
-        //createOrUpdateMarkerByLocation(pointLatitude, pointLongitude);
         //Dibuja la zona
         drawZone(currentZone);
         drawParking(currentZone);
@@ -112,11 +112,10 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
 
 
     private void createOrUpdateMarkerByLocation(double latitude, double longitude){
-        if(markerZone == null){
-            //markerZone = gMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).draggable(true));
+        if (this.latitude == 0 && this.longitude == 0) {
             zoomToLocation(latitude, longitude);
-        }else{
-            //markerZone.setPosition(new LatLng(latitude, longitude));
+            this.latitude = latitude;
+            this.longitude = longitude;
         }
     }
 

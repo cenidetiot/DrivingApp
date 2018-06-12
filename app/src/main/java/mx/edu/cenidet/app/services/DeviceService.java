@@ -256,6 +256,9 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
     private void eventDetecion(Location location){
 
+        Alert suddenStopAlert = null;
+        String StopingStatus = "";
+
         if (location != null) {
             
             RoadSegment roadSegment;
@@ -308,12 +311,14 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
             countSendDevice++;
 
-            Alert suddenStopAlert = events.suddenStop(speedMS, new Date().getTime(), location);
-            String StopingStatus = "";
-
-            if(suddenStopAlert != null){
-                sendAlert1(suddenStopAlert);
-                StopingStatus  = suddenStopAlert.getDescription().getValue();
+            if (speedKmHr > 10) {
+                suddenStopAlert = events.suddenStop(speedMS, new Date().getTime(), location);
+                if (suddenStopAlert != null) {
+                    if(suddenStopAlert.getSeverity().getValue()!="") {
+                        sendAlert1(suddenStopAlert);
+                    }
+                    StopingStatus = suddenStopAlert.getDescription().getValue();
+                }
             }
 
             Intent intent = new Intent(Constants.SERVICE_CHANGE_LOCATION_DEVICE)

@@ -105,7 +105,7 @@ public class EventsDetect {
         Alert alert = null ;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
 
-        String comunData = 
+        String commonData =
             currentP.getLatitude() + "," +
             currentP.getLongitude() + "," +
             currentSpeed + "," +
@@ -138,12 +138,12 @@ public class EventsDetect {
 
             if (finalVelocity == 0){ 
                 double idealDistance = 0;
-                idealDistance =((Math.pow(speedReached, 2) / (2 * frictionCoefficient * gravity)));
+                idealDistance = Math.round(Math.pow(speedReached, 2) / (2 * frictionCoefficient * gravity));
                 double realDistance = 0;
                 long diffDate = finalDate - dateSpeedReached;
                 long time = TimeUnit.MILLISECONDS.toSeconds(diffDate);
             
-                realDistance = ((finalVelocity + speedReached )  / 2) * (time) ;
+                realDistance = Math.round(((finalVelocity + speedReached )  / 2) * (time));
 
                 if (idealDistance > realDistance){
                     result += "PARADA REPENTINA,";
@@ -159,7 +159,7 @@ public class EventsDetect {
                     "Alcanzada : " + speedReached + "," +
                     "Fecha Alcanzada:" + sdf.format(dateSpeedReached);
                     
-                //alert  = makeAlert( comunData + result, "critical", "SuddenStop", currentP.getLatitude(), currentP.getLongitude());
+                alert  = makeAlert(commonData + result, "", "SuddenStop", currentP.getLatitude(), currentP.getLongitude());
             }
 
         } else{
@@ -184,7 +184,7 @@ public class EventsDetect {
                         severity = "critical";
                     }
                     if (severity != "") {
-                        alert  = makeAlert( comunData, severity, "suddenStop", currentP.getLatitude(), currentP.getLongitude());
+                        alert  = makeAlert( commonData, severity, "suddenStop", currentP.getLatitude(), currentP.getLongitude());
                     }
                     stoped = false;
                 }
@@ -193,13 +193,13 @@ public class EventsDetect {
             if(stoped){
                 stopedSeconds ++;
                 if(stopedSeconds > 8 ){ //Critical
-                    alert  = makeAlert( comunData, "critical", "suddenStop", currentP.getLatitude(), currentP.getLongitude());
+                    alert  = makeAlert(commonData, "critical", "suddenStop", currentP.getLatitude(), currentP.getLongitude());
                     stoped = false;
                 }
             }
             
         }
-        writeFile(comunData + result);
+        writeFile(commonData + result);
         //lastPoint = currentPoint;
 
         return alert;

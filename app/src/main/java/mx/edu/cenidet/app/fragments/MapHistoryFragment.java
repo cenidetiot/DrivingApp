@@ -46,6 +46,7 @@ public class MapHistoryFragment extends Fragment implements OnMapReadyCallback, 
     private MapView mapView;
     private GoogleMap gMap;
     private Marker marker = null;
+    private double latitude = 0, longitude = 0;
     private CameraPosition camera;
     private Context context;
     private SQLiteDrivingApp sqLiteDrivingApp;
@@ -92,12 +93,10 @@ public class MapHistoryFragment extends Fragment implements OnMapReadyCallback, 
     }
 
     private void createOrUpdateMarkerByLocation(double latitude, double longitude) {
-        if (marker == null) {
-            // marker = gMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).draggable(true));
+        if (this.latitude == 0 && this.longitude == 0) {
             zoomToLocation(latitude, longitude);
-        } else {
-            zoomToLocation(latitude, longitude);
-            //marker.setPosition(new LatLng(latitude, longitude));
+            this.latitude = latitude;
+            this.longitude = longitude;
         }
     }
 
@@ -126,7 +125,6 @@ public class MapHistoryFragment extends Fragment implements OnMapReadyCallback, 
             String[] subString;
 
             try {
-                String centerPoint = zone.getCenterPoint().getValue();
                 arrayLocation = new JSONArray(zone.getLocation().getValue());
                 listLocation = new ArrayList<>();
                 for (int j = 0; j < arrayLocation.length(); j++) {
@@ -137,14 +135,11 @@ public class MapHistoryFragment extends Fragment implements OnMapReadyCallback, 
                     longitude = Double.parseDouble(subString[1]);
                     listLocation.add(new LatLng(latitude, longitude));
                 }
-                arrayPoint = new JSONArray(centerPoint);
-                double centerLatitude = arrayPoint.getDouble(0);
-                double centerLongitude = arrayPoint.getDouble(1);
+
                 if(gMap != null){
                     gMap.addPolygon(new PolygonOptions()
                             .addAll(listLocation).strokeColor(Color.RED));
                 }
-                //zoomToLocation(centerLatitude, centerLongitude);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
