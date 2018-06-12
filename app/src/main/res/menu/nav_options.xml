@@ -24,7 +24,7 @@
     <group android:id="@+id/menu_center" android:checkableBehavior="single">
         <item android:id="@+id/menu_history"
             android:icon="@drawable/ic_alerts_menu"
-            android:title="@string/menu_history"/>
+            android:title="@string/menu_current_alerts"/>
     </group>
 
     <group android:id="@+id/menu_bottom" android:checkableBehavior="none">

@@ -20,13 +20,13 @@
     <string name="menu_home">Inicio</string>
     <string name="menu_speed">Mi velocidad</string>
     <string name="menu_campus_map">Mapa de zonas</string>
-    <string name="menu_alerts">Mis alertas</string>
+    <string name="menu_alerts">Historial de alertas</string>
     <string name="menu_my_campus">Mis zonas</string>
     <string name="menu_my_location">Mi localización</string>
     <string name="menu_profile">Mi perfil</string>
     <string name="menu_settings">Configuración</string>
     <string name="menu_logout">Cerrar sesión</string>
-    <string name="menu_history">Historial de alertas</string>
+    <string name="menu_current_alerts">Últimas alertas</string>
 
 
     <!--Messages-->

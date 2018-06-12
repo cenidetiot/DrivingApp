@@ -18,13 +18,13 @@
     <string name="menu_home">Home</string>
     <string name="menu_speed">My Speed</string>
     <string name="menu_campus_map">Zones Map</string>
-    <string name="menu_alerts">My Alerts</string>
+    <string name="menu_alerts">Alerts History</string>
     <string name="menu_my_campus">My zones</string>
     <string name="menu_my_location">My location</string>
     <string name="menu_profile">My Profile</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_logout">Logout</string>
-    <string name="menu_history">Alert history</string>
+    <string name="menu_current_alerts">Current alerts</string>
 
 
     <!--Messages-->
