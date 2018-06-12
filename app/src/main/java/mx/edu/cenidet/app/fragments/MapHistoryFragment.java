@@ -30,27 +30,32 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
+import mx.edu.cenidet.app.services.SendDataService;
 import mx.edu.cenidet.cenidetsdk.db.SQLiteDrivingApp;
 import mx.edu.cenidet.app.R;
 import mx.edu.cenidet.app.activities.HomeActivity;
 import www.fiware.org.ngsi.datamodel.entity.Alert;
+import www.fiware.org.ngsi.datamodel.entity.RoadSegment;
 import www.fiware.org.ngsi.datamodel.entity.Zone;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MapHistoryFragment extends Fragment implements OnMapReadyCallback {
+public class MapHistoryFragment extends Fragment implements OnMapReadyCallback,  SendDataService.SendDataMethods {
     View rootView;
     private MapView mapView;
     private GoogleMap gMap;
-    private Marker marker;
+    private Marker marker = null;
     private CameraPosition camera;
     private Context context;
     private SQLiteDrivingApp sqLiteDrivingApp;
     private ArrayList<LatLng> listLocation;
     private String zoneId;
+    private SendDataService sendDataService;
+
     public MapHistoryFragment() {
         context = HomeActivity.MAIN_CONTEXT;
+        sendDataService = new SendDataService(this);
         sqLiteDrivingApp = new SQLiteDrivingApp(context);
     }
 
@@ -86,16 +91,17 @@ public class MapHistoryFragment extends Fragment implements OnMapReadyCallback {
         drawZone(this.zoneId);
     }
 
-    private void createOrUpdateMarkerByLocation(double latitude, double longitude){
-        if(marker == null){
-            marker = gMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).draggable(true));
+    private void createOrUpdateMarkerByLocation(double latitude, double longitude) {
+        if (marker == null) {
+            // marker = gMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).draggable(true));
             zoomToLocation(latitude, longitude);
-        }else{
-            marker.setPosition(new LatLng(latitude, longitude));
+        } else {
+            zoomToLocation(latitude, longitude);
+            //marker.setPosition(new LatLng(latitude, longitude));
         }
     }
 
-    private void zoomToLocation(double latitude, double longitude){
+    private void zoomToLocation(double latitude, double longitude) {
         camera = new CameraPosition.Builder()
                 .target(new LatLng(latitude, longitude))
                 .zoom(19)       //limit -> 21
@@ -105,13 +111,14 @@ public class MapHistoryFragment extends Fragment implements OnMapReadyCallback {
         gMap.animateCamera(CameraUpdateFactory.newCameraPosition(camera));
     }
 
-    public void renderZone(String zoneId){
+    public void renderZone(String zoneId) {
         this.zoneId = zoneId;
         //this.zoneId = "Zone_1523933778251";
     }
+
     //Buscar la zona en la DB interna y pintar en el mapa.
-    public void drawZone(String zoneId){
-        if(!zoneId.equals("undetectedZone")){
+    public void drawZone(String zoneId) {
+        if (!zoneId.equals("undetectedZone")) {
             Zone zone = sqLiteDrivingApp.getZoneById(zoneId);
             JSONArray arrayLocation, arrayPoint;
             String originalString, clearString;
@@ -122,49 +129,50 @@ public class MapHistoryFragment extends Fragment implements OnMapReadyCallback {
                 String centerPoint = zone.getCenterPoint().getValue();
                 arrayLocation = new JSONArray(zone.getLocation().getValue());
                 listLocation = new ArrayList<>();
-                for (int j=0; j<arrayLocation.length(); j++){
+                for (int j = 0; j < arrayLocation.length(); j++) {
                     originalString = arrayLocation.get(j).toString();
                     clearString = originalString.substring(originalString.indexOf("[") + 1, originalString.indexOf("]"));
-                    subString =  clearString.split(",");
+                    subString = clearString.split(",");
                     latitude = Double.parseDouble(subString[0]);
                     longitude = Double.parseDouble(subString[1]);
-                    listLocation.add(new LatLng(latitude,longitude));
+                    listLocation.add(new LatLng(latitude, longitude));
                 }
                 arrayPoint = new JSONArray(centerPoint);
                 double centerLatitude = arrayPoint.getDouble(0);
                 double centerLongitude = arrayPoint.getDouble(1);
-               /* if(gMap != null){
+                if(gMap != null){
                     gMap.addPolygon(new PolygonOptions()
                             .addAll(listLocation).strokeColor(Color.RED));
-                }*/
-                zoomToLocation(centerLatitude, centerLongitude);
+                }
+                //zoomToLocation(centerLatitude, centerLongitude);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }else{
+        } else {
             Log.i("NO:", "SE DETECTO NINGUNA ZONA -----------------------------------------------------");
         }
     }
-    public void renderListAlerts(ArrayList<Alert> listAlerts){
-        if(listAlerts.size() > 0){
+
+    public void renderListAlerts(ArrayList<Alert> listAlerts) {
+        if (listAlerts.size() > 0) {
             Log.i("MapHistoryFragment:", "MAYOR QUE 0");
-        }else{
+        } else {
             Log.i("MapHistoryFragment:", "IGUAL  QUE 0");
         }
         //Log.i("MapHistoryFragment: 3", text);
     }
 
-    public void renderAlert(Alert alert){
+    public void renderAlert(Alert alert) {
 
-        if(alert != null){
+        if (alert != null) {
             String severity = alert.getSeverity().getValue();
             String subcategory = alert.getSubCategory().getValue();
             String description = alert.getDescription().getValue();
             String[] subString;
-            subString =  alert.getLocation().getValue().split(",");
+            subString = alert.getLocation().getValue().split(",");
             double centerLatitude = Double.parseDouble(subString[0]);
             double centerLongitude = Double.parseDouble(subString[1]);
-            switch (severity){
+            switch (severity) {
                 case "informational":
                     marker = gMap.addMarker(new MarkerOptions().position(new LatLng(centerLatitude, centerLongitude)).title(subcategory).snippet(description).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_location_informational)));
                     break;
@@ -182,7 +190,32 @@ public class MapHistoryFragment extends Fragment implements OnMapReadyCallback {
                     break;
             }
             //marker = gMap.addMarker(new MarkerOptions().position(new LatLng(centerLatitude, centerLongitude)));
-            Log.i("MapHistoryFragment:", "renderAlert: "+alert.getId()+ " category: "+alert.getCategory().getValue()+" location: "+alert.getLocation().getValue()+" Latitude: "+centerLatitude+" Longitude: "+centerLongitude);
+            Log.i("MapHistoryFragment:", "renderAlert: " + alert.getId() + " category: " + alert.getCategory().getValue() + " location: " + alert.getLocation().getValue() + " Latitude: " + centerLatitude + " Longitude: " + centerLongitude);
         }
+    }
+
+    @Override
+    public void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr) {
+        createOrUpdateMarkerByLocation(latitude,longitude);
+    }
+
+    @Override
+    public void detectZone(Zone zone, boolean statusLocation) {
+
+    }
+
+    @Override
+    public void detectRoadSegment(double latitude, double longitude, RoadSegment roadSegment) {
+
+    }
+
+    @Override
+    public void sendDataAccelerometer(double ax, double ay, double az) {
+
+    }
+
+    @Override
+    public void sendEvent(String event) {
+
     }
 }
