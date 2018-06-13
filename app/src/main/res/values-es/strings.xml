@@ -26,7 +26,7 @@
     <string name="menu_profile">Mi perfil</string>
     <string name="menu_settings">Configuración</string>
     <string name="menu_logout">Cerrar sesión</string>
-    <string name="menu_current_alerts">Últimas alertas</string>
+    <string name="menu_current_alerts">Alertas recientes</string>
 
 
     <!--Messages-->

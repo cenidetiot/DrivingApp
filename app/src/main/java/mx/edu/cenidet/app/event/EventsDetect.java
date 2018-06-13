@@ -119,7 +119,7 @@ public class EventsDetect {
         initialDate = finalDate;
         finalDate = currentDate;
 
-        /* Arregla errorde tiempo */
+        /* Arregla error de tiempo */
         long diff = finalDate - initialDate;
         long timeDif = TimeUnit.MILLISECONDS.toSeconds(diff);
         if(timeDif < 0){
@@ -136,7 +136,7 @@ public class EventsDetect {
                 isStoping = true;
             }
 
-            if (finalVelocity == 0){ 
+            if (finalVelocity == 0 && speedReached > 1.39){
                 double idealDistance = 0;
                 idealDistance = Math.round(Math.pow(speedReached, 2) / (2 * frictionCoefficient * gravity));
                 double realDistance = 0;
@@ -154,10 +154,10 @@ public class EventsDetect {
                 }
 
                 result += 
-                    "Distancia ideal : " +  idealDistance + "," +
-                    "Distancia Real : " + realDistance + "," + 
-                    "Alcanzada : " + speedReached + "," +
-                    "Fecha Alcanzada:" + sdf.format(dateSpeedReached);
+                    " Distancia Ideal: " +  idealDistance + ", " +
+                    "Distancia Real: " + realDistance + ", " +
+                    "Vel.Alcanzada: " + speedReached + " m/s, " +
+                    "Fecha Vel.Alcanzada: " + sdf.format(dateSpeedReached);
                     
                 alert  = makeAlert(commonData + result, "", "SuddenStop", currentP.getLatitude(), currentP.getLongitude());
             }
