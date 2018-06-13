@@ -35,17 +35,21 @@ public class EventsDetect {
     private static String idDevice ;
     private AlertController alertController;
 
+    /*Variables globales de paradas repentinas*/
     private static double gravity=9.81; // valor en m/s
     private static double frictionCoefficient=0.95; //coeficiente de friccion entre los neumaticos y el piso
-    private static double initialVelocity = 0;
-    private static double finalVelocity = 0;
-    private static long initialDate = 0;
-    private static long finalDate = 0;
-    private static boolean isStopping = false, wasStopped = false, alertSent = false;
-    private static boolean stopped = false;
+    private static double initialVelocity = 0 ,finalVelocity = 0;
+    private static long initialDate = 0, finalDate = 0;
+    private static boolean isStopping = false, wasStopped = false, alertSent = false, stopped = false ;
     private static long stoppedSeconds = 0 ;
     private static double speedReached = 0;
     private static long dateSpeedReached = 0;
+
+    /*Variables Globales de contra sentido */
+    private static double totalDistance = 0;
+    private static double startToLastDistance = 0, startToCurrentDistance = 0;
+    private static double endToLastDistance = 0, endToCurrentDistance = 0;
+    private static LatLng lastPoint;
 
 
     public  EventsDetect () {
@@ -53,24 +57,24 @@ public class EventsDetect {
         //this.idDevice = new DevicePropertiesFunctions().getAlertId(context);
     }
     
-    public static String oppositeDirectionDisplacement(LatLng lastPoint, LatLng currentPoint, LatLng startPoint, LatLng endPoint){
-        String flag="undefined";
-        double distanceTotal=SphericalUtil.computeDistanceBetween(startPoint, endPoint);
+    public static boolean wrongWay(LatLng currentPoint, LatLng startPoint, LatLng endPoint){
+        boolean flag = false;
 
-        double distance1Endpoint=SphericalUtil.computeDistanceBetween(lastPoint,endPoint);
-        double distance2Endpoint=SphericalUtil.computeDistanceBetween(currentPoint,endPoint);
-        double distance2StartPoint=SphericalUtil.computeDistanceBetween(currentPoint,startPoint);
-        double distance1StartPoint=SphericalUtil.computeDistanceBetween(lastPoint,startPoint);
-        if(PolyUtil.distanceToLine(currentPoint,startPoint,endPoint)<5) {
-            if ( distanceTotal + 3 >= distance2StartPoint + distance2Endpoint){
-                if(distance2Endpoint > distance1Endpoint){
-                    flag="wrongWay";
-                }else if(distance2Endpoint < distance1Endpoint){
-                    flag="correctWay";
-                }
-            }
+        totalDistance = SphericalUtil.computeDistanceBetween(startPoint, endPoint);
+        
+        startToLastDistance = SphericalUtil.computeDistanceBetween(startPoint, lastPoint);
 
+        startToCurrentDistance = SphericalUtil.computeDistanceBetween(startPoint, currentPoint);
+
+        endToLastDistance = SphericalUtil.computeDistanceBetween(endPoint, lastPoint);
+
+        endToCurrentDistance = SphericalUtil.computeDistanceBetween(startPoint, endPoint);
+
+        if(!(startToCurrentDistance > startToLastDistance && endToLastDistance > endToCurrentDistance)){
+            flag = true;
         }
+
+        lastPoint = currentPoint;
         return flag;
     }
     
