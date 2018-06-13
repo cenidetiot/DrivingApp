@@ -41,14 +41,12 @@ public class EventsDetect {
     private static double finalVelocity = 0;
     private static long initialDate = 0;
     private static long finalDate = 0;
-    private static boolean isStoping = false;
-    private static boolean stoped = false;
-    private static long stopedSeconds = 0 ;
+    private static boolean isStopping = false, wasStopped = false, alertSent = false;
+    private static boolean stopped = false;
+    private static long stoppedSeconds = 0 ;
     private static double speedReached = 0;
     private static long dateSpeedReached = 0;
-    private static double distancePoints = 0; 
-    private static LatLng lastPoint = null;
-    private static String suddenDescription ="";
+
 
     public  EventsDetect () {
         context = HomeActivity.MAIN_CONTEXT;
@@ -106,10 +104,10 @@ public class EventsDetect {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
 
         String commonData =
-            currentP.getLatitude() + "," +
-            currentP.getLongitude() + "," +
-            currentSpeed + "," +
-            "Fecha Actual : "+ sdf.format(currentDate) + ",";
+            currentP.getLatitude() + ", " +
+            currentP.getLongitude() + ", " +
+            currentSpeed + ", " +
+            "Fecha Actual: "+ sdf.format(currentDate) + ",";
             
 
         String result = "";
@@ -122,79 +120,80 @@ public class EventsDetect {
         /* Arregla error de tiempo */
         long diff = finalDate - initialDate;
         long timeDif = TimeUnit.MILLISECONDS.toSeconds(diff);
-        if(timeDif < 0){
+        if(timeDif < 1){
             if(finalVelocity > initialVelocity )
                 initialVelocity = finalVelocity;
             return null;
         }
 
-        if ( finalVelocity < initialVelocity ){
+        if ((finalVelocity < initialVelocity || (finalVelocity == 0 && initialVelocity == 0)) && stopped == false && alertSent == false){
         
-            if (isStoping == false){
+            if (isStopping == false){
                 speedReached = initialVelocity;
                 dateSpeedReached = initialDate;
-                isStoping = true;
+                isStopping = true;
             }
 
             if (finalVelocity == 0 && speedReached > 1.39){
-                double idealDistance = 0;
-                idealDistance = Math.round(Math.pow(speedReached, 2) / (2 * frictionCoefficient * gravity));
-                double realDistance = 0;
-                long diffDate = finalDate - dateSpeedReached;
-                long time = TimeUnit.MILLISECONDS.toSeconds(diffDate);
-            
-                realDistance = Math.round(((finalVelocity + speedReached )  / 2) * (time));
+                if(wasStopped){
+                    double idealDistance = 0;
+                    idealDistance = Math.round(Math.pow(speedReached, 2) / (2 * frictionCoefficient * gravity));
+                    double realDistance = 0;
+                    long diffDate = finalDate - dateSpeedReached;
+                    long time = TimeUnit.MILLISECONDS.toSeconds(diffDate);
 
-                if (idealDistance > realDistance){
-                    result += "PARADA REPENTINA,";
-                    stoped = true; 
-                    stopedSeconds = TimeUnit.MILLISECONDS.toSeconds(new Date().getTime() - finalDate);
-                }else {
-                    result += "PARADA NORMAL,";
+                    realDistance = Math.round(((finalVelocity + speedReached )  / 2) * (time));
+
+                    if (idealDistance > realDistance){
+                        result += "PARADA REPENTINA, ";
+                        stopped = true;
+                        stoppedSeconds = TimeUnit.MILLISECONDS.toSeconds(new Date().getTime() - finalDate);
+                    }else {
+                        result += "PARADA NORMAL, ";
+                    }
+
+                    result += " Distancia Ideal: " +  idealDistance + ", " + "Distancia Real: " + realDistance + ", " + "Vel.Alcanzada: " + speedReached + " m/s, " + "Fecha Vel.Alcanzada: " + sdf.format(dateSpeedReached);
+                    alert  = makeAlert(commonData + result, "", "SuddenStop", currentP.getLatitude(), currentP.getLongitude());
+                    wasStopped = false;
                 }
-
-                result += 
-                    " Distancia Ideal: " +  idealDistance + ", " +
-                    "Distancia Real: " + realDistance + ", " +
-                    "Vel.Alcanzada: " + speedReached + " m/s, " +
-                    "Fecha Vel.Alcanzada: " + sdf.format(dateSpeedReached);
-                    
-                alert  = makeAlert(commonData + result, "", "SuddenStop", currentP.getLatitude(), currentP.getLongitude());
+                wasStopped = true;
             }
 
         } else{
 
-            distancePoints = 0;
+            //distancePoints = 0;
             if(finalVelocity > 0){
                 speedReached = 0;
                 dateSpeedReached = 0;
-                isStoping = false;
+                isStopping = false;
+                alertSent = false;
 
-                if(stoped){
+                if(stopped){
                     String severity =  "";
-                    if(stopedSeconds > 1 && stopedSeconds <= 2 ){ //informational
+                    if(stoppedSeconds > 1 && stoppedSeconds <= 2 ){ //informational
                         severity = "informational";
-                    } else if(stopedSeconds > 2 && stopedSeconds <=4){ // Low
+                    } else if(stoppedSeconds > 2 && stoppedSeconds <=4){ // Low
                         severity = "low";
-                    } else if(stopedSeconds > 4 && stopedSeconds <=6){ // Medium
+                    } else if(stoppedSeconds > 4 && stoppedSeconds <=6){ // Medium
                         severity = "medium";
-                    } else if(stopedSeconds > 6 && stopedSeconds <=8){ // High
+                    } else if(stoppedSeconds > 6 && stoppedSeconds <=8){ // High
                         severity = "high";
-                    } else if(stopedSeconds > 8 ) { // Critical
+                    } else if(stoppedSeconds > 8 ) { // Critical
                         severity = "critical";
                     }
                     if (severity != "") {
                         alert  = makeAlert( commonData, severity, "suddenStop", currentP.getLatitude(), currentP.getLongitude());
                     }
-                    stoped = false;
+                    stopped = false;
                 }
             }
 
-            if(stoped){
-                stopedSeconds ++;
-                if(stopedSeconds > 8 ){ //Critical
+            if(stopped){
+                stoppedSeconds ++;
+                if(stoppedSeconds > 8 && !alertSent){ //Critical
                     alert  = makeAlert(commonData, "critical", "suddenStop", currentP.getLatitude(), currentP.getLongitude());
-                    stoped = false;
+                    alertSent = true;
+                    stopped = false;
                 }
             }
             
