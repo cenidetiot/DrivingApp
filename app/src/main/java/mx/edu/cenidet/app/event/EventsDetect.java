@@ -9,7 +9,7 @@ import android.location.Location;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import mx.edu.cenidet.app.activities.HomeActivity;
+import mx.edu.cenidet.app.activities.HomeActivity; 
 
 import android.content.Context;
 
@@ -40,7 +40,7 @@ public class EventsDetect {
     private static double frictionCoefficient=0.95; //coeficiente de friccion entre los neumaticos y el piso
     private static double initialVelocity = 0 ,finalVelocity = 0;
     private static long initialDate = 0, finalDate = 0;
-    private static boolean isStopping = false, wasStopped = false, alertSent = false, stopped = false ;
+    private static boolean isStopping = false, wasStopped = false, suddenAlertSent = false, stopped = false ;
     private static long stoppedSeconds = 0 ;
     private static double speedReached = 0;
     private static long dateSpeedReached = 0;
@@ -50,6 +50,8 @@ public class EventsDetect {
     private static double startToLastDistance = 0, startToCurrentDistance = 0;
     private static double endToLastDistance = 0, endToCurrentDistance = 0;
     private static LatLng lastPoint;
+    private static boolean  wrongWayAlertSent = false, isWrongWay;
+    private static long wrongWayDate = 0;
 
 
     public  EventsDetect () {
@@ -58,7 +60,7 @@ public class EventsDetect {
     }
     
     public static boolean wrongWay(LatLng currentPoint, LatLng startPoint, LatLng endPoint){
-        boolean flag = false;
+        
 
         totalDistance = SphericalUtil.computeDistanceBetween(startPoint, endPoint);
         
@@ -71,11 +73,17 @@ public class EventsDetect {
         endToCurrentDistance = SphericalUtil.computeDistanceBetween(startPoint, endPoint);
 
         if(!(startToCurrentDistance > startToLastDistance && endToLastDistance > endToCurrentDistance)){
-            flag = true;
+            if(isWrongWay)
+                wrongWayDate = TimeUnit.MILLISECONDS.toSeconds(new Date().getTime());
+            isWrongWay = true;
+            
         }
-
+        long wrongWaySeconds = TimeUnit.MILLISECONDS.toSeconds(new Date().getTime()) - wrongWayDate; 
+        if (wrongWaySeconds == 3){
+            
+        }
         lastPoint = currentPoint;
-        return flag;
+        return isWrongWay;
     }
     
 
@@ -130,7 +138,7 @@ public class EventsDetect {
             return null;
         }
 
-        if ((finalVelocity < initialVelocity || (finalVelocity == 0 && initialVelocity == 0)) && stopped == false && alertSent == false){
+        if ((finalVelocity < initialVelocity || (finalVelocity == 0 && initialVelocity == 0)) && stopped == false && suddenAlertSent == false){
         
             if (isStopping == false){
                 speedReached = initialVelocity;
@@ -170,7 +178,7 @@ public class EventsDetect {
                 speedReached = 0;
                 dateSpeedReached = 0;
                 isStopping = false;
-                alertSent = false;
+                suddenAlertSent = false;
 
                 if(stopped){
                     String severity =  "";
@@ -194,9 +202,9 @@ public class EventsDetect {
 
             if(stopped){
                 stoppedSeconds ++;
-                if(stoppedSeconds > 8 && !alertSent){ //Critical
+                if(stoppedSeconds > 8 && !suddenAlertSent){ //Critical
                     alert  = makeAlert(commonData, "critical", "suddenStop", currentP.getLatitude(), currentP.getLongitude());
-                    alertSent = true;
+                    suddenAlertSent = true;
                     stopped = false;
                 }
             }

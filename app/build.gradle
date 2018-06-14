@@ -30,10 +30,10 @@ dependencies {
     implementation 'com.android.support:design:26.1.0'
     implementation project(':ngsi')
     implementation project(':cenidetsdk')
-    compile 'com.google.maps.android:android-maps-utils:0.4+'
-    compile 'com.google.firebase:firebase-core:11.8.0'
-    compile 'com.google.firebase:firebase-messaging:11.8.0'
-    compile 'com.github.clans:fab:1.6.4'
+    implementation 'com.google.maps.android:android-maps-utils:0.4+'
+    implementation 'com.google.firebase:firebase-core:11.8.0'
+    implementation 'com.google.firebase:firebase-messaging:11.8.0'
+    implementation 'com.github.clans:fab:1.6.4'
     implementation 'com.google.android.gms:play-services-auth:11.8.0'
 }
 
