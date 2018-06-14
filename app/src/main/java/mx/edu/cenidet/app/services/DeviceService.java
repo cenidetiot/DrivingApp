@@ -325,8 +325,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
                 .putExtra(Constants.SERVICE_RESULT_LATITUDE, latitude)
                 .putExtra(Constants.SERVICE_RESULT_LONGITUDE, longitude)
                 .putExtra(Constants.SERVICE_RESULT_SPEED_MS, speedMS)
-                .putExtra(Constants.SERVICE_RESULT_SPEED_KMHR, speedKmHr)
-                .putExtra(Constants.SERVICE_RESULT_STOPING, StopingStatus);
+                .putExtra(Constants.SERVICE_RESULT_SPEED_KMHR, speedKmHr);
             
             roadSegment = EventsFuntions.detectedRoadSegment(context, latitude, longitude);
 
@@ -338,9 +337,28 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
                     latitude,
                     longitude
                 );
+                /* String[] laneUsages;
+                laneUsages = roadSegment.getLaneUsage().split(",");
+
+                if(laneUsages.length == 1) {
+                    String[] startStrings, endStrings;
+                    startStrings =  roadSegment.getStartPoint().split(",");
+                    endStrings =  roadSegment.getEndPoint().split(",");
+                    LatLng startPoint = new LatLng(
+                        Double.parseDouble(startStrings[0]), 
+                        Double.parseDouble(startStrings[1])); 
+                    LatLng endPoint = new LatLng(
+                        Double.parseDouble(endStrings[0]), 
+                        Double.parseDouble(endStrings[1]));
+                    StopingStatus += ", Contrasentido"+ events.wrongWay(
+                        new LatLng(location.getLatitude(),location.getLongitude()), 
+                        startPoint, 
+                        endPoint);
+                }
+               */ 
                 
             }
-            
+            intent.putExtra(Constants.SERVICE_RESULT_STOPING, StopingStatus);
             intent.putExtra(Constants.ROAD_SEGMENT, roadSegment);
             LocalBroadcastManager.getInstance(DeviceService.this).sendBroadcast(intent);
 
