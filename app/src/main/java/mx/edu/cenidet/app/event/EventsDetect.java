@@ -167,7 +167,6 @@ public class EventsDetect {
 
                     result += " Distancia Ideal: " +  idealDistance + ", " + "Distancia Real: " + realDistance + ", " + "Vel.Alcanzada: " + speedReached + " m/s, " + "Fecha Vel.Alcanzada: " + sdf.format(dateSpeedReached);
                     alert  = makeAlert(commonData + result, "", "SuddenStop", currentP.getLatitude(), currentP.getLongitude());
-                    wasStopped = false;
                 }
                 wasStopped = true;
             }
