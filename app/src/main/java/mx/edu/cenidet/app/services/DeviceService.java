@@ -401,7 +401,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         Alert alert = new Alert();
         alert.setId(new DevicePropertiesFunctions().getAlertId(context));
         alert.getAlertSource().setValue(new DevicePropertiesFunctions().getDeviceId(context));
-        alert.getCategory().setValue("security");
+        alert.getCategory().setValue("traffic");
         alert.getDateObserved().setValue(Functions.getActualDate());
         alert.getDescription().setValue(description);
         alert.getLocation().setValue(latitude + ", " + longitude);
