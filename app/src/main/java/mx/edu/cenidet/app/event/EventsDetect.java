@@ -138,7 +138,8 @@ public class EventsDetect {
             return null;
         }
 
-        if ((finalVelocity < initialVelocity || (finalVelocity == 0 && initialVelocity == 0)) && stopped == false && suddenAlertSent == false){
+        if ((finalVelocity < initialVelocity || (finalVelocity == 0 && initialVelocity == 0)) 
+        && stopped == false && suddenAlertSent == false){
         
             if (isStopping == false){
                 speedReached = initialVelocity;
