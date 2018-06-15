@@ -340,7 +340,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
                 String[] laneUsages;
                 laneUsages = roadSegment.getLaneUsage().split(",");
 
-                if(laneUsages.length == 1) {
+                /*if(laneUsages.length == 1) {
                     String[] startStrings, endStrings;
                     startStrings =  roadSegment.getStartPoint().split(",");
                     endStrings =  roadSegment.getEndPoint().split(",");
@@ -357,7 +357,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
                         endPoint,
                         new Date().getTime()
                     );
-                }
+                }*/
                
                 
             }
