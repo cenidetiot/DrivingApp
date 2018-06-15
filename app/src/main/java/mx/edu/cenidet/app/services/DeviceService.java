@@ -337,7 +337,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
                     latitude,
                     longitude
                 );
-                /* String[] laneUsages;
+                String[] laneUsages;
                 laneUsages = roadSegment.getLaneUsage().split(",");
 
                 if(laneUsages.length == 1) {
@@ -350,12 +350,15 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
                     LatLng endPoint = new LatLng(
                         Double.parseDouble(endStrings[0]), 
                         Double.parseDouble(endStrings[1]));
-                    StopingStatus += ", Contrasentido"+ events.wrongWay(
+                    StopingStatus += ", Contrasentido"+ 
+                    events.wrongWay(
                         new LatLng(location.getLatitude(),location.getLongitude()), 
                         startPoint, 
-                        endPoint);
+                        endPoint,
+                        new Date().getTime()
+                    );
                 }
-               */ 
+               
                 
             }
             intent.putExtra(Constants.SERVICE_RESULT_STOPING, StopingStatus);

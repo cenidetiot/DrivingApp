@@ -22,11 +22,6 @@ import www.fiware.org.ngsi.utilities.Functions;
 import www.fiware.org.ngsi.utilities.DevicePropertiesFunctions;
 
 
-
-/**
- * Created by Alberne on 04/04/2018.
- */
-
 public class EventsDetect {
 
     private static Context context = null; 
@@ -59,34 +54,50 @@ public class EventsDetect {
         //this.idDevice = new DevicePropertiesFunctions().getAlertId(context);
     }
     
-    public static boolean wrongWay(LatLng currentPoint, LatLng startPoint, LatLng endPoint){
+    public Alert wrongWay(LatLng currentPoint, LatLng startPoint, LatLng endPoint, long currentDate){
         
+        Alert alert = null;
 
         totalDistance = SphericalUtil.computeDistanceBetween(startPoint, endPoint);
-        
         startToLastDistance = SphericalUtil.computeDistanceBetween(startPoint, lastPoint);
-
         startToCurrentDistance = SphericalUtil.computeDistanceBetween(startPoint, currentPoint);
-
         endToLastDistance = SphericalUtil.computeDistanceBetween(endPoint, lastPoint);
-
         endToCurrentDistance = SphericalUtil.computeDistanceBetween(startPoint, endPoint);
 
+        /* Determina contrasentido */
         if(!(startToCurrentDistance > startToLastDistance && endToLastDistance > endToCurrentDistance)){
-            if(isWrongWay)
-                wrongWayDate = TimeUnit.MILLISECONDS.toSeconds(new Date().getTime());
             isWrongWay = true;
-            
+            wrongWayDate = currentDate;
         }
+
         long wrongWaySeconds = TimeUnit.MILLISECONDS.toSeconds(new Date().getTime()) - wrongWayDate; 
-        if (wrongWaySeconds == 3){
-            
+        if (wrongWaySeconds > 3){
+            String severity =  "";
+            if(wrongWaySeconds > 3 && wrongWaySeconds <= 5){ // informational
+                severity = "informational";
+            } else if(wrongWaySeconds > 5 && wrongWaySeconds <= 7){ // low
+                severity = "low";
+            } else if(wrongWaySeconds > 7 && wrongWaySeconds <= 9){ // medium
+                severity = "medium";
+            } if(wrongWaySeconds > 9 && wrongWaySeconds <= 11){ // high 
+                severity =  "high";
+            } else { // critical
+                severity = "critical";
+            }
+            String[] currentCoords = currentPoint.toString().split(",");
+            alert  = makeAlert( 
+                "Wrong Way Automatic Detection", 
+                severity, 
+                "wrongWay", 
+                Double.parseDouble(currentCoords[0]), 
+                Double.parseDouble(currentCoords[1])
+            );
+
         }
         lastPoint = currentPoint;
-        return isWrongWay;
+        return alert;
     }
     
-
     /**
      * @param description La velocidad máxima permitida es 20 km/h. Velocidad actual del vehiculo es 25 km/h.
      * @param severity
@@ -120,7 +131,6 @@ public class EventsDetect {
             currentP.getLongitude() + ", " +
             currentSpeed + ", " +
             "Fecha Actual: "+ sdf.format(currentDate) + ",";
-            
 
         String result = "";
         
@@ -129,14 +139,7 @@ public class EventsDetect {
         initialDate = finalDate;
         finalDate = currentDate;
 
-        /* Arregla error de tiempo */
-        long diff = finalDate - initialDate;
-        long timeDif = TimeUnit.MILLISECONDS.toSeconds(diff);
-        if(timeDif < 1){
-            if(finalVelocity > initialVelocity )
-                initialVelocity = finalVelocity;
-            return null;
-        }
+        
 
         if ((finalVelocity < initialVelocity || (finalVelocity == 0 && initialVelocity == 0)) 
         && stopped == false && suddenAlertSent == false){
@@ -147,7 +150,7 @@ public class EventsDetect {
                 isStopping = true;
             }
 
-            if (finalVelocity == 0 && speedReached > 1.39){
+            if (finalVelocity == 0){
                 if(wasStopped){
                     double idealDistance = 0;
                     idealDistance = Math.round(Math.pow(speedReached, 2) / (2 * frictionCoefficient * gravity));
