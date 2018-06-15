@@ -138,7 +138,7 @@ public class EventsDetect {
         initialDate = finalDate;
         finalDate = currentDate;
 
-        if (((finalVelocity < initialVelocity) || (finalVelocity == 0 && initialVelocity == 0)) && stopped == false && alertSent == false){
+        if (((finalVelocity < initialVelocity) || (finalVelocity == 0 && initialVelocity == 0)) && stopped == false && suddenAlertSent == false){
         
             if (!isStopping){
                 speedReached = initialVelocity;
@@ -163,7 +163,7 @@ public class EventsDetect {
                             result += "PARADA NORMAL, ";
                         }
                         result += " Distancia Ideal: " + idealDistance + ", " + "Distancia Real: " + realDistance + ", " + "Vel.Alcanzada: " + speedReached + " m/s, " + "Fecha Vel.Alcanzada: " + sdf.format(dateSpeedReached);
-                        //alert = sendAlert(commonData + result, "critical", "SuddenStop", latitude,longitude);
+                        alert = makeAlert(commonData + result, "", "suddenStop", latitude,longitude);
                     }
                     stopped = true;
                 }
@@ -175,7 +175,7 @@ public class EventsDetect {
                 speedReached = 0;
                 dateSpeedReached = 0;
                 isStopping = false;
-                alertSent = false;
+                suddenAlertSent = false;
                 wasStopped = false;
 
                 if(stopped){
@@ -201,12 +201,11 @@ public class EventsDetect {
 
             if(stopped){
                 stoppedSeconds ++;
-                if(stoppedSeconds > 8 && !alertSent){ //Critical
+                if(stoppedSeconds > 8 && !suddenAlertSent){ //Critical
                     alert  = makeAlert(commonData, "critical", "segundo " + stoppedSeconds,latitude, longitude);
-                    alertSent = true;
+                    suddenAlertSent = true;
                     stopped = false;
                     stoppedSeconds = 0;
-                    stopDate = 0;
                 }
             }
             

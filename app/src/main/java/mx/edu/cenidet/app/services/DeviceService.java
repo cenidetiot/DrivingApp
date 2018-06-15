@@ -312,7 +312,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
             countSendDevice++;
 
             //if (speedKmHr > 10) {
-                suddenStopAlert = events.suddenStop(speedMS, new Date().getTime(), location);
+                suddenStopAlert = events.suddenStop(speedMS, new Date().getTime(), latitude,  longitude);
                 if (suddenStopAlert != null) {
                     if(!(suddenStopAlert.getSeverity().getValue()).equals("")){
                         sendAlert1(suddenStopAlert);
