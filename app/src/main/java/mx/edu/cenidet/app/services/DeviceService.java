@@ -36,6 +36,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 
 import mx.edu.cenidet.app.activities.HomeActivity;
 import mx.edu.cenidet.app.event.EventsFuntions;
@@ -69,6 +70,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     private LocationManager locationManager;
     //private UsersLocationService uLocationService;
     private int id;
+    private List<ArrayList> locationCoordsRoadSeg;
 
     //Modelo de datos Device, DeviceModel.
     private DeviceController deviceController;
@@ -311,15 +313,13 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
             countSendDevice++;
 
-            //if (speedKmHr > 10) {
-                suddenStopAlert = events.suddenStop(speedMS, new Date().getTime(), latitude,  longitude);
+            suddenStopAlert = events.suddenStop(speedMS, new Date().getTime(), latitude,  longitude);
                 if (suddenStopAlert != null) {
                     if(!(suddenStopAlert.getSeverity().getValue()).equals("")){
                         sendAlert1(suddenStopAlert);
                     }
                     StopingStatus = suddenStopAlert.getDescription().getValue();
                 }
-            //}
 
             Intent intent = new Intent(Constants.SERVICE_CHANGE_LOCATION_DEVICE)
                 .putExtra(Constants.SERVICE_RESULT_LATITUDE, latitude)
@@ -337,24 +337,27 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
                     latitude,
                     longitude
                 );
-                String[] laneUsages;
-                Log.d("laneUsage", roadSegment.getLaneUsage());
+                String[] laneUsages, locationRoadSegment;
+                Log.d("ROAD SEGMENT LOCATION", roadSegment.getLocation());
                 laneUsages = roadSegment.getLaneUsage().split(",");
+                locationRoadSegment = roadSegment.getLocation().substring(1, roadSegment.getLocation().length()-1).split(",");
 
+                for (String item:locationRoadSegment) {
+                    Log.d("ROAD SEGMENT ITEM", item);
+                }
                 if(laneUsages.length == 1) {
                     String[] startStrings, endStrings;
                     startStrings =  roadSegment.getStartPoint().split(",");
                     endStrings =  roadSegment.getEndPoint().split(",");
 
                     LatLng startPoint = new LatLng(
-                        Double.parseDouble(startStrings[0]), 
-                        Double.parseDouble(startStrings[1]));
+                        Double.parseDouble(startStrings[0].substring(1,startStrings[0].length())),
+                        Double.parseDouble(startStrings[1].substring(0,startStrings[1].length()-1)));
 
                     LatLng endPoint = new LatLng(
-                        Double.parseDouble(endStrings[0]), 
-                        Double.parseDouble(endStrings[1]));
+                        Double.parseDouble(endStrings[0].substring(1, endStrings[0].length())),
+                        Double.parseDouble(endStrings[1].substring(0,endStrings[1].length()-1)));
 
-                    //Log.d("", "Service destroyed...!");
                     /*StopingStatus += ", Contrasentido"+
                     events.wrongWay(
                         new LatLng(location.getLatitude(),location.getLongitude()), 
@@ -363,8 +366,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
                         new Date().getTime()
                     );*/
                 }
-               
-                
             }
             intent.putExtra(Constants.SERVICE_RESULT_STOPING, StopingStatus);
             intent.putExtra(Constants.ROAD_SEGMENT, roadSegment);
