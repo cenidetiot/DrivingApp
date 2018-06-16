@@ -315,7 +315,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
                 suddenStopAlert = events.suddenStop(speedMS, new Date().getTime(), latitude,  longitude);
                 if (suddenStopAlert != null) {
                     if(!(suddenStopAlert.getSeverity().getValue()).equals("")){
-                        sendAlert1(suddenStopAlert);
+                        //sendAlert1(suddenStopAlert);
                     }
                     StopingStatus = suddenStopAlert.getDescription().getValue();
                 }

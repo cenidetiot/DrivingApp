@@ -18,11 +18,12 @@ import android.util.Log;
 
 import www.fiware.org.ngsi.datamodel.entity.Alert;
 import www.fiware.org.ngsi.controller.AlertController;
+import www.fiware.org.ngsi.httpmethodstransaction.Response;
 import www.fiware.org.ngsi.utilities.Functions;
 import www.fiware.org.ngsi.utilities.DevicePropertiesFunctions;
 
 
-public class EventsDetect {
+public class EventsDetect implements AlertController.AlertResourceMethods {
 
     private static Context context = null; 
     private static String fileName = "velocidades.csv";
@@ -51,9 +52,31 @@ public class EventsDetect {
 
     public  EventsDetect () {
         context = HomeActivity.MAIN_CONTEXT;
+        alertController = new AlertController(this);
         //this.idDevice = new DevicePropertiesFunctions().getAlertId(context);
     }
-    
+
+    private Alert sendAlert(String description, String severity, String subCategory, double latitude, double longitude) {
+
+        Alert alert = new Alert();
+        alert.setId(new DevicePropertiesFunctions().getAlertId(context));
+        alert.getAlertSource().setValue(new DevicePropertiesFunctions().getDeviceId(context));
+        alert.getCategory().setValue("traffic");
+        alert.getDateObserved().setValue(Functions.getActualDate());
+        alert.getDescription().setValue(description);
+        alert.getLocation().setValue(latitude + ", " + longitude);
+        alert.getSeverity().setValue(severity);
+        alert.getSubCategory().setValue(subCategory);
+        alert.getValidFrom().setValue(Functions.getActualDate());
+        alert.getValidTo().setValue(Functions.getActualDate());
+        try {
+            alertController.createEntity(context, alert.getId(), alert);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return  alert;
+    }
+
     public Alert wrongWay(LatLng currentPoint, LatLng startPoint, LatLng endPoint, long currentDate){
         
         Alert alert = null;
@@ -163,7 +186,7 @@ public class EventsDetect {
                             result += "PARADA NORMAL, ";
                         }
                         result += " Distancia Ideal: " + idealDistance + ", " + "Distancia Real: " + realDistance + ", " + "Vel.Alcanzada: " + speedReached + " m/s, " + "Fecha Vel.Alcanzada: " + sdf.format(dateSpeedReached);
-                        alert = makeAlert(commonData + result, "", "suddenStop", latitude,longitude);
+                        //alert = sendAlert(commonData + result, "", "suddenStop", latitude,longitude);
                     }
                     stopped = true;
                 }
@@ -192,7 +215,7 @@ public class EventsDetect {
                         severity = "critical";
                     }
                     if (severity != "") {
-                        alert  = makeAlert( commonData, severity, "primero", latitude,  longitude);
+                        alert  = sendAlert( commonData, severity, "primero", latitude,  longitude);
                     }
                     stopped = false;
                     stoppedSeconds = 0;
@@ -202,7 +225,7 @@ public class EventsDetect {
             if(stopped){
                 stoppedSeconds ++;
                 if(stoppedSeconds > 8 && !suddenAlertSent){ //Critical
-                    alert  = makeAlert(commonData, "critical", "segundo " + stoppedSeconds,latitude, longitude);
+                    alert  = sendAlert(commonData, "critical", "segundo " + stoppedSeconds,latitude, longitude);
                     suddenAlertSent = true;
                     stopped = false;
                     stoppedSeconds = 0;
@@ -245,7 +268,19 @@ public class EventsDetect {
         return "";
     }
 
-    
 
-   
+    @Override
+    public void onCreateEntityAlert(Response response) {
+
+    }
+
+    @Override
+    public void onUpdateEntityAlert(Response response) {
+
+    }
+
+    @Override
+    public void onGetEntitiesAlert(Response response) {
+
+    }
 }
