@@ -92,8 +92,8 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
             isWrongWay = true;
             wrongWayDate = currentDate;
         }
-
-        long wrongWaySeconds = TimeUnit.MILLISECONDS.toSeconds(new Date().getTime()) - wrongWayDate; 
+        long wrongWayTmp = new Date().getTime()- wrongWayDate;
+        long wrongWaySeconds = TimeUnit.MILLISECONDS.toSeconds(wrongWayTmp);
         if (wrongWaySeconds > 3){
             String severity =  "";
             if(wrongWaySeconds > 3 && wrongWaySeconds <= 5){ // informational
@@ -169,7 +169,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
                 isStopping = true;
             }
 
-            if (finalVelocity == 0){
+            if (finalVelocity == 0 && speedReached > 1.39){
                 if(wasStopped){
                     if(!stopped) {
                         double idealDistance = 0;

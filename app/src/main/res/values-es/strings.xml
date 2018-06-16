@@ -20,13 +20,13 @@
     <string name="menu_home">Inicio</string>
     <string name="menu_speed">Mi velocidad</string>
     <string name="menu_campus_map">Mapa de zonas</string>
-    <string name="menu_alerts">Historial de alertas</string>
+    <string name="menu_alerts">Alertas del día</string>
     <string name="menu_my_campus">Mis zonas</string>
     <string name="menu_my_location">Mi localización</string>
     <string name="menu_profile">Mi perfil</string>
     <string name="menu_settings">Configuración</string>
     <string name="menu_logout">Cerrar sesión</string>
-    <string name="menu_current_alerts">Alertas recientes</string>
+    <string name="menu_current_alerts">Últimas 10 alertas</string>
 
 
     <!--Messages-->
@@ -34,10 +34,10 @@
     <string name="message_valid_password">La contraseña no es valida, intente de nuevo.</string>
     <string name="message_user_not_found">Datos incorrectos, intentelo de nuevo.</string>
     <string name="message_login_not_found">Error al iniciar sesión.</string>
-    <string name="message_undetected_zone">No te encuentras en ninguna zona....!</string>
-    <string name="message_no_alerts_show">Esta zona no tiene alertas para mostrar...!</string>
-    <string name="message_successful_sending">Envío exitoso...!</string>
-    <string name="message_failed_send">Error al enviar...!</string>
+    <string name="message_undetected_zone">No te encuentras en ninguna zona.</string>
+    <string name="message_no_alerts_show">Esta zona no tiene alertas para mostrar.</string>
+    <string name="message_successful_sending">Envío exitoso.</string>
+    <string name="message_failed_send">Error al enviar.</string>
     <string name="message_empty_fields">Empty fields</string>
     <string name="message_passwords_incorrect">Las contraseñas son incorrectas, inténtalo de nuevo.</string>
     <string name="message_account_generated">Cuenta generada exitosamente.</string>
@@ -66,8 +66,8 @@
     <!--Message HomeFragment-->
     <string name="message_name_campus">Nombre del Campus</string>
     <string name="message_address_campus">Dirección</string>
-    <string name="message_any_campus">No te encuentras en ningún campus..!</string>
-    <string name="message_not_road_segment">No estás en un segmento de carretera...!</string>
+    <string name="message_any_campus">No te encuentras en ningún campus.</string>
+    <string name="message_not_road_segment">No estás en un segmento de carretera.</string>
     <string name="message_maximum">Máximo</string>
     <string name="message_minimum">Mínimo</string>
 
