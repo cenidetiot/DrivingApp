@@ -313,13 +313,13 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
             countSendDevice++;
 
-            suddenStopAlert = events.suddenStop(speedMS, new Date().getTime(), latitude,  longitude);
-                if (suddenStopAlert != null) {
-                    if(!(suddenStopAlert.getSeverity().getValue()).equals("")){
-                        //sendAlert1(suddenStopAlert);
-                    }
-                    StopingStatus = suddenStopAlert.getDescription().getValue();
+            /*suddenStopAlert = events.suddenStop(speedMS, new Date().getTime(), latitude,  longitude);
+            if (suddenStopAlert != null) {
+                if(!(suddenStopAlert.getSeverity().getValue()).equals("")){
+                    //sendAlert1(suddenStopAlert);
                 }
+                StopingStatus = suddenStopAlert.getDescription().getValue();
+            }*/
 
             Intent intent = new Intent(Constants.SERVICE_CHANGE_LOCATION_DEVICE)
                 .putExtra(Constants.SERVICE_RESULT_LATITUDE, latitude)

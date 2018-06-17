@@ -54,9 +54,10 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
         context = HomeActivity.MAIN_CONTEXT;
         alertController = new AlertController(this);
         //this.idDevice = new DevicePropertiesFunctions().getAlertId(context);
+
     }
 
-    private Alert sendAlert(String description, String severity, String subCategory, double latitude, double longitude) {
+    public Alert sendAlert(String description, String severity, String subCategory, double latitude, double longitude) {
 
         Alert alert = new Alert();
         alert.setId(new DevicePropertiesFunctions().getAlertId(context));
@@ -145,7 +146,8 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
 
     
     public Alert suddenStop(double currentSpeed , long currentDate, double latitude, double longitude){
-        
+
+
         Alert alert = null ;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
 
@@ -169,7 +171,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
                 isStopping = true;
             }
 
-            if (finalVelocity == 0 && speedReached > 1.39){
+            if (finalVelocity == 0 ){ //&& speedReached > 1.39){
                 if(wasStopped){
                     if(!stopped) {
                         double idealDistance = 0;

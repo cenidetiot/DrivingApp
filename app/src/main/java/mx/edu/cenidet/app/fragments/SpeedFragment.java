@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +13,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
+import java.util.Date;
 
 import mx.edu.cenidet.app.R;
 import mx.edu.cenidet.app.activities.HomeActivity;
+import mx.edu.cenidet.app.event.EventsDetect;
 import mx.edu.cenidet.app.services.SendDataService;
+import www.fiware.org.ngsi.datamodel.entity.Alert;
 import www.fiware.org.ngsi.datamodel.entity.RoadSegment;
 import www.fiware.org.ngsi.datamodel.entity.Zone;
 
@@ -35,11 +39,17 @@ public class SpeedFragment extends Fragment implements SendDataService.SendDataM
 
     private SendDataService sendDataService;
 
+    private Alert suddenStopAlert = null;
+    private String StopingStatus = "";
+    private EventsDetect events ;
+
     public SpeedFragment() {
         context = HomeActivity.MAIN_CONTEXT;
         sendDataService = new SendDataService(this);
+
         //sendDataService = HomeFragment.SENDDATASERVICE;
         df = new DecimalFormat("0.00");
+        events = new EventsDetect();
     }
 
 
@@ -63,6 +73,10 @@ public class SpeedFragment extends Fragment implements SendDataService.SendDataM
     @Override
     public void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr) {
         tvSpeed.setText(df.format(speedMS)+"m/s, "+df.format(speedKmHr)+"km/hr");
+        events.suddenStop(speedMS, new Date().getTime(), latitude,  longitude);
+
+
+
     }
 
     @Override
