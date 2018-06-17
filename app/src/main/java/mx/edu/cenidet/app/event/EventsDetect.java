@@ -145,10 +145,9 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
     } 
 
     
-    public Alert suddenStop(double currentSpeed , long currentDate, double latitude, double longitude){
+    public boolean suddenStop(double currentSpeed , long currentDate, double latitude, double longitude){
 
-
-        Alert alert = null ;
+        boolean alert =  false;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
 
         String commonData =
@@ -188,7 +187,8 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
                             result += "PARADA NORMAL, ";
                         }
                         result += " Distancia Ideal: " + idealDistance + ", " + "Distancia Real: " + realDistance + ", " + "Vel.Alcanzada: " + speedReached + " m/s, " + "Fecha Vel.Alcanzada: " + sdf.format(dateSpeedReached);
-                        //alert = sendAlert(commonData + result, "", "suddenStop", latitude,longitude);
+                        //alert = sendAlert(commonData + result, "critical", "suddenStop", latitude,longitude);
+                        alert = true;
                     }
                     stopped = true;
                 }
@@ -217,27 +217,29 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
                         severity = "critical";
                     }
                     if (severity != "") {
-                        alert  = sendAlert( commonData, severity, "primero", latitude,  longitude);
+                        sendAlert( commonData, severity, "primero", latitude,  longitude);
                     }
                     stopped = false;
                     stoppedSeconds = 0;
+                    alert = false;
                 }
             }
 
             if(stopped){
                 stoppedSeconds ++;
                 if(stoppedSeconds > 8 && !suddenAlertSent){ //Critical
-                    alert  = sendAlert(commonData, "critical", "segundo " + stoppedSeconds,latitude, longitude);
+                    sendAlert(commonData, "critical", "segundo " + stoppedSeconds,latitude, longitude);
                     suddenAlertSent = true;
                     stopped = false;
                     stoppedSeconds = 0;
+                    alert = false;
                 }
             }
             
         }
         writeFile(commonData + result);
 
-        return alert;
+        return stopped;
     }
 
     /**

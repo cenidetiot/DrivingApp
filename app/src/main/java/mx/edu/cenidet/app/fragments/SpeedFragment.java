@@ -2,6 +2,7 @@ package mx.edu.cenidet.app.fragments;
 
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -73,7 +74,12 @@ public class SpeedFragment extends Fragment implements SendDataService.SendDataM
     @Override
     public void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr) {
         tvSpeed.setText(df.format(speedMS)+"m/s, "+df.format(speedKmHr)+"km/hr");
-        events.suddenStop(speedMS, new Date().getTime(), latitude,  longitude);
+
+        if (events.suddenStop(speedMS, new Date().getTime(), latitude,  longitude)){
+            rootView.setBackgroundColor(Color.parseColor("#e74c3c"));
+        }else {
+            rootView.setBackgroundColor(Color.parseColor("#2980b9"));
+        }
 
 
 
@@ -86,6 +92,9 @@ public class SpeedFragment extends Fragment implements SendDataService.SendDataM
 
     @Override
     public void detectRoadSegment(double latitude, double longitude, RoadSegment roadSegment) {
+        if (roadSegment != null){
+            tvAcceleration.setText(roadSegment.getName());
+        }
 
     }
 
@@ -96,9 +105,7 @@ public class SpeedFragment extends Fragment implements SendDataService.SendDataM
 
     @Override
     public void sendEvent(String event) {
-        if(tvAcceleration != null){
-            tvAcceleration.setText(event);
-        }
+
     }
 
 }
