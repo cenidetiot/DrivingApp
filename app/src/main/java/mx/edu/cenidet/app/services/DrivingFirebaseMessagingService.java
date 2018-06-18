@@ -2,6 +2,7 @@
 package mx.edu.cenidet.app.services;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
@@ -17,6 +18,10 @@ import com.google.firebase.messaging.RemoteMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Random;
+
+import mx.edu.cenidet.app.activities.AlertHistoryActivity;
+import mx.edu.cenidet.app.activities.SplashActivity;
 import mx.edu.cenidet.cenidetsdk.httpmethods.Response;
 import mx.edu.cenidet.app.R;
 import mx.edu.cenidet.app.activities.HomeActivity;
@@ -61,12 +66,24 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void showNotification(String messageTitle ,String messageBody, String severity) {
-        Intent intent = new Intent(this, HomeActivity.class);
+        Intent intent = new Intent(this, AlertHistoryActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addNextIntentWithParentStack(intent);
+        // Get the PendingIntent containing the entire back stack
+        PendingIntent pendingIntent =
+                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        //PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+         //       PendingIntent.FLAG_ONE_SHOT);
+
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
         NotificationCompat.Builder notificationBuilder = null;
+
+        int notificationId = new Random().nextInt(60000);
+
         switch (severity){
             case "informational":
                 notificationBuilder = new NotificationCompat.Builder(this)
@@ -132,7 +149,7 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+        notificationManager.notify(notificationId , notificationBuilder.build());
     }
 
     private void newAlertMessage(String messageTitle) {

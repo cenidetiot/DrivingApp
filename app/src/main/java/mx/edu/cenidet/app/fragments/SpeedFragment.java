@@ -44,6 +44,7 @@ public class SpeedFragment extends Fragment implements SendDataService.SendDataM
     private String StopingStatus = "";
     private EventsDetect events;
     private boolean driving = false;
+    private RoadSegment roadSegment  = null;
 
     public SpeedFragment() {
         context = HomeActivity.MAIN_CONTEXT;
@@ -73,14 +74,24 @@ public class SpeedFragment extends Fragment implements SendDataService.SendDataM
     public void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr) {
         tvSpeed.setText(df.format(speedMS)+"m/s, "+df.format(speedKmHr)+"km/hr");
         if (driving) {
-            tvAcceleration.setText("Manejando");
+            //tvAcceleration.setText("Manejando");
             /*if (events.suddenStop(speedMS, new Date().getTime(), latitude,  longitude)){
                 rootView.setBackgroundColor(Color.parseColor("#e74c3c"));
             }else {
                 rootView.setBackgroundColor(Color.parseColor("#2980b9"));
             }*/
+            if (roadSegment != null){
+
+                String[] laneUsages, locationRoadSegment;
+                Log.d("ROAD SEGMENT LOCATION", roadSegment.getLocation());
+                laneUsages = roadSegment.getLaneUsage().split(",");
+
+
+                tvAcceleration.setText(roadSegment.getLocation().substring(1, roadSegment.getLocation().length()-1));
+
+            }
         }else {
-            tvAcceleration.setText("No manejando");
+            //tvAcceleration.setText("No manejando");
         }
     }
 
@@ -113,6 +124,7 @@ public class SpeedFragment extends Fragment implements SendDataService.SendDataM
     @Override
     public void detectRoadSegment(double latitude, double longitude, RoadSegment roadSegment) {
         if (roadSegment != null){
+            this.roadSegment =  roadSegment;
             //tvAcceleration.setText(roadSegment.getStartPoint() + "," +  roadSegment.getEndPoint());
         }
 

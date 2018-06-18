@@ -51,6 +51,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
 
     /*Variables globales de velocidad*/
     private static double lastSpeed = 0;
+    private static int speedigSeconds;
 
 
     public  EventsDetect () {
@@ -83,7 +84,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
 
     public boolean wrongWay(LatLng currentPoint, LatLng startPoint, LatLng endPoint, long currentDate){
         
-        boolean alert = false;
+        boolean wrong = false;
 
         totalDistance = SphericalUtil.computeDistanceBetween(startPoint, endPoint);
         startToLastDistance = SphericalUtil.computeDistanceBetween(startPoint, lastPoint);
@@ -95,7 +96,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
         if(!(startToCurrentDistance > startToLastDistance && endToLastDistance > endToCurrentDistance)){
             isWrongWay = true;
             wrongWayDate = currentDate;
-            alert = true;
+            wrong = true;
         }
         long wrongWayTmp = new Date().getTime()- wrongWayDate;
         long wrongWaySeconds = TimeUnit.MILLISECONDS.toSeconds(wrongWayTmp);
@@ -120,11 +121,11 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
                 Double.parseDouble(currentCoords[0]), 
                 Double.parseDouble(currentCoords[1])
             );
-            alert = true;
+            wrong = true;
 
         }
         lastPoint = currentPoint;
-        return alert;
+        return wrong;
     }
 
     public void writeFile(String text){
@@ -231,18 +232,22 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
 
     /**
      * @param maximumSpeed velocidad maxima del road segment
-     * @param speedFrom velocidad anterior.
-     * @param speedTo velocidad actual.
+     * @param speed velocidad anterior.
      * @return la severidad del exceso de velocidad.
      */
-    public static String speeding(double maximumSpeed, double speedFrom, double speedTo){
-        double averageSpeed;
+    public static String speeding(double maximumSpeed, double speed){
+        boolean isSpeeding  = false;
         double subtractSpeed;
 
-        if(speedFrom > 4.5 && speedTo > 4.5){
-            averageSpeed = ( speedFrom + speedTo ) / 2;
-            subtractSpeed = averageSpeed - maximumSpeed;
-            if(subtractSpeed < 1){
+        if(speed > 1.39 ){
+            subtractSpeed = speed - maximumSpeed;
+
+            if (subtractSpeed < 0){
+                isSpeeding = true;
+                speedigSeconds ++;
+            }
+
+            /*if(subtractSpeed < 1){
                 return "tolerance";
             }else if (subtractSpeed<=5){
                 return "informational";
@@ -254,8 +259,15 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
                 return "high";
             }else {
                 return "critical";
+            }*/
+        }
+
+        if (isSpeeding){
+            if (speedigSeconds > 3){
+
             }
         }
+
         return "";
     }
 

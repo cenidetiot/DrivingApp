@@ -44,7 +44,7 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
     private String zoneId;
     private DataListener callback;
     public AlertHistoryFragment() {
-        context = HomeActivity.MAIN_CONTEXT;
+        context = getContext();
         alertsControllerSdk = new AlertsControllerSdk(context, this);
         applicationPreferences = new ApplicationPreferences();
     }

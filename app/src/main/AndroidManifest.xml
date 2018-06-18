@@ -26,10 +26,10 @@
         <activity android:name="mx.edu.cenidet.app.activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name="mx.edu.cenidet.app.activities.HomeActivity" />
         <activity
             android:name="mx.edu.cenidet.app.activities.SplashActivity"
@@ -55,7 +55,8 @@
         </service>
 
         <activity android:name="mx.edu.cenidet.app.activities.AlertMapDetailActivity" />
-        <activity android:name="mx.edu.cenidet.app.activities.AlertHistoryActivity" />
+        <activity android:name="mx.edu.cenidet.app.activities.AlertHistoryActivity"
+            android:parentActivityName="mx.edu.cenidet.app.activities.LoginActivity" />
         <activity android:name="mx.edu.cenidet.app.activities.SendManualAlertsActivity" />
         <activity android:name="mx.edu.cenidet.app.activities.CreateAccountActivity" />
         <activity android:name="mx.edu.cenidet.app.activities.MyProfileActivity"></activity>
