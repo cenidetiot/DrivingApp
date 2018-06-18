@@ -84,66 +84,36 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
 
         int notificationId = new Random().nextInt(60000);
 
+        notificationBuilder = new NotificationCompat.Builder(this)
+                .setContentTitle(messageTitle)
+                .setContentText(messageBody)
+                .setAutoCancel(true)
+                .setColorized(true)
+                .setSmallIcon(R.drawable.ic_car)
+                .setVibrate(new long[] {100, 250, 100, 500})
+                .setSound(defaultSoundUri)
+                .setContentIntent(pendingIntent);
+
         switch (severity){
             case "informational":
-                notificationBuilder = new NotificationCompat.Builder(this)
-                        .setContentTitle(messageTitle)
-                        .setContentText(messageBody)
-                        .setAutoCancel(true)
-                        .setColorized(true)
-                        .setColor(Color.parseColor("#3498db"))
-                        .setSmallIcon(R.drawable.ic_car)
-                        .setVibrate(new long[] {100, 250, 100, 500})
-                        .setSound(defaultSoundUri)
-                        .setContentIntent(pendingIntent);
+                notificationBuilder
+                        .setColor(Color.parseColor("#3498db"));
                 break;
             case "low":
-                notificationBuilder = new NotificationCompat.Builder(this)
-                        .setContentTitle(messageTitle)
-                        .setContentText(messageBody)
-                        .setAutoCancel(true)
-                        .setColorized(true)
-                        .setColor(Color.parseColor("#2c3e50"))
-                        .setSmallIcon(R.drawable.ic_car)
-                        .setVibrate(new long[] {100, 250, 100, 500})
-                        .setSound(defaultSoundUri)
-                        .setContentIntent(pendingIntent);
+                notificationBuilder
+                        .setColor(Color.parseColor("#2c3e50"));
                 break;
             case "medium":
-                notificationBuilder = new NotificationCompat.Builder(this)
-                        .setContentTitle(messageTitle)
-                        .setContentText(messageBody)
-                        .setAutoCancel(true)
-                        .setColorized(true)
-                        .setColor(Color.parseColor("#f1c40f"))
-                        .setSmallIcon(R.drawable.ic_car)
-                        .setVibrate(new long[] {100, 250, 100, 500})
-                        .setSound(defaultSoundUri)
-                        .setContentIntent(pendingIntent);
+                notificationBuilder
+                        .setColor(Color.parseColor("#f1c40f"));
                 break;
             case "high":
-                notificationBuilder = new NotificationCompat.Builder(this)
-                        .setContentTitle(messageTitle)
-                        .setContentText(messageBody)
-                        .setAutoCancel(true)
-                        .setColorized(true)
-                        .setColor(Color.parseColor("#e67e22"))
-                        .setSmallIcon(R.drawable.ic_car)
-                        .setVibrate(new long[] {100, 250, 100, 500})
-                        .setSound(defaultSoundUri)
-                        .setContentIntent(pendingIntent);
+                notificationBuilder
+                        .setColor(Color.parseColor("#e67e22"));
                 break;
             case "critical":
-                notificationBuilder = new NotificationCompat.Builder(this)
-                        .setContentTitle(messageTitle)
-                        .setContentText(messageBody)
-                        .setAutoCancel(true)
-                        .setColorized(true)
-                        .setColor(Color.parseColor("#c0392b"))
-                        .setSmallIcon(R.drawable.ic_car)
-                        .setVibrate(new long[] {100, 250, 100, 500})
-                        .setSound(defaultSoundUri)
-                        .setContentIntent(pendingIntent);
+                notificationBuilder
+                        .setColor(Color.parseColor("#c0392b"));
                 break;
         }
 
