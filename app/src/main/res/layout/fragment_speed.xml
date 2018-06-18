@@ -5,40 +5,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#3498db"
     tools:context="mx.edu.cenidet.app.fragments.SpeedFragment">
-        <!-- <ProgressBar
-            android:id="@+id/pbSpeed"
-            android:layout_width="270dp"
-            android:layout_height="270dp"
-            android:layout_gravity="center"
-            android:background="@drawable/circle_2"
-            android:indeterminate="false"
-            android:max="100"
-            android:progress="100"
-            android:progressDrawable="@drawable/circle_1" 
-            android:rotation="-90"
-            style="?android:attr/progressBarStyleHorizontal"/> 
-            
-            android:layout_centerVertical="true" 
-            android:layout_gravity="center"
-            -->
+
 
         <TextView
             android:id="@+id/tvSpeed"
-            android:layout_width="match_parent"
+            android:layout_width="190dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="Speeed"
+            android:layout_gravity="center"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="@dimen/title"
             android:textStyle="bold" />
+
         <TextView
+            android:id="@+id/tvAcceleration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tvAcceleration"
-            android:text="m/s2"
-            android:textColor="#ffff"
             android:layout_gravity="center"
-            android:layout_marginTop="40dp"/>
+            android:layout_marginTop="40dp"
+            android:text=""
+            android:textColor="#ffff" />
             
 </FrameLayout>

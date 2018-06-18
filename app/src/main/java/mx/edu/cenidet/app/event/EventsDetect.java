@@ -49,6 +49,9 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
     private static boolean  wrongWayAlertSent = false, isWrongWay;
     private static long wrongWayDate = 0;
 
+    /*Variables globales de velocidad*/
+    private static double lastSpeed = 0;
+
 
     public  EventsDetect () {
         context = HomeActivity.MAIN_CONTEXT;
@@ -78,9 +81,9 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
         return  alert;
     }
 
-    public Alert wrongWay(LatLng currentPoint, LatLng startPoint, LatLng endPoint, long currentDate){
+    public boolean wrongWay(LatLng currentPoint, LatLng startPoint, LatLng endPoint, long currentDate){
         
-        Alert alert = null;
+        boolean alert = false;
 
         totalDistance = SphericalUtil.computeDistanceBetween(startPoint, endPoint);
         startToLastDistance = SphericalUtil.computeDistanceBetween(startPoint, lastPoint);
@@ -92,6 +95,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
         if(!(startToCurrentDistance > startToLastDistance && endToLastDistance > endToCurrentDistance)){
             isWrongWay = true;
             wrongWayDate = currentDate;
+            alert = true;
         }
         long wrongWayTmp = new Date().getTime()- wrongWayDate;
         long wrongWaySeconds = TimeUnit.MILLISECONDS.toSeconds(wrongWayTmp);
@@ -109,34 +113,17 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
                 severity = "critical";
             }
             String[] currentCoords = currentPoint.toString().split(",");
-            alert  = makeAlert( 
+            sendAlert(
                 "Wrong Way Automatic Detection", 
                 severity, 
                 "wrongWay", 
                 Double.parseDouble(currentCoords[0]), 
                 Double.parseDouble(currentCoords[1])
             );
+            alert = true;
 
         }
         lastPoint = currentPoint;
-        return alert;
-    }
-    
-    /**
-     * @param description La velocidad máxima permitida es 20 km/h. Velocidad actual del vehiculo es 25 km/h.
-     * @param severity
-     * @param subCategory UnauthorizedSpeeDetection
-     * @param latitude
-     * @param longitude
-     */
-
-    private Alert makeAlert(String description, String severity, String subCategory, double latitude, double longitude){
-        
-        Alert alert = new Alert();
-        alert.getDescription().setValue(description);
-        alert.getLocation().setValue(latitude+", "+longitude);
-        alert.getSeverity().setValue(severity);
-        alert.getSubCategory().setValue(subCategory);
         return alert;
     }
 

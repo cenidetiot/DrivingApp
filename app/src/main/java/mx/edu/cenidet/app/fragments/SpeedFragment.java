@@ -2,10 +2,12 @@ package mx.edu.cenidet.app.fragments;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,18 +39,15 @@ public class SpeedFragment extends Fragment implements SendDataService.SendDataM
     //private TextView tvSpeed;
     private static final String STATUS = "Status";
     private DecimalFormat df;
-
     private SendDataService sendDataService;
-
     private Alert suddenStopAlert = null;
     private String StopingStatus = "";
-    private EventsDetect events ;
+    private EventsDetect events;
+    private boolean driving = false;
 
     public SpeedFragment() {
         context = HomeActivity.MAIN_CONTEXT;
         sendDataService = new SendDataService(this);
-
-        //sendDataService = HomeFragment.SENDDATASERVICE;
         df = new DecimalFormat("0.00");
         events = new EventsDetect();
     }
@@ -58,31 +57,52 @@ public class SpeedFragment extends Fragment implements SendDataService.SendDataM
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_speed, container, false);
-        //tvSpeed = rootView.findViewById(R.id.tvSpeed);
         tvSpeed = (TextView) rootView.findViewById(R.id.tvSpeed);
         tvAcceleration = (TextView) rootView.findViewById(R.id.tvAcceleration);
-        //tvLocation = (TextView) rootView.findViewById(R.id.tvLocation);
+
         return rootView;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //tvSpeed.setText(getArguments().getString("speed"));
+        isDrivingUser();
     }
 
     @Override
     public void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr) {
         tvSpeed.setText(df.format(speedMS)+"m/s, "+df.format(speedKmHr)+"km/hr");
-
-        if (events.suddenStop(speedMS, new Date().getTime(), latitude,  longitude)){
-            rootView.setBackgroundColor(Color.parseColor("#e74c3c"));
+        if (driving) {
+            tvAcceleration.setText("Manejando");
+            /*if (events.suddenStop(speedMS, new Date().getTime(), latitude,  longitude)){
+                rootView.setBackgroundColor(Color.parseColor("#e74c3c"));
+            }else {
+                rootView.setBackgroundColor(Color.parseColor("#2980b9"));
+            }*/
         }else {
-            rootView.setBackgroundColor(Color.parseColor("#2980b9"));
+            tvAcceleration.setText("No manejando");
         }
+    }
 
-
-
+    private void isDrivingUser(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        alertDialogBuilder.setMessage(R.string.message_is_driving_user_title)
+                .setIcon(R.drawable.ic_car)
+                .setNegativeButton(R.string.message_is_driving_user_no,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                driving = false;
+                            }
+                        })
+                .setPositiveButton(R.string.message_is_driving_user_yes,
+                        new DialogInterface.OnClickListener(){
+                            public void onClick(DialogInterface dialog, int id){
+                                driving = true;
+                            }
+                        });
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
     }
 
     @Override
@@ -93,7 +113,7 @@ public class SpeedFragment extends Fragment implements SendDataService.SendDataM
     @Override
     public void detectRoadSegment(double latitude, double longitude, RoadSegment roadSegment) {
         if (roadSegment != null){
-            tvAcceleration.setText(roadSegment.getName());
+            //tvAcceleration.setText(roadSegment.getStartPoint() + "," +  roadSegment.getEndPoint());
         }
 
     }

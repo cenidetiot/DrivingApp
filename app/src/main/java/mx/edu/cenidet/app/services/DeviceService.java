@@ -313,14 +313,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
             countSendDevice++;
 
-            /*suddenStopAlert = events.suddenStop(speedMS, new Date().getTime(), latitude,  longitude);
-            if (suddenStopAlert != null) {
-                if(!(suddenStopAlert.getSeverity().getValue()).equals("")){
-                    //sendAlert1(suddenStopAlert);
-                }
-                StopingStatus = suddenStopAlert.getDescription().getValue();
-            }*/
-
             Intent intent = new Intent(Constants.SERVICE_CHANGE_LOCATION_DEVICE)
                 .putExtra(Constants.SERVICE_RESULT_LATITUDE, latitude)
                 .putExtra(Constants.SERVICE_RESULT_LONGITUDE, longitude)
@@ -337,6 +329,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
                     latitude,
                     longitude
                 );
+
                 String[] laneUsages, locationRoadSegment;
                 Log.d("ROAD SEGMENT LOCATION", roadSegment.getLocation());
                 laneUsages = roadSegment.getLaneUsage().split(",");
@@ -360,8 +353,8 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
                     /*StopingStatus += ", Contrasentido"+
                     events.wrongWay(
-                        new LatLng(location.getLatitude(),location.getLongitude()), 
-                        startPoint, 
+                        new LatLng(location.getLatitude(),location.getLongitude()),
+                        startPoint,
                         endPoint,
                         new Date().getTime()
                     );*/
