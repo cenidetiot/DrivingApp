@@ -76,26 +76,7 @@ public class UserController implements MethodGET.MethodGETCallback, MethodPOST.M
         method = "logInUser";
         Response response = new Response();
         String URL = URL_BASE_HOST + ConfigServer.http_api.getPropiedad() +"/"+ ConfigServer.http_user.getPropiedad() +"/"+ ConfigServer.http_login.getPropiedad();
-        //String URL = URL_BASE_LOGIN + ConfigServer.http_tokens.getPropiedad();
-        //String URL = URL_BASE_LOGIN + ConfigServer.http_login.getPropiedad();
-        /*String json= "{\n" +
-                "\t\"auth\": {\n" +
-                "\t\t\"identity\": {\n" +
-                "\t\t\t\"methods\": [\n" +
-                "\t\t\t\t\"password\"\n" +
-                "\t\t\t],\n" +
-                "\t\t\t\"password\": {\n" +
-                "\t\t\t\t\"user\": {\n" +
-                "\t\t\t\t\t\"name\": \""+email+"\",\n" +
-                "\t\t\t\t\t\"domain\": {\n" +
-                "\t\t\t\t\t\t\"id\": \"default\"\n" +
-                "\t\t\t\t\t},\n" +
-                "\t\t\t\t\t\"password\": \""+password+"\"\n" +
-                "\t\t\t\t}\n" +
-                "\t\t\t}\n" +
-                "\t\t}\n" +
-                "\t}\n" +
-                "}";*/
+
         String json = "{\n" +
                 "\t\"phoneNumber\":\""+phoneNumber+"\",\n" +
                 "\t\"password\":\""+password+"\"\n" +
