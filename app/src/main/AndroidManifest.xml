@@ -55,11 +55,16 @@
         </service>
 
         <activity android:name="mx.edu.cenidet.app.activities.AlertMapDetailActivity" />
-        <activity android:name="mx.edu.cenidet.app.activities.AlertHistoryActivity"
-            android:parentActivityName="mx.edu.cenidet.app.activities.LoginActivity" />
+        <activity android:name="mx.edu.cenidet.app.activities.AlertHistoryActivity" />
         <activity android:name="mx.edu.cenidet.app.activities.SendManualAlertsActivity" />
         <activity android:name="mx.edu.cenidet.app.activities.CreateAccountActivity" />
         <activity android:name="mx.edu.cenidet.app.activities.MyProfileActivity"></activity>
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_alert_critical" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/red" />
     </application>
 
 </manifest>
