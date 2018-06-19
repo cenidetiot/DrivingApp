@@ -2,11 +2,14 @@
 package mx.edu.cenidet.app.services;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.graphics.Color;
 
@@ -17,134 +20,145 @@ import com.google.firebase.messaging.RemoteMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
+import java.util.Random;
+
+import mx.edu.cenidet.app.activities.AlertHistoryActivity;
+import mx.edu.cenidet.app.activities.AlertMapDetailActivity;
+import mx.edu.cenidet.app.activities.SplashActivity;
+import mx.edu.cenidet.app.utils.Config;
+import mx.edu.cenidet.app.utils.NotificationUtils;
 import mx.edu.cenidet.cenidetsdk.httpmethods.Response;
 import mx.edu.cenidet.app.R;
 import mx.edu.cenidet.app.activities.HomeActivity;
 
 public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
 
-    private static final String TAG = "Alertas";
+
+    private static final String TAG = DrivingFirebaseMessagingService.class.getSimpleName();
+
     private Response response = new Response();
     private String severity = "";
     private String location = "";
+    private String subcategory = "";
+    private String description = "";
 
-    /**
-     * Called when message is received.
-     *
-     * @param remoteMessage Object representing the message received from Firebase Cloud Messaging.
-     */
-
-    // [START receive_message]
+    private NotificationUtils notificationUtils;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        Log.d(TAG, "From: " + remoteMessage.getFrom());
-        // Check if message contains a data payload.
-        if (remoteMessage.getData().size() > 0) {
-            Log.d(TAG, "Message data payload: " + remoteMessage.getData().get("alert"));
-            JSONObject jsonObject = response.parseJsonObject(remoteMessage.getData().get("alert").toString());
-            try {
-                severity = jsonObject.getString("severity");
-                location = jsonObject.getString("location");
-                Log.d(TAG, "SEVERITY: " + severity+ " LOCATION: "+location);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
+        /*Log.e(TAG, "From: " + remoteMessage.getFrom());
+        if (remoteMessage == null) {
+            Log.d(TAG, "REMOTE NULL");
+            return;
         }
+
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
-            Log.d(TAG, "Message Notification Body-------------: " + remoteMessage.getNotification().getBody());
-            showNotification(remoteMessage.getNotification().getTitle(),remoteMessage.getNotification().getBody(), severity);
-            newAlertMessage(remoteMessage.getNotification().getTitle());
+            Log.e(TAG, "Notification Body: " + remoteMessage.getNotification().getBody());
+            //handleNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
+        }
+
+        // Check if message contains a data payload.
+        if (remoteMessage.getData().size() > 0) {
+            Log.e(TAG, "Data Payload: " + remoteMessage.getData().toString());
+
+            try {
+                JSONObject json = new JSONObject(remoteMessage.getData().toString());
+                handleDataMessage(json);
+            } catch (Exception e) {
+                Log.e(TAG, "Exception: " + e.getMessage());
+            }
+        }*/
+    }
+
+
+
+
+    private void handleNotification(String title, String message) {
+
+        if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
+            // app is in foreground, broadcast the push message
+            Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
+            pushNotification.putExtra("message", message);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
+
+            // play notification sound
+            NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
+            notificationUtils.playNotificationSound();
+        }else{
+            // If the app is in background, firebase itself handles the notification
+            Intent resultIntent = new Intent(getApplicationContext(), AlertMapDetailActivity.class);
+            resultIntent.putExtra("message", message);
+            showNotificationMessage(getApplicationContext(), title, message, new Date().toString(), resultIntent);
         }
     }
 
-    private void showNotification(String messageTitle ,String messageBody, String severity) {
-        Intent intent = new Intent(this, HomeActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT);
-        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder = null;
-        switch (severity){
-            case "informational":
-                notificationBuilder = new NotificationCompat.Builder(this)
-                        .setContentTitle(messageTitle)
-                        .setContentText(messageBody)
-                        .setAutoCancel(true)
-                        .setColorized(true)
-                        .setColor(Color.parseColor("#3498db"))
-                        .setSmallIcon(R.drawable.ic_car)
-                        .setVibrate(new long[] {100, 250, 100, 500})
-                        .setSound(defaultSoundUri)
-                        .setContentIntent(pendingIntent);
-                break;
-            case "low":
-                notificationBuilder = new NotificationCompat.Builder(this)
-                        .setContentTitle(messageTitle)
-                        .setContentText(messageBody)
-                        .setAutoCancel(true)
-                        .setColorized(true)
-                        .setColor(Color.parseColor("#2c3e50"))
-                        .setSmallIcon(R.drawable.ic_car)
-                        .setVibrate(new long[] {100, 250, 100, 500})
-                        .setSound(defaultSoundUri)
-                        .setContentIntent(pendingIntent);
-                break;
-            case "medium":
-                notificationBuilder = new NotificationCompat.Builder(this)
-                        .setContentTitle(messageTitle)
-                        .setContentText(messageBody)
-                        .setAutoCancel(true)
-                        .setColorized(true)
-                        .setColor(Color.parseColor("#f1c40f"))
-                        .setSmallIcon(R.drawable.ic_car)
-                        .setVibrate(new long[] {100, 250, 100, 500})
-                        .setSound(defaultSoundUri)
-                        .setContentIntent(pendingIntent);
-                break;
-            case "high":
-                notificationBuilder = new NotificationCompat.Builder(this)
-                        .setContentTitle(messageTitle)
-                        .setContentText(messageBody)
-                        .setAutoCancel(true)
-                        .setColorized(true)
-                        .setColor(Color.parseColor("#e67e22"))
-                        .setSmallIcon(R.drawable.ic_car)
-                        .setVibrate(new long[] {100, 250, 100, 500})
-                        .setSound(defaultSoundUri)
-                        .setContentIntent(pendingIntent);
-                break;
-            case "critical":
-                notificationBuilder = new NotificationCompat.Builder(this)
-                        .setContentTitle(messageTitle)
-                        .setContentText(messageBody)
-                        .setAutoCancel(true)
-                        .setColorized(true)
-                        .setColor(Color.parseColor("#c0392b"))
-                        .setSmallIcon(R.drawable.ic_car)
-                        .setVibrate(new long[] {100, 250, 100, 500})
-                        .setSound(defaultSoundUri)
-                        .setContentIntent(pendingIntent);
-                break;
+    private void handleDataMessage(JSONObject json) {
+        Log.e(TAG, "push json: " + json.toString());
+
+        try {
+            JSONObject data = json.getJSONObject("data");
+
+            String title = data.getString("title");
+            String message = data.getString("message");
+            boolean isBackground = data.getBoolean("is_background");
+            String imageUrl = data.getString("image");
+            String timestamp = data.getString("timestamp");
+            JSONObject payload = data.getJSONObject("payload");
+
+            Log.e(TAG, "title: " + title);
+            Log.e(TAG, "message: " + message);
+            Log.e(TAG, "isBackground: " + isBackground);
+            Log.e(TAG, "payload: " + payload.toString());
+            Log.e(TAG, "imageUrl: " + imageUrl);
+            Log.e(TAG, "timestamp: " + timestamp);
+
+
+            if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
+                // app is in foreground, broadcast the push message
+                Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
+                pushNotification.putExtra("message", message);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
+
+                // play notification sound
+                NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
+                notificationUtils.playNotificationSound();
+            } else {
+                // app is in background, show the notification in notification tray
+                Intent resultIntent = new Intent(getApplicationContext(), HomeActivity.class);
+                resultIntent.putExtra("message", message);
+
+                // check for image attachment
+                if (TextUtils.isEmpty(imageUrl)) {
+                    showNotificationMessage(getApplicationContext(), title, message, timestamp, resultIntent);
+                } else {
+                    // image is present, show notification with image
+                    showNotificationMessageWithBigImage(getApplicationContext(), title, message, timestamp, resultIntent, imageUrl);
+                }
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "Json Exception: " + e.getMessage());
+        } catch (Exception e) {
+            Log.e(TAG, "Exception: " + e.getMessage());
         }
-
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
     }
 
-    private void newAlertMessage(String messageTitle) {
-
-        /*Context context = getApplicationContext();
-        Intent serviceIntent = new Intent(context, EntringAlert.class);
-        serviceIntent.putExtra("EntringAlert", messageTitle);
-        context.startService(serviceIntent);
-        HeadlessJsTaskService.acquireWakeLockNow(context);*/
-
+    /**
+     * Showing notification with text only
+     */
+    private void showNotificationMessage(Context context, String title, String message, String timeStamp, Intent intent) {
+        notificationUtils = new NotificationUtils(context);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        notificationUtils.showNotificationMessage(title, message, timeStamp, intent);
     }
 
-    // [END receive_message]
-
+    /**
+     * Showing notification with text and image
+     */
+    private void showNotificationMessageWithBigImage(Context context, String title, String message, String timeStamp, Intent intent, String imageUrl) {
+        notificationUtils = new NotificationUtils(context);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        notificationUtils.showNotificationMessage(title, message, timeStamp, intent, imageUrl);
+    }
 }

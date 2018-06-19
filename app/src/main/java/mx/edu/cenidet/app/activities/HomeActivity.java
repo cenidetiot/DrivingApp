@@ -90,6 +90,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         roadSegmentControllerSdk = new RoadSegmentControllerSdk(MAIN_CONTEXT, this);
         offStreetParkingControllerSdk = new OffStreetParkingControllerSdk(MAIN_CONTEXT, this);
         sqLiteDrivingApp = new SQLiteDrivingApp(this);
+
+
         //Inicializa los datos de conexión
         try {
             Tools.initialize("config.properties", getApplicationContext());

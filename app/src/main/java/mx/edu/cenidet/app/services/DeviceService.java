@@ -269,40 +269,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
             speedMS = (double) location.getSpeed();
             speedKmHr = (double) (location.getSpeed() * 3.6);
 
-            //Logica para obtener location apartir de (location anterior) y location hasta (location actual)
-            if (hashMapLatLngFromTo.isEmpty() || hashMapLatLngFromTo.size() == 0) {
-                latitudeFrom = latitude;
-                longitudeFrom = longitude;
-                latitudeTo = latitude;
-                longitudeTo = longitude;
-                hashMapLatLngFromTo.put("latitudeFrom", latitudeFrom);
-                hashMapLatLngFromTo.put("longitudeFrom", longitudeFrom);
-                hashMapLatLngFromTo.put("latitudeTo", latitudeTo);
-                hashMapLatLngFromTo.put("longitudeTo", longitudeTo);
-            } else {
-                latitudeFrom = hashMapLatLngFromTo.get("latitudeTo");
-                longitudeFrom = hashMapLatLngFromTo.get("longitudeTo");
-                latitudeTo = latitude;
-                longitudeTo = longitude;
-                hashMapLatLngFromTo.put("latitudeFrom", latitudeFrom);
-                hashMapLatLngFromTo.put("longitudeFrom", longitudeFrom);
-                hashMapLatLngFromTo.put("latitudeTo", latitudeTo);
-                hashMapLatLngFromTo.put("longitudeTo", longitudeTo);
-            }
-
-            //Logica para obtener la velocidad anterior y actual
-            if (hashMapSpeedFromTo.isEmpty() || hashMapSpeedFromTo.size() == 0) {
-                speedFrom = speedKmHr;
-                speedTo = speedKmHr;
-                hashMapSpeedFromTo.put("speedFrom", speedFrom);
-                hashMapSpeedFromTo.put("speedTo", speedTo);
-            } else {
-                speedFrom = hashMapSpeedFromTo.get("speedTo");
-                speedTo = speedKmHr;
-                hashMapSpeedFromTo.put("speedFrom", speedFrom);
-                hashMapSpeedFromTo.put("speedTo", speedTo);
-            }
-
             //Envía el Modelo de datos Device
             if(countSendDevice == 0){
                 sendContext(latitude, longitude);
@@ -313,14 +279,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
             countSendDevice++;
 
-            /*suddenStopAlert = events.suddenStop(speedMS, new Date().getTime(), latitude,  longitude);
-            if (suddenStopAlert != null) {
-                if(!(suddenStopAlert.getSeverity().getValue()).equals("")){
-                    //sendAlert1(suddenStopAlert);
-                }
-                StopingStatus = suddenStopAlert.getDescription().getValue();
-            }*/
-
             Intent intent = new Intent(Constants.SERVICE_CHANGE_LOCATION_DEVICE)
                 .putExtra(Constants.SERVICE_RESULT_LATITUDE, latitude)
                 .putExtra(Constants.SERVICE_RESULT_LONGITUDE, longitude)
@@ -330,13 +288,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
             roadSegment = EventsFuntions.detectedRoadSegment(context, latitude, longitude);
 
             if(roadSegment != null){
-                speeding(
-                    roadSegment.getMaximumAllowedSpeed(),
-                    hashMapSpeedFromTo.get("speedFrom"),
-                    hashMapSpeedFromTo.get("speedTo"),
-                    latitude,
-                    longitude
-                );
+
                 String[] laneUsages, locationRoadSegment;
                 Log.d("ROAD SEGMENT LOCATION", roadSegment.getLocation());
                 laneUsages = roadSegment.getLaneUsage().split(",");
@@ -360,8 +312,8 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
                     /*StopingStatus += ", Contrasentido"+
                     events.wrongWay(
-                        new LatLng(location.getLatitude(),location.getLongitude()), 
-                        startPoint, 
+                        new LatLng(location.getLatitude(),location.getLongitude()),
+                        startPoint,
                         endPoint,
                         new Date().getTime()
                     );*/
@@ -377,44 +329,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
     }
 
-    public void speeding(double maximumSpeed, double speedFrom, double speedTo, double latitude, double longitude){
-        
-        String severitySpeeding =  EventsDetect.speeding(maximumSpeed, speedFrom, speedTo);
-
-        String description = 
-            this.getString( R.string.message_alert_description_maximum_speed ) + " " + maximumSpeed + "km/h. " +
-            this.getString( R.string.message_alert_description_current_speed ) + " " + speedTo + "km/h.";
-        String severity = "";
-
-        String subCategory = "unauthorizedSpeedDetection";
-
-        switch (severitySpeeding){
-
-            case "tolerance":
-                break;
-            case "informational":
-                severity = "informational";
-                sendAlert(description, severity, subCategory, latitude, longitude);
-                break;
-            case "low":
-                severity = "low";
-                sendAlert(description, severity, subCategory, latitude, longitude);
-                break;
-            case "medium":
-                severity = "medium";
-                sendAlert(description, severity, subCategory, latitude, longitude);
-                break;
-            case "high":
-                severity = "high";
-                sendAlert(description, severity, subCategory, latitude, longitude);
-                break;
-            case "critical":
-                severity = "critical";
-                sendAlert(description, severity, subCategory, latitude, longitude);
-                break;
-
-        }
-    }
 
     /**
      * @param description Velocidad máxima permitida: 20 km/h. Velocidad actual del vehiculo es 25 km/h.

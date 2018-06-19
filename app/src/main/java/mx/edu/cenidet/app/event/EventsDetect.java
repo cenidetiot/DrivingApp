@@ -49,6 +49,10 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
     private static boolean  wrongWayAlertSent = false, isWrongWay;
     private static long wrongWayDate = 0;
 
+    /*Variables globales de velocidad*/
+    private static double lastSpeed = 0;
+    private static int speedigSeconds;
+
 
     public  EventsDetect () {
         context = HomeActivity.MAIN_CONTEXT;
@@ -78,9 +82,9 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
         return  alert;
     }
 
-    public Alert wrongWay(LatLng currentPoint, LatLng startPoint, LatLng endPoint, long currentDate){
+    public boolean wrongWay(LatLng currentPoint, LatLng startPoint, LatLng endPoint, long currentDate){
         
-        Alert alert = null;
+        boolean wrong = false;
 
         totalDistance = SphericalUtil.computeDistanceBetween(startPoint, endPoint);
         startToLastDistance = SphericalUtil.computeDistanceBetween(startPoint, lastPoint);
@@ -92,6 +96,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
         if(!(startToCurrentDistance > startToLastDistance && endToLastDistance > endToCurrentDistance)){
             isWrongWay = true;
             wrongWayDate = currentDate;
+            wrong = true;
         }
         long wrongWayTmp = new Date().getTime()- wrongWayDate;
         long wrongWaySeconds = TimeUnit.MILLISECONDS.toSeconds(wrongWayTmp);
@@ -109,35 +114,18 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
                 severity = "critical";
             }
             String[] currentCoords = currentPoint.toString().split(",");
-            alert  = makeAlert( 
+            sendAlert(
                 "Wrong Way Automatic Detection", 
                 severity, 
                 "wrongWay", 
                 Double.parseDouble(currentCoords[0]), 
                 Double.parseDouble(currentCoords[1])
             );
+            wrong = true;
 
         }
         lastPoint = currentPoint;
-        return alert;
-    }
-    
-    /**
-     * @param description La velocidad máxima permitida es 20 km/h. Velocidad actual del vehiculo es 25 km/h.
-     * @param severity
-     * @param subCategory UnauthorizedSpeeDetection
-     * @param latitude
-     * @param longitude
-     */
-
-    private Alert makeAlert(String description, String severity, String subCategory, double latitude, double longitude){
-        
-        Alert alert = new Alert();
-        alert.getDescription().setValue(description);
-        alert.getLocation().setValue(latitude+", "+longitude);
-        alert.getSeverity().setValue(severity);
-        alert.getSubCategory().setValue(subCategory);
-        return alert;
+        return wrong;
     }
 
     public void writeFile(String text){
@@ -244,18 +232,22 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
 
     /**
      * @param maximumSpeed velocidad maxima del road segment
-     * @param speedFrom velocidad anterior.
-     * @param speedTo velocidad actual.
+     * @param speed velocidad anterior.
      * @return la severidad del exceso de velocidad.
      */
-    public static String speeding(double maximumSpeed, double speedFrom, double speedTo){
-        double averageSpeed;
+    public static String speeding(double maximumSpeed, double speed){
+        boolean isSpeeding  = false;
         double subtractSpeed;
 
-        if(speedFrom > 4.5 && speedTo > 4.5){
-            averageSpeed = ( speedFrom + speedTo ) / 2;
-            subtractSpeed = averageSpeed - maximumSpeed;
-            if(subtractSpeed < 1){
+        if(speed > 1.39 ){
+            subtractSpeed = speed - maximumSpeed;
+
+            if (subtractSpeed < 0){
+                isSpeeding = true;
+                speedigSeconds ++;
+            }
+
+            /*if(subtractSpeed < 1){
                 return "tolerance";
             }else if (subtractSpeed<=5){
                 return "informational";
@@ -267,8 +259,15 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
                 return "high";
             }else {
                 return "critical";
+            }*/
+        }
+
+        if (isSpeeding){
+            if (speedigSeconds > 3){
+
             }
         }
+
         return "";
     }
 

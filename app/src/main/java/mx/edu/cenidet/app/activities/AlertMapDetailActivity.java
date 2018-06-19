@@ -45,17 +45,12 @@ public class AlertMapDetailActivity extends AppCompatActivity implements OnMapRe
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
-        createOrUpdateMarkerByLocation(pointLatitude, pointLongitude);
-        /*gMap.addPolygon(new PolygonOptions()
-                .addAll(listLocation).strokeColor(Color.RED));
-        createOrUpdateMarkerByLocation(pointLatitude, pointLongitude);*/
+        createOrUpdateMarkerByLocation(pointLatitude, pointLongitude, severity, subcategory, description );
     }
 
-    private void createOrUpdateMarkerByLocation(double latitude, double longitude){
+    private void createOrUpdateMarkerByLocation(double latitude, double longitude, String severity, String subcategory, String description){
         if(marker == null){
-           // marker = gMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(category+"\n"+description));
-            //marker = gMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(category).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_alerts_menu)).anchor((float) 0.5, (float) 0.5).rotation((float) 90.0));
-            switch (severity){
+           switch (severity){
                 case "informational":
                     marker = gMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(subcategory).snippet(description).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_location_informational)));
                     break;
@@ -84,9 +79,9 @@ public class AlertMapDetailActivity extends AppCompatActivity implements OnMapRe
     private void zoomToLocation(double latitude, double longitude){
         camera = new CameraPosition.Builder()
                 .target(new LatLng(latitude, longitude))
-                .zoom(18)       //limit -> 21
-                .bearing(0)    //orientación de la camara hacia el este 0°-365°
-                .tilt(30)       //efecto 3D 0-90
+                .zoom(18)
+                .bearing(0)
+                .tilt(30)
                 .build();
         gMap.animateCamera(CameraUpdateFactory.newCameraPosition(camera));
     }

@@ -19,6 +19,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import mx.edu.cenidet.app.activities.AlertHistoryActivity;
 import mx.edu.cenidet.cenidetsdk.controllers.AlertsControllerSdk;
 import mx.edu.cenidet.cenidetsdk.httpmethods.Response;
 import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
@@ -27,6 +28,7 @@ import mx.edu.cenidet.app.activities.HomeActivity;
 import mx.edu.cenidet.app.adapters.MyAdapterAlerts;
 import www.fiware.org.ngsi.datamodel.entity.Alert;
 import www.fiware.org.ngsi.utilities.ApplicationPreferences;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,7 +46,7 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
     private String zoneId;
     private DataListener callback;
     public AlertHistoryFragment() {
-        context = HomeActivity.MAIN_CONTEXT;
+        context =  HomeActivity.MAIN_CONTEXT;
         alertsControllerSdk = new AlertsControllerSdk(context, this);
         applicationPreferences = new ApplicationPreferences();
     }
