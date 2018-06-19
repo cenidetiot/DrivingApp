@@ -66,15 +66,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         context = LOGIN_CONTEXT;
         appPreferences = new ApplicationPreferences();
 
-        Intent intent = getIntent();
+        /*Intent intent = getIntent();
         if (intent != null && intent.getExtras() != null) {
             Bundle extras = intent.getExtras();
-            String someData= extras.getString("alert");
-            Log.d("DATA", someData);
-            /*private Response response = new Response();
-            JSONObject jsonObject = response.parseJsonObject(extras.getString("alert"));
-            Intent alertIntent = new Intent(context, AlertMapDetailActivity.class);
+            String alert = extras.getString("alert");
+            Log.d("DATA", alert);
+
             try {
+                JSONObject jsonObject = new JSONObject(extras.getString("alert"));
+                Intent alertIntent = new Intent(context, AlertMapDetailActivity.class);
                 alertIntent.putExtra("subcategory", jsonObject.getString("subCategory"));
                 alertIntent.putExtra("description", jsonObject.getString("description"));
                 alertIntent.putExtra("location", jsonObject.getString("location"));
@@ -82,8 +82,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 startActivity(alertIntent);
             }catch (JSONException e) {
                 e.printStackTrace();
-            }*/
-        }
+            }
+        }else {
+            Log.d("DATA", "Noo contiene data");
+        }*/
 
         if(setCredentialsIfExist()){
             mIntent = new Intent(this, SplashActivity.class);
