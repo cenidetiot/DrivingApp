@@ -40,6 +40,7 @@ import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
 import mx.edu.cenidet.cenidetsdk.utilities.FunctionSdk;
 import mx.edu.cenidet.app.R;
 import www.fiware.org.ngsi.utilities.ApplicationPreferences;
+import mx.edu.cenidet.cenidetsdk.httpmethods.Response;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener, UserController.UsersServiceMethods {
     final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
@@ -64,6 +65,25 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         LOGIN_CONTEXT = LoginActivity.this;
         context = LOGIN_CONTEXT;
         appPreferences = new ApplicationPreferences();
+
+        Intent intent = getIntent();
+        if (intent != null && intent.getExtras() != null) {
+            Bundle extras = intent.getExtras();
+            String someData= extras.getString("alert");
+            Log.d("DATA", someData);
+            /*private Response response = new Response();
+            JSONObject jsonObject = response.parseJsonObject(extras.getString("alert"));
+            Intent alertIntent = new Intent(context, AlertMapDetailActivity.class);
+            try {
+                alertIntent.putExtra("subcategory", jsonObject.getString("subCategory"));
+                alertIntent.putExtra("description", jsonObject.getString("description"));
+                alertIntent.putExtra("location", jsonObject.getString("location"));
+                alertIntent.putExtra("severity", jsonObject.getString("severity"));
+                startActivity(alertIntent);
+            }catch (JSONException e) {
+                e.printStackTrace();
+            }*/
+        }
 
         if(setCredentialsIfExist()){
             mIntent = new Intent(this, SplashActivity.class);

@@ -42,7 +42,7 @@ public class SendDataService {
     private Context context;
 
     public SendDataService(SendDataService.SendDataMethods sendDataMethods){
-        context = context = HomeActivity.MAIN_CONTEXT;
+        context = HomeActivity.MAIN_CONTEXT;
         this.sendDataMethods = sendDataMethods;
         filter = new IntentFilter(Constants.SERVICE_CHANGE_LOCATION_DEVICE);
         ResponseReceiver receiver = new ResponseReceiver();

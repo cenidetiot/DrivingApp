@@ -5,11 +5,14 @@ import android.content.Context;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
+import mx.edu.cenidet.cenidetsdk.controllers.DeviceTokenControllerSdk;
+import mx.edu.cenidet.cenidetsdk.httpmethods.Response;
 import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
 import www.fiware.org.ngsi.utilities.ApplicationPreferences;
+import www.fiware.org.ngsi.utilities.DevicePropertiesFunctions;
 
 
-public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
+public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService implements DeviceTokenControllerSdk.DeviceTokenServiceMethods {
     private static final String TAG = "Alertas";
     private ApplicationPreferences appPreferences;
     private String fcmToken;
@@ -30,5 +33,22 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
     
     private void sendRegistrationToServer(String token) {
         Context context = getApplicationContext();
+        DeviceTokenControllerSdk deviceTokenControllerSdk = new DeviceTokenControllerSdk(context, this);
+        deviceTokenControllerSdk.createDeviceToken(token, new DevicePropertiesFunctions().getDeviceId(context));
+    }
+
+    @Override
+    public void createDeviceToken(Response response) {
+
+    }
+
+    @Override
+    public void readDeviceToken(Response response) {
+
+    }
+
+    @Override
+    public void updateDeviceToken(Response response) {
+
     }
 }
