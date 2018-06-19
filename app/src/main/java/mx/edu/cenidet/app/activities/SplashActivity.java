@@ -50,7 +50,7 @@ public class SplashActivity extends AppCompatActivity implements DeviceTokenCont
         deviceTokenControllerSdk = new DeviceTokenControllerSdk(context, this);
         fcmToken = appPreferences.getPreferenceString(getApplicationContext(),ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_FCMTOKEN);
         if (!fcmToken.equals("") || fcmToken != null){
-            deviceTokenControllerSdk.createDeviceToken(fcmToken, new DevicePropertiesFunctions().getDeviceId(context));
+            //deviceTokenControllerSdk.createDeviceToken(fcmToken, new DevicePropertiesFunctions().getDeviceId(context));
         }
         if(listZone.size()== 0){
             zoneControllerSdk.readAllZone();

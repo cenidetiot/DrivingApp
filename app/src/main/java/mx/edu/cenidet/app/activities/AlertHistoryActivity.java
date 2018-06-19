@@ -1,5 +1,6 @@
 package mx.edu.cenidet.app.activities;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -12,9 +13,12 @@ import mx.edu.cenidet.app.fragments.MapHistoryFragment;
 import www.fiware.org.ngsi.datamodel.entity.Alert;
 
 public class AlertHistoryActivity extends AppCompatActivity implements AlertHistoryFragment.DataListener {
+
+    public Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = this;
         setContentView(R.layout.activity_alert_history);
         setToolbar();
     }
