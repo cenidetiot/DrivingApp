@@ -91,7 +91,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         offStreetParkingControllerSdk = new OffStreetParkingControllerSdk(MAIN_CONTEXT, this);
         sqLiteDrivingApp = new SQLiteDrivingApp(this);
 
-
         //Inicializa los datos de conexión
         try {
             Tools.initialize("config.properties", getApplicationContext());
@@ -177,16 +176,17 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         Intent intent = new Intent(getApplicationContext(), AlertHistoryActivity.class);
                         startActivity(intent);
                         break;
-                    case R.id.menu_profile:
+                    /*case R.id.menu_profile:
                         drawerLayout.closeDrawers();
                         Intent intentMyProfile = new Intent(getApplicationContext(), MyProfileActivity.class);
                         startActivity(intentMyProfile);
-                        break;
+                        break;*/
                     case R.id.menu_logout:
                         sqLiteDrivingApp.deleteDatabase(MAIN_CONTEXT);
                         appPreferences.removeSharedPreferences(MAIN_CONTEXT, ConstantSdk.PREFERENCE_NAME_GENERAL);
-                        Intent intentLogin = new Intent(getApplicationContext(), LoginActivity.class);
-                        startActivity(intentLogin);
+                        Intent intentMainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intentMainActivity);
+                        finish();
                         break;
                 }
 
