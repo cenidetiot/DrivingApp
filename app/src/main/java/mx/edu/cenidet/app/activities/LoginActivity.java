@@ -18,6 +18,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -44,25 +45,33 @@ import www.fiware.org.ngsi.utilities.ApplicationPreferences;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener, UserController.UsersServiceMethods {
     final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
     private static final int RESOLVE_HINT = 12;
-    private EditText etPhone;
+    private EditText etPhone, etEmailSG;
     private EditText etLoginPassword;
+    private ImageButton btnPhone;
     private Button btnLogin;
     private Button btnSignUp;
     private ApplicationPreferences appPreferences;
     private UserController userController;
-    private String email;
+    private String email, emailSG;
     private String token;
     private Intent mIntent;
     private Context context;
     public static Context LOGIN_CONTEXT = null;
     private GoogleApiClient mGoogleApiClient;
     private String phone;
+    private String userType;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_login);
         LOGIN_CONTEXT = LoginActivity.this;
         context = LOGIN_CONTEXT;
+
+        //Main Activity Intent --- Authenticate user as: (userType)
+
+        userType = getIntent().getStringExtra("userType");
+
         appPreferences = new ApplicationPreferences();
 
         if(setCredentialsIfExist()){
@@ -126,14 +135,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void bindUI(){
+        etEmailSG = (EditText) findViewById (R.id.etEmailSG);
         etPhone = (EditText) findViewById(R.id.etPhone);
         etPhone.setEnabled(false);
         etLoginPassword = (EditText) findViewById(R.id.etLoginPassword);
-        //etLoginPassword.setFocusable(true);
-        btnLogin = (Button) findViewById(R.id.btnLogin);
+        btnPhone = (ImageButton) findViewById (R.id.btnPhone);
+        btnLogin = (Button) findViewById (R.id.btnLogin);
         btnLogin.setOnClickListener(this);
         btnSignUp = (Button) findViewById(R.id.btnSignUp);
         btnSignUp.setOnClickListener(this);
+
+        if(userType.equals("mobileUser")){
+            etEmailSG.setVisibility(View.INVISIBLE);
+            etPhone.setVisibility(View.VISIBLE);
+            btnPhone.setVisibility(View.VISIBLE);
+        }
+        else{
+            etPhone.setVisibility(View.INVISIBLE);
+            btnPhone.setVisibility(View.INVISIBLE);
+            etEmailSG.setVisibility(View.VISIBLE);
+        }
     }
 
     // Construct a request for phone numbers and show the picker
@@ -177,15 +198,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private boolean login(String email, String password){
-        /*if(!isValidEmail(email)){
-            Toast.makeText(getApplicationContext(), R.string.message_valid_email, Toast.LENGTH_SHORT).show();
-            return false;
-        }else */
-       
+        if(userType.equals("mobileUser")) {
+        }
+        else{
+            if(!isValidEmail(email)){
+                Toast.makeText(getApplicationContext(), R.string.message_valid_email, Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
         if(!isValidPassword(password)){
             Toast.makeText(getApplicationContext(), R.string.message_valid_password, Toast.LENGTH_SHORT).show();
             return false;
-        }else{
+        }
+        else{
             return true;
         }
     }
@@ -210,25 +235,44 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
+        String password = etLoginPassword.getText().toString();
         switch(v.getId()){
             case R.id.btnLogin:
-                phone = etPhone.getText().toString();
-                String password = etLoginPassword.getText().toString();
-                String subPhone = phone.substring(1, phone.length());
-                if(login(subPhone, password)){
-                    userController.logInUser(subPhone, password);
+                //IF THE TYPE USER IS A MOBILE USER
+                if(userType.equals("mobileUser")){
+                    phone = etPhone.getText().toString();
+                    String subPhone = phone.substring(1, phone.length());
+                    if(login(subPhone, password)){
+                        userController.logInUser(subPhone, password);
+                    }
+                }
+                // ON THE OTHER SIDE, IF THE USER IS A SECURITY GUARD USER SO..
+                else{
+                    emailSG = etEmailSG.getText().toString();
+                    if(login(emailSG, password)){
+                        Toast.makeText(getApplicationContext(), "Login de Guardia de Seguridad", Toast.LENGTH_SHORT).show();
+                        //userController.logInUser(emailSG, password);
+                    }
+
                 }
                 break;
             case R.id.btnSignUp:
-                Intent intentCreateAccount = new Intent(LoginActivity.this, CreateAccountActivity.class);
-                startActivity(intentCreateAccount);
+                if(userType.equals("mobileUser")) {
+                    //INTENT CREATE NEW ACCOUNT
+                    Intent intentCreateAccount = new Intent(LoginActivity.this, CreateAccountActivity.class);
+                    startActivity(intentCreateAccount);
+                }
+                else{
+                    //INTENT WEBVIEW
+                    Intent webViewSmartSecurity = new Intent(LoginActivity.this, WebViewSmartSecurity.class);
+                    startActivity(webViewSmartSecurity);
+                }
                 break;
             case R.id.btnPhone:
                 requestHint();
                 break;
         }
     }
-
 
     @Override
     public void createUser(Response response) {

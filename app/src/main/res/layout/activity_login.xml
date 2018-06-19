@@ -79,6 +79,17 @@
                 android:layout_alignParentRight="true"
                 android:onClick="onClick"
                 android:src="@android:drawable/ic_menu_call" />
+
+            <EditText
+                android:id="@+id/etEmailSG"
+                style="@style/EditTextStyleOne"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:ems="10"
+                android:hint="@string/email_sg"
+                android:inputType="textPersonName" />
         </RelativeLayout>
 
         <EditText
