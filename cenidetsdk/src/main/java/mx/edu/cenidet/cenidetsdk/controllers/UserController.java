@@ -72,21 +72,30 @@ public class UserController implements MethodGET.MethodGETCallback, MethodPOST.M
         mPOST.execute(URL, jsonString.toString());
     }
 
-    public void logInUser(String phoneNumber, String password){
+    public void logInUser(String userID, String password, String typeUser){
         method = "logInUser";
         Response response = new Response();
-        String URL = URL_BASE_HOST + ConfigServer.http_api.getPropiedad() +"/"+ ConfigServer.http_user.getPropiedad() +"/"+ ConfigServer.http_login.getPropiedad();
+        String URL,json;
+        if(typeUser.equals("mobileUser")){
+            URL = URL_BASE_HOST + ConfigServer.http_api.getPropiedad() +"/"+ ConfigServer.http_user.getPropiedad() +"/"+ ConfigServer.http_login.getPropiedad();
 
-        String json = "{\n" +
-                "\t\"phoneNumber\":\""+phoneNumber+"\",\n" +
-                "\t\"password\":\""+password+"\"\n" +
-                "}";
+            json = "{\n" +
+                    "\t\"phoneNumber\":\""+userID+"\",\n" +
+                    "\t\"password\":\""+password+"\"\n" +
+                    "}";
+        }else{
+            URL = URL_BASE_HOST + ConfigServer.http_api.getPropiedad() +"/"+ ConfigServer.http_security.getPropiedad() +"/"+ ConfigServer.http_login.getPropiedad();
+
+            json = "{\n" +
+                    "\t\"email\":\""+userID+"\",\n" +
+                    "\t\"password\":\""+password+"\"\n" +
+                    "}";
+        }
         JSONObject jsonLogInUser = response.parseJsonObject(json);
         Log.i("Status", "JSON: "+jsonLogInUser);
         mPOST = new MethodPOST(this);
         mPOST.execute(URL, jsonLogInUser.toString());
     }
-
     public void readUser(String email){
         method = "readUser";
         String URL = URL_BASE_NODE + ConfigServer.http_user.getPropiedad()+"?email="+email;

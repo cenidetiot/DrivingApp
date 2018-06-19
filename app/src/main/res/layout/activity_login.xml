@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,36 +7,30 @@
     android:background="@color/backgroundDefault"
     tools:context=".activities.LoginActivity">
 
-    <!--LinearLayout
+    <include
+        android:id="@+id/toolbar2"
+        layout="@layout/toolbar2"
+        android:title="@string/emptyTitleToolbar" />
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content
-        android:orientation="vertical"
-        android:background="@drawable/drive1"
-        android:padding="15dp"!-->
-    <!--LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/colorPrimaryDark"
-        android:padding="15dp"-->
+        android:layout_height="match_parent"
+        android:layout_marginTop="55dp">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="15dp">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical"
-        android:padding="15dp"
-        
-        >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="130dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="6dp"
+                android:src="@drawable/logo" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="130dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="8dp"
-            android:src="@drawable/logo" />
-        
-        <TextView
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -46,84 +40,76 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/title"
                 android:textStyle="bold" />
-        <!--EditText
-            android:id="@+id/etPhone"
-            style="@style/EditTextStyleOne"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:hint="@string/phone"
-            android:inputType="phone" /-->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
+
+                <EditText
+                    android:id="@+id/etPhone"
+                    style="@style/EditTextStyleOne"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_toLeftOf="@+id/btnPhone"
+                    android:layout_toStartOf="@+id/btnPhone"
+                    android:hint="@string/phone"
+                    android:inputType="phone" />
+
+                <ImageButton
+                    android:id="@+id/btnPhone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:onClick="onClick"
+                    android:src="@android:drawable/ic_menu_call" />
+
+                <EditText
+                    android:id="@+id/etEmailSG"
+                    style="@style/EditTextStyleOne"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:ems="10"
+                    android:hint="@string/email_sg"
+                    android:inputType="textPersonName" />
+            </RelativeLayout>
 
             <EditText
-                android:id="@+id/etPhone"
+                android:id="@+id/etLoginPassword"
                 style="@style/EditTextStyleOne"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_toLeftOf="@+id/btnPhone"
-                android:layout_toStartOf="@+id/btnPhone"
-                android:hint="@string/phone"
-                android:inputType="phone" />
+                android:layout_marginBottom="8dp"
+                android:hint="@string/password"
+                android:inputType="textPassword" />
 
-            <ImageButton
-                android:id="@+id/btnPhone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:onClick="onClick"
-                android:src="@android:drawable/ic_menu_call" />
-
-            <EditText
-                android:id="@+id/etEmailSG"
-                style="@style/EditTextStyleOne"
+            <Button
+                android:id="@+id/btnLogin"
+                style="@style/ButtonStyleOne"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:ems="10"
-                android:hint="@string/email_sg"
-                android:inputType="textPersonName" />
-        </RelativeLayout>
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/log_in" />
 
-        <EditText
-            android:id="@+id/etLoginPassword"
-            style="@style/EditTextStyleOne"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:hint="@string/password"
-            android:inputType="textPassword" />
+            <Button
+                android:id="@+id/btnSignUp"
+                style="@style/ButtonStyleTwo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:text="@string/message_btn_sign_up" />
 
-        <Button
-            android:id="@+id/btnLogin"
-            style="@style/ButtonStyleOne"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/log_in" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="45dp"
+                android:src="@drawable/logo_smartsdk" />
+        </LinearLayout>
+    </ScrollView>
 
-        <Button
-            android:id="@+id/btnSignUp"
-            style="@style/ButtonStyleTwo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
-            android:text="@string/message_btn_sign_up" />
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="45dp"
-            android:src="@drawable/logo_smartsdk" />
-    </LinearLayout>
-
-</ScrollView>
+</RelativeLayout>

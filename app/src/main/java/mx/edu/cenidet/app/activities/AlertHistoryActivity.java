@@ -23,15 +23,15 @@ public class AlertHistoryActivity extends AppCompatActivity implements AlertHist
         setToolbar();
     }
 
+    // SET TOOLBAR METHOD
     private void setToolbar(){
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
-        //getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_return);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle(R.string.menu_current_alerts);
     }
-
+    //FUNCTION TO BACK TO THE ACTIVITY WITH THE ARROW
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();

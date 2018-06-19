@@ -6,10 +6,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="mx.edu.cenidet.app.activities.AlertHistoryActivity">
+
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar"
         android:title="@string/menu_current_alerts"/>
+
     <fragment
         android:id="@+id/mapHistoryFragment"
         android:name="mx.edu.cenidet.app.fragments.MapHistoryFragment"

@@ -27,6 +27,7 @@ public enum  ConfigServer {
 
     //#Entities
     http_user("user"),
+    http_security("guard"),
     http_organization("organization"),
     http_zone("zone"),
     http_campus("campus"),
