@@ -6,6 +6,7 @@ import android.content.IntentSender;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
@@ -39,6 +40,7 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
+        setToolbar();
         appPreferences = new ApplicationPreferences();
         bindEditText();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -59,6 +61,20 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
     protected void onPause() {
         super.onPause();
         Log.i("onPause", "--------------------------------------------------");
+    }
+
+    private void setToolbar(){
+        Toolbar toolbarLogin = (Toolbar) findViewById(R.id.toolbar2);
+        setSupportActionBar(toolbarLogin);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle(R.string.emptyTitleToolbar);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     private boolean createAccount(User user, String confirmPassword){

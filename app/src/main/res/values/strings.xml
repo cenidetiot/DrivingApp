@@ -3,6 +3,8 @@
     <string name="authenticate_user">  Authenticate me as: </string>
     <string name="mobile_user"> Mobile User</string>
     <string name="security_guard"> Security Guard </string>
+    <string name="emptyTitleToolbar"></string>
+    <string name = "webViewTitle"> SmartSecurity VideoSurveillance </string>
     <string name="phone">Phone</string>
     <string name="email_sg">Email</string>
     <string name="password">Password</string>

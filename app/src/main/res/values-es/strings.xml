@@ -4,6 +4,8 @@
     <string name = "authenticate_user">  Iniciar sesión como: </string>
     <string name = "mobile_user"> Usuario Móvil </string>
     <string name = "security_guard"> Guardia de Seguridad </string>
+    <string name="emptyTitleToolbar"></string>
+    <string name = "webViewTitle"> SmartSecurity VideoSurveillance </string>
     <string name="phone">Teléfono</string>
     <string name="email_sg">Email</string>
     <string name="password">Contraseña</string>

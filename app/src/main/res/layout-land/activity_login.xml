@@ -4,6 +4,10 @@
     android:layout_height="match_parent"
     android:background="@color/backgroundDefault">
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -53,14 +57,7 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <!--EditText
-                android:id="@+id/etPhone"
-                style="@style/EditTextStyleOne"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:hint="@string/phone"
-                android:inputType="phone" /-->
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

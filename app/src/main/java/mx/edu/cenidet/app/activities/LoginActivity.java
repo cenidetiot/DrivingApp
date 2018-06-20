@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
@@ -69,6 +70,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         context = LOGIN_CONTEXT;
 
 
+        //SET TOOLBAR WITH BACK ARROW
+        setToolbar();
+
+        //Main Activity Intent --- Authenticate user as: (userType)
         userType = getIntent().getStringExtra("userType");
 
         appPreferences = new ApplicationPreferences();
@@ -100,11 +105,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 permissionsNeeded.add(readPhone);
             }
 
-           /* if(!addPermission(permissionsList, Manifest.permission.WRITE_EXTERNAL_STORAGE))
-                permissionsNeeded.add("WRITE STORAGE");
-            if(!addPermission(permissionsList, Manifest.permission.READ_PHONE_STATE))
-                permissionsNeeded.add("READ PHONE");*/
-
             if (permissionsList.size() > 0) {
                 if (permissionsNeeded.size() > 0) {
                     // Need Rationale
@@ -130,7 +130,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         }
 
+    }
+    private void setToolbar(){
+        Toolbar toolbarLogin = (Toolbar) findViewById(R.id.toolbar2);
+        setSupportActionBar(toolbarLogin);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle(R.string.emptyTitleToolbar);
+    }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     private void bindUI(){
@@ -237,12 +249,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String password = etLoginPassword.getText().toString();
         switch(v.getId()){
             case R.id.btnLogin:
-                //IF THE TYPE USER IS A MOBILE USER
+                //
                 if(userType.equals("mobileUser")){
                     phone = etPhone.getText().toString();
                     String subPhone = phone.substring(1, phone.length());
                     if(login(subPhone, password)){
-                        userController.logInUser(subPhone, password);
+                        userController.logInUser(subPhone, password, userType);
                     }
                 }
                 // ON THE OTHER SIDE, IF THE USER IS A SECURITY GUARD USER SO..
@@ -250,7 +262,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     emailSG = etEmailSG.getText().toString();
                     if(login(emailSG, password)){
                         Toast.makeText(getApplicationContext(), "Login de Guardia de Seguridad", Toast.LENGTH_SHORT).show();
-                        //userController.logInUser(emailSG, password);
+                        userController.logInUser(emailSG, password, userType);
                     }
 
                 }
@@ -427,15 +439,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     this.finish();
                     Toast.makeText(LoginActivity.this, R.string.message_permission_denied, Toast.LENGTH_SHORT).show();
                 }
-                /*if (perms.get(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                        && perms.get(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                        && perms.get(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-                    // All Permissions Granted
-                } else {
-                    // Permission Denied
-                    Toast.makeText(LoginActivity.this, "Some Permission is Denied", Toast.LENGTH_SHORT)
-                            .show();
-                }*/
+
             }
             break;
             default:
