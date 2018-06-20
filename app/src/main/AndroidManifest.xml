@@ -34,6 +34,7 @@ uses-permission android:name="android.permission.READ_SMS" />
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -61,19 +62,26 @@ uses-permission android:name="android.permission.READ_SMS" />
         <activity android:name=".activities.AlertMapDetailActivity" />
         <activity android:name=".activities.MapDetailActivity" />
         <activity android:name=".activities.AlertHistoryActivity" />
-        <activity android:name=".activities.SendManualAlertsActivity" />
+        <activity
+            android:name=".activities.SendManualAlertsActivity"
+            android:configChanges="screenSize|orientation"
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".activities.CreateAccountActivity" />
         <activity android:name=".activities.MyProfileActivity" />
         <activity android:name=".activities.LoginActivity" />
-        <activity android:name=".activities.WebViewSmartSecurity"></activity>
+        <activity android:name=".activities.WebViewSmartSecurity" />
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_alert_critical" />
         <meta-data
-         android:name="com.google.firebase.messaging.default_notification_color"
+            android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/red" />
 
-
+        <activity
+            android:name=".activities.DrivingView"
+            android:label="@string/title_activity_driving_view"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

@@ -17,41 +17,49 @@
         <item name="fab_colorPressed">#B40404</item>
         <item name="fab_colorRipple">#8A0808</item>
     </style>
+
     <style name="MenuButtonsAccident">
         <item name="fab_colorNormal">#e67e22</item>
         <item name="fab_colorPressed">#B45F04</item>
         <item name="fab_colorRipple">#8A4B08</item>
     </style>
+
     <style name="MenuButtonsTraffic">
         <item name="fab_colorNormal">#f1c40f</item>
         <item name="fab_colorPressed">#DBA901</item>
         <item name="fab_colorRipple">#B18904</item>
     </style>
+
     <style name="MenuButtonsInformational">
         <item name="fab_colorNormal">#3498db</item>
         <item name="fab_colorPressed">#00BFFF</item>
         <item name="fab_colorRipple">#0489B1</item>
     </style>
+
     <style name="MenuButtonsLow">
         <item name="fab_colorNormal">#2c3e50</item>
         <item name="fab_colorPressed">#424242</item>
         <item name="fab_colorRipple">#585858</item>
     </style>
+
     <style name="MenuButtonsMedium">
         <item name="fab_colorNormal">#f1c40f</item>
         <item name="fab_colorPressed">#DBA901</item>
         <item name="fab_colorRipple">#B18904</item>
     </style>
+
     <style name="MenuButtonsHigh">
         <item name="fab_colorNormal">#e67e22</item>
         <item name="fab_colorPressed">#B45F04</item>
         <item name="fab_colorRipple">#8A4B08</item>
     </style>
+
     <style name="MenuButtonsCritical">
         <item name="fab_colorNormal">#c0392b</item>
         <item name="fab_colorPressed">#e74c3c</item>
         <item name="fab_colorRipple">#8A4B08</item>
     </style>
+
     <style name="EditTextStyleOne">
         <item name="android:background">@drawable/edit_text_background_one</item>
         <item name="android:textColor">@color/white</item>
@@ -59,16 +67,22 @@
         <item name="android:paddingTop">8dp</item>
         <item name="android:paddingBottom">8dp</item>
     </style>
+
     <style name="ButtonStyleOne">
         <item name="android:paddingRight">16dp</item>
         <item name="android:paddingLeft">16dp</item>
         <item name="android:background">@drawable/button_background_one</item>
         <item name="android:textColor">@color/white</item>
     </style>
+
     <style name="ButtonStyleTwo">
         <item name="android:paddingRight">16dp</item>
         <item name="android:paddingLeft">16dp</item>
         <item name="android:background">@drawable/button_background_two</item>
         <item name="android:textColor">@color/white</item>
     </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

@@ -20,12 +20,14 @@
     <string name="message_btn_create_account">Crear cuenta</string>
     <string name="message_title_create_account">Crea una cuenta</string>
     <string name="message_btn_sign_up">Regístrate</string>
+    <string name= "alert_location"> Localización de la Alerta</string>
+    <string name="send_alert">Enviar Alerta</string>
 
 
     <!--Drawer and Tabs-->
     <string name="menu_home">Inicio</string>
-    <string name="menu_speed">Mi velocidad</string>
-    <string name="menu_campus_map">Mapa de zonas</string>
+    <string name="menu_speed">Vista de Manejo</string>
+    <string name="menu_campus_map">Mapa de la Zona</string>
     <string name="menu_alerts">Alertas del día</string>
     <string name="menu_my_campus">Mis zonas</string>
     <string name="menu_my_location">Mi localización</string>

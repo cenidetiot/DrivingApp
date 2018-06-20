@@ -4,7 +4,7 @@
     <string name="mobile_user"> Mobile User</string>
     <string name="security_guard"> Security Guard </string>
     <string name="emptyTitleToolbar"></string>
-    <string name = "webViewTitle"> SmartSecurity VideoSurveillance </string>
+    <string name="webViewTitle"> SmartSecurity VideoSurveillance </string>
     <string name="phone">Phone</string>
     <string name="email_sg">Email</string>
     <string name="password">Password</string>
@@ -22,8 +22,8 @@
 
     <!--Drawer and Tabs-->
     <string name="menu_home">Home</string>
-    <string name="menu_speed">My Speed</string>
-    <string name="menu_campus_map">Zones Map</string>
+    <string name="menu_speed">Driving View</string>
+    <string name="menu_campus_map">Zone Map</string>
     <string name="menu_alerts">Alerts History</string>
     <string name="menu_my_campus">My zones</string>
     <string name="menu_my_location">My location</string>
@@ -31,6 +31,8 @@
     <string name="menu_settings">Settings</string>
     <string name="menu_logout">Logout</string>
     <string name="menu_current_alerts">Current alerts</string>
+    <string name="alert_location"> Alert Location</string>
+    <string name="send_alert">Send Alert</string>
 
 
     <!--Messages-->
@@ -113,5 +115,6 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="title_activity_driving_view">DrivingView</string>
 
 </resources>

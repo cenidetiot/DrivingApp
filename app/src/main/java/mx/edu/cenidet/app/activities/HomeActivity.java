@@ -129,10 +129,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         //TabLayout
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_home_menu));//setText(R.string.menu_home));
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_speed));//.setText(R.string.menu_speed));
+        //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_speed));//.setText(R.string.menu_speed));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_map));//setText(R.string.menu_campus_map));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_my_alerts));//.setText(R.string.menu_alerts));
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_my_campus));//setText(R.string.menu_my_campus));
+        //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_my_campus));//setText(R.string.menu_my_campus));
 
         //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_my_location));//setText(R.string.menu_my_location));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
@@ -173,8 +173,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     case R.id.menu_speed:
                         //fragment = new SpeedFragment();
-                        viewPager.setCurrentItem(1);
-                        fragmentTransaction = true;
+                        //viewPager.setCurrentItem(1);
+                        //fragmentTransaction = true;
+                        Intent intentDrivingView = new Intent(getApplicationContext(), DrivingView.class);
+                        startActivity(intentDrivingView);
                         break;
                     case R.id.menu_campus:
                         //fragment = new ZoneFragment();
@@ -186,10 +188,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         viewPager.setCurrentItem(3);
                         fragmentTransaction = true;
                         break;
-                    case R.id.menu_my_campus:
+                    /*case R.id.menu_my_campus:
                         viewPager.setCurrentItem(4);
                         fragmentTransaction = true;
-                        break;
+                        break;*/
                     case R.id.menu_history:
                         drawerLayout.closeDrawers();
                         Intent intent = new Intent(getApplicationContext(), AlertHistoryActivity.class);

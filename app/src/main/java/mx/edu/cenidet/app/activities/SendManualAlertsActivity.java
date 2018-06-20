@@ -226,7 +226,7 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(R.string.emptyTitleToolbar);
+        getSupportActionBar().setTitle(R.string.send_alert);
     }
 
     @Override
