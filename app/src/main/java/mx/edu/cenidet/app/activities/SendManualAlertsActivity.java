@@ -59,6 +59,8 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_manual_alerts);
         context = HomeActivity.MAIN_CONTEXT;
+
+        setToolbar();
         sendDataService = new SendDataService(this);
         alertController = new AlertController(this);
 
@@ -220,12 +222,18 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
     }
 
     private void setToolbar(){
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(myToolbar);
-        //getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_return);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarAlerts);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle(R.string.emptyTitleToolbar);
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 
     private int getItem(int i) {
         return viewPager.getCurrentItem() + i;

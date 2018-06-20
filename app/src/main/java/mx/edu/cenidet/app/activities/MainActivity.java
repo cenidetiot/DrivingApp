@@ -5,22 +5,36 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
 import mx.edu.cenidet.app.R;
+import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
+import www.fiware.org.ngsi.utilities.ApplicationPreferences;
+
 import android.content.Intent;
 import android.view.View;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private Button btnMobileUser, btnSecurityGuard;
+    private ApplicationPreferences appPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //PREFERENCES OF THE APPLICATIONS, TO SAVE THE CONSTANTS
+        appPreferences = new ApplicationPreferences();
+
         //Instance buttons of activities
         btnMobileUser = (Button) findViewById(R.id.btnMobileUser);
         btnSecurityGuard = (Button) findViewById(R.id.btnSecurityGuard);
         btnSecurityGuard.setOnClickListener(this);
         btnMobileUser.setOnClickListener(this);
+
+        //CHECK IF THERE ARE CREDENTIALS OF AN USER
+        if(setCredentialsIfExist()){
+            Intent redirectUser = new Intent(this, SplashActivity.class);
+            startActivity(redirectUser);
+            this.finish();
+        }
     }
      @Override
     public void onClick(View v) {
@@ -36,6 +50,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(loginSecurityGuard);
                 break;
         }
+    }
+    private boolean setCredentialsIfExist(){
+        return !(appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_TOKEN).equals("") && appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_NAME).equals(""));
     }
 }
 

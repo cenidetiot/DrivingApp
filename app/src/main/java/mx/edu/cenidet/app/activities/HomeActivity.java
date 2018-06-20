@@ -83,6 +83,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         MAIN_CONTEXT = HomeActivity.this;
+
         appPreferences = new ApplicationPreferences();
         sendDataService = new SendDataService(this);
         alertController = new AlertController(this);
@@ -252,6 +253,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         Log.i("onPause", "-----------------------------------------------------------------------------");
     }
 
+    private boolean setCredentialsIfExist(){
+        return !(appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_TOKEN).equals("") && appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_NAME).equals(""));
+    }
 
     public void btnFloatingGUI(){
         btnFloatingUnknown = (FloatingActionButton)findViewById(R.id.btnFloatingUnknown);
