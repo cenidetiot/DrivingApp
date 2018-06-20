@@ -239,7 +239,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }else {
             offStreetParkingControllerSdk.getAllOffStreetParking();
         }
-        //roadSegmentControllerSdk.getByrefRoadRoadSegment("Road_1524190240036");
+
 
         //Inicia el servicio para la captura de la posición.
         Intent deviceService = new Intent(MAIN_CONTEXT, DeviceService.class);
@@ -258,7 +258,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     alertIntent.putExtra("description", intent.getStringExtra("description"));
                     alertIntent.putExtra("location", intent.getStringExtra("location"));
                     alertIntent.putExtra("severity", intent.getStringExtra("severity"));
-                    startActivity(alertIntent);
+                    //startActivity(alertIntent);
                 }
 
             }
