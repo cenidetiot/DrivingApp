@@ -47,7 +47,7 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        /*Log.e(TAG, "From: " + remoteMessage.getFrom());
+        Log.e(TAG, "From: " + remoteMessage.getFrom());
         if (remoteMessage == null) {
             Log.d(TAG, "REMOTE NULL");
             return;
@@ -56,7 +56,7 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
             Log.e(TAG, "Notification Body: " + remoteMessage.getNotification().getBody());
-            //handleNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
+            handleNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
         }
 
         // Check if message contains a data payload.
@@ -69,7 +69,7 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
             } catch (Exception e) {
                 Log.e(TAG, "Exception: " + e.getMessage());
             }
-        }*/
+        }
     }
 
 
@@ -80,7 +80,7 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
         if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
             // app is in foreground, broadcast the push message
             Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
-            pushNotification.putExtra("message", message);
+            pushNotification.putExtra("notification", message);
             LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
 
             // play notification sound
@@ -89,7 +89,7 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
         }else{
             // If the app is in background, firebase itself handles the notification
             Intent resultIntent = new Intent(getApplicationContext(), AlertMapDetailActivity.class);
-            resultIntent.putExtra("message", message);
+            resultIntent.putExtra("notification", message);
             showNotificationMessage(getApplicationContext(), title, message, new Date().toString(), resultIntent);
         }
     }
