@@ -5,13 +5,8 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.TextUtils;
 import android.util.Log;
-import android.graphics.Color;
 
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -21,16 +16,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
-import java.util.Random;
-
-import mx.edu.cenidet.app.activities.AlertHistoryActivity;
 import mx.edu.cenidet.app.activities.AlertMapDetailActivity;
-import mx.edu.cenidet.app.activities.SplashActivity;
 import mx.edu.cenidet.app.utils.Config;
 import mx.edu.cenidet.app.utils.NotificationUtils;
 import mx.edu.cenidet.cenidetsdk.httpmethods.Response;
-import mx.edu.cenidet.app.R;
-import mx.edu.cenidet.app.activities.HomeActivity;
 
 public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -70,6 +59,8 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
                 Log.e(TAG, "Exception: " + e.getMessage());
             }
         }
+        NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
+        notificationUtils.playNotificationSound();
     }
 
 
@@ -91,52 +82,30 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
             Intent resultIntent = new Intent(getApplicationContext(), AlertMapDetailActivity.class);
             resultIntent.putExtra("notification", message);
             showNotificationMessage(getApplicationContext(), title, message, new Date().toString(), resultIntent);
+            NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
+            notificationUtils.playNotificationSound();
         }
     }
 
     private void handleDataMessage(JSONObject json) {
         Log.e(TAG, "push json: " + json.toString());
-
         try {
-            JSONObject data = json.getJSONObject("data");
-
-            String title = data.getString("title");
-            String message = data.getString("message");
-            boolean isBackground = data.getBoolean("is_background");
-            String imageUrl = data.getString("image");
-            String timestamp = data.getString("timestamp");
-            JSONObject payload = data.getJSONObject("payload");
-
-            Log.e(TAG, "title: " + title);
-            Log.e(TAG, "message: " + message);
-            Log.e(TAG, "isBackground: " + isBackground);
-            Log.e(TAG, "payload: " + payload.toString());
-            Log.e(TAG, "imageUrl: " + imageUrl);
-            Log.e(TAG, "timestamp: " + timestamp);
-
-
+            JSONObject alert = json.getJSONObject("alert");
+            String subcategory = alert.getString("subCategory");
+            Log.d("SUBCATEGORY", subcategory);
             if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
                 // app is in foreground, broadcast the push message
                 Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
-                pushNotification.putExtra("message", message);
+                pushNotification.putExtra("subcategory", alert.getString("subCategory"));
+                pushNotification.putExtra("description", alert.getString("description"));
+                pushNotification.putExtra("location", alert.getString("location"));
+                pushNotification.putExtra("severity", alert.getString("severity"));
                 LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
-
                 // play notification sound
                 NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
                 notificationUtils.playNotificationSound();
-            } else {
-                // app is in background, show the notification in notification tray
-                Intent resultIntent = new Intent(getApplicationContext(), HomeActivity.class);
-                resultIntent.putExtra("message", message);
-
-                // check for image attachment
-                if (TextUtils.isEmpty(imageUrl)) {
-                    showNotificationMessage(getApplicationContext(), title, message, timestamp, resultIntent);
-                } else {
-                    // image is present, show notification with image
-                    showNotificationMessageWithBigImage(getApplicationContext(), title, message, timestamp, resultIntent, imageUrl);
-                }
             }
+
         } catch (JSONException e) {
             Log.e(TAG, "Json Exception: " + e.getMessage());
         } catch (Exception e) {

@@ -1,12 +1,15 @@
 package mx.edu.cenidet.app.activities;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -42,6 +45,8 @@ import mx.edu.cenidet.app.adapters.PagerAdapter;
 import mx.edu.cenidet.app.services.DeviceService;
 import mx.edu.cenidet.app.services.SendDataService;
 import www.fiware.org.ngsi.controller.AlertController;
+
+import mx.edu.cenidet.app.utils.Config;
 import www.fiware.org.ngsi.datamodel.entity.Alert;
 import www.fiware.org.ngsi.datamodel.entity.OffStreetParking;
 import www.fiware.org.ngsi.datamodel.entity.Road;
@@ -49,6 +54,7 @@ import www.fiware.org.ngsi.datamodel.entity.RoadSegment;
 import www.fiware.org.ngsi.datamodel.entity.Zone;
 import www.fiware.org.ngsi.httpmethodstransaction.Response;
 import www.fiware.org.ngsi.utilities.ApplicationPreferences;
+import www.fiware.org.ngsi.utilities.Constants;
 import www.fiware.org.ngsi.utilities.DevicePropertiesFunctions;
 import www.fiware.org.ngsi.utilities.Functions;
 import www.fiware.org.ngsi.utilities.Tools;
@@ -77,6 +83,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayList<RoadSegment> listRoadSegment;
     private ArrayList<OffStreetParking> listOffStreetParking;
 
+    private IntentFilter filter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +98,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         roadSegmentControllerSdk = new RoadSegmentControllerSdk(MAIN_CONTEXT, this);
         offStreetParkingControllerSdk = new OffStreetParkingControllerSdk(MAIN_CONTEXT, this);
         sqLiteDrivingApp = new SQLiteDrivingApp(this);
+
+        filter = new IntentFilter(Config.PUSH_NOTIFICATION);
+        LocalBroadcastManager.getInstance(MAIN_CONTEXT).registerReceiver(new ResponseReceiver(), filter);
+
 
         //Inicializa los datos de conexión
         try {
@@ -233,6 +245,24 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         Intent deviceService = new Intent(MAIN_CONTEXT, DeviceService.class);
         startService(deviceService);
         Log.i("onCreate", "-----------------------------------------------------------------------------");
+    }
+
+    private class ResponseReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null) {
+                String alert = intent.getStringExtra("subcategory");
+                if ( alert  != null) {
+                    Intent alertIntent = new Intent(HomeActivity.this, AlertMapDetailActivity.class);
+                    alertIntent.putExtra("subcategory", intent.getStringExtra("subcategory"));
+                    alertIntent.putExtra("description", intent.getStringExtra("description"));
+                    alertIntent.putExtra("location", intent.getStringExtra("location"));
+                    alertIntent.putExtra("severity", intent.getStringExtra("severity"));
+                    startActivity(alertIntent);
+                }
+
+            }
+        }
     }
 
     @Override
