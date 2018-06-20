@@ -32,7 +32,7 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         Log.i("ADAPTER: ", "POSITION: -------------------"+(position));
         switch (position){
-            case 0:
+            /*case 0:
                 return new HomeFragment();
             case 1:
                 return new SpeedFragment();
@@ -41,6 +41,16 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
             case 3:
                 return new AlertsFragment();
             case 4:
+                return new MyCampusFragment();
+            default:
+                return null;*/
+            case 0:
+                return new HomeFragment();
+            case 1:
+                return new ZoneFragment();
+            case 2:
+                return new AlertsFragment();
+            case 3:
                 return new MyCampusFragment();
             default:
                 return null;

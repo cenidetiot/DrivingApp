@@ -13,19 +13,10 @@
         <item android:id="@+id/menu_alerts"
             android:icon="@drawable/ic_my_alerts"
             android:title="@string/menu_alerts"/>
-        <item android:id="@+id/menu_my_campus"
-            android:icon="@drawable/ic_my_campus"
-            android:title="@string/menu_my_campus"/>
         <item android:id="@+id/menu_history"
             android:icon="@drawable/ic_alerts_menu"
             android:title="@string/menu_current_alerts"/>
     </group>
-
-    <!--<group android:id="@+id/menu_center" android:checkableBehavior="single">
-        <item android:id="@+id/menu_history"
-            android:icon="@drawable/ic_alerts_menu"
-            android:title="@string/menu_current_alerts"/>
-    </group>-->
 
     <group android:id="@+id/menu_bottom" android:checkableBehavior="none">
         <!--<item android:id="@+id/menu_profile"
