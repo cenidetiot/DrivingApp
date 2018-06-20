@@ -30,27 +30,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if(setCredentialsIfExist()){
 
+            Intent redirectUser = new Intent(this, SplashActivity.class);
+            startActivity(redirectUser);
+            this.finish();
+
             String alert = getIntent().getStringExtra("alert");
-            if ( alert  != null) {
+            if ( alert  != null || getIntent().getStringExtra("subcategory") != null) {
                 try {
 
-                    JSONObject jsonObject = new JSONObject(alert);
-                    Intent alertIntent = new Intent(MainActivity.this, AlertMapDetailActivity.class);
-                    alertIntent.putExtra("subcategory", jsonObject.getString("subCategory"));
-                    alertIntent.putExtra("description", jsonObject.getString("description"));
-                    alertIntent.putExtra("location", jsonObject.getString("location"));
-                    alertIntent.putExtra("severity", jsonObject.getString("severity"));
-                    startActivity(alertIntent);
-                    //this.finish();
+                    if(alert  != null){
+                        JSONObject jsonObject = new JSONObject(alert);
+                        Intent alertIntent = new Intent(MainActivity.this, AlertMapDetailActivity.class);
+                        alertIntent.putExtra("subcategory", jsonObject.getString("subCategory"));
+                        alertIntent.putExtra("description", jsonObject.getString("description"));
+                        alertIntent.putExtra("location", jsonObject.getString("location"));
+                        alertIntent.putExtra("severity", jsonObject.getString("severity"));
+                        startActivity(alertIntent);
+                    }
 
+                    if(getIntent().getStringExtra("subcategory") != null){
+                        Intent alertIntent = new Intent(MainActivity.this, AlertMapDetailActivity.class);
+                        alertIntent.putExtra("subcategory", getIntent().getStringExtra("subcategory"));
+                        alertIntent.putExtra("description", getIntent().getStringExtra("description"));
+                        alertIntent.putExtra("location", getIntent().getStringExtra("location"));
+                        alertIntent.putExtra("severity", getIntent().getStringExtra("severity"));
+                        startActivity(alertIntent);
+                        Log.d("MENSAJE" , "ALERTA CON APP ABIERTA");
+
+                    }
+
+                    //this.finish();
                 }catch(Exception e){
                     e.printStackTrace();
                 }
                 Log.d("DATA", "Contiene data");
-            }else {
-                Intent mIntent = new Intent(this, SplashActivity.class);
-                startActivity(mIntent);
-                this.finish();
             }
 
 
@@ -65,12 +78,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnSecurityGuard.setOnClickListener(this);
         btnMobileUser.setOnClickListener(this);
 
-        //CHECK IF THERE ARE CREDENTIALS OF AN USER
-        if(setCredentialsIfExist()){
-            Intent redirectUser = new Intent(this, SplashActivity.class);
-            startActivity(redirectUser);
-            this.finish();
-        }
+
+
     }
      @Override
     public void onClick(View v) {

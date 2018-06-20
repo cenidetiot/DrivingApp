@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.Random;
 
 import mx.edu.cenidet.app.activities.AlertMapDetailActivity;
+import mx.edu.cenidet.app.activities.MainActivity;
 import mx.edu.cenidet.app.utils.Config;
 import mx.edu.cenidet.app.utils.NotificationUtils;
 import mx.edu.cenidet.cenidetsdk.httpmethods.Response;
@@ -50,11 +51,11 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
         }
 
         // Check if message contains a notification payload.
-        if (remoteMessage.getNotification() != null) {
+        /*if (remoteMessage.getNotification() != null) {
             handleNotification(
                     remoteMessage.getNotification().getTitle(),
                     remoteMessage.getNotification().getBody());
-        }
+        }*/
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
@@ -76,8 +77,8 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
 
         Intent resultIntent = new Intent(getApplicationContext(), AlertMapDetailActivity.class);
         showNotificationMessage(getApplicationContext(), title, message, new Date().toString(), resultIntent);
-        NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
-        notificationUtils.playNotificationSound();
+        //NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
+        //notificationUtils.playNotificationSound();
 
     }
 
@@ -92,20 +93,26 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
             pushNotification.putExtra("severity", alert.getString("severity"));
             LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
 
-            Intent resultIntent = new Intent(getApplicationContext(), AlertMapDetailActivity.class);
+            Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
             resultIntent.putExtra("subcategory", alert.getString("subCategory"));
             resultIntent.putExtra("description", alert.getString("description"));
             resultIntent.putExtra("location", alert.getString("location"));
             resultIntent.putExtra("severity", alert.getString("severity"));
 
-            showNotificationMessage(
-                    getApplicationContext(),
+            resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            resultIntent.setAction(Long.toString(System.currentTimeMillis()));
+
+            PendingIntent pendingIntent = PendingIntent.getActivity(
+                    this, 0, resultIntent, PendingIntent.FLAG_ONE_SHOT
+            );
+
+
+            showNotification(pendingIntent,
                     alert.getString("category"),
                     alert.getString("subCategory"),
-                    new Date().toString(), resultIntent);
-
-            NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
-            notificationUtils.playNotificationSound();
+                    alert.getString("severity"));
 
         } catch (JSONException e) {
             Log.e(TAG, "Json Exception: " + e.getMessage());
@@ -123,35 +130,16 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
         notificationUtils.showNotificationMessage(title, message, timeStamp, intent);
     }
 
-    /**
-     * Showing notification with text and image
-     */
-    private void showNotificationMessageWithBigImage(Context context, String title, String message, String timeStamp, Intent intent, String imageUrl) {
-        notificationUtils = new NotificationUtils(context);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        notificationUtils.showNotificationMessage(title, message, timeStamp, intent, imageUrl);
-    }
 
-    private void showNotification(String messageTitle ,String messageBody, String severity) {
-        Intent intent = new Intent(this, AlertMapDetailActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addNextIntentWithParentStack(intent);
-        // Get the PendingIntent containing the entire back stack
-        PendingIntent pendingIntent =
-                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        //PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-        //       PendingIntent.FLAG_ONE_SHOT);
+    private void showNotification(PendingIntent pendingIntent ,
+                                  String messageTitle ,
+                                  String messageBody,
+                                  String severity) {
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
-        NotificationCompat.Builder notificationBuilder = null;
-
         int notificationId = new Random().nextInt(60000);
 
-        notificationBuilder = new NotificationCompat.Builder(this)
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setContentTitle(messageTitle)
                 .setContentText(messageBody)
                 .setAutoCancel(true)

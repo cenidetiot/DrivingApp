@@ -182,43 +182,30 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
 
     private void structureAlert(int typeAlert, String severity){
         Alert alert = new Alert();
+
+        alert.setId(new DevicePropertiesFunctions().getAlertId(context));
+        alert.getAlertSource().setValue(new DevicePropertiesFunctions().getDeviceId(context));
+        alert.getCategory().setValue("traffic");
+        alert.getDateObserved().setValue(Functions.getActualDate());
+        alert.getDescription().setValue(etDescriptionAlert.getText().toString());
+        alert.getLocation().setValue(latitude+", "+longitude);
+        alert.getSeverity().setValue(severity);
+        alert.getValidFrom().setValue(Functions.getActualDate());
+        alert.getValidTo().setValue(Functions.getActualDate());
+
         if (typeAlert == 1){
-            alert.setId(new DevicePropertiesFunctions().getAlertId(context));
-            alert.getAlertSource().setValue(new DevicePropertiesFunctions().getDeviceId(context));
-            //alert.getCategory().setValue(this.getString(R.string.message_alert_category_accident));
-            alert.getCategory().setValue("traffic");
-            alert.getDateObserved().setValue(Functions.getActualDate());
-            alert.getDescription().setValue(etDescriptionAlert.getText().toString());
-            alert.getLocation().setValue(latitude+", "+longitude);
-            alert.getSeverity().setValue(severity);
             alert.getSubCategory().setValue("carAccident");
-            alert.getValidFrom().setValue(Functions.getActualDate());
-            alert.getValidTo().setValue(Functions.getActualDate());
-            try {
-                alertController.createEntity(context, alert.getId(), alert);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            //Toast.makeText(context, "Accident, position "+auxPosition+" Lat, Lon :"+latitude+", "+longitude, Toast.LENGTH_SHORT).show();
-        }else{
-            alert.setId(new DevicePropertiesFunctions().getAlertId(context));
-            alert.getAlertSource().setValue(new DevicePropertiesFunctions().getDeviceId(context));
-            //alert.getCategory().setValue(this.getString(R.string.message_alert_category_traffic));
-            alert.getCategory().setValue("traffic");
-            alert.getDateObserved().setValue(Functions.getActualDate());
-            alert.getDescription().setValue(etDescriptionAlert.getText().toString());
-            alert.getLocation().setValue(latitude+", "+longitude);
-            alert.getSeverity().setValue(severity);
+          }else{
             alert.getSubCategory().setValue("trafficJam");
-            alert.getValidFrom().setValue(Functions.getActualDate());
-            alert.getValidTo().setValue(Functions.getActualDate());
-            try {
-                alertController.createEntity(context, alert.getId(), alert);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            //Toast.makeText(context, "Traffic, position "+auxPosition+" Lat, Lon :"+latitude+", "+longitude, Toast.LENGTH_SHORT).show();
         }
+
+        try {
+            alertController.createEntity(context, alert.getId(), alert);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        onSupportNavigateUp();
+
     }
 
     private void setToolbar(){
