@@ -3,6 +3,7 @@ package mx.edu.cenidet.app.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import mx.edu.cenidet.app.R;
 import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
@@ -10,6 +11,9 @@ import www.fiware.org.ngsi.utilities.ApplicationPreferences;
 
 import android.content.Intent;
 import android.view.View;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private Button btnMobileUser, btnSecurityGuard;
@@ -19,6 +23,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        appPreferences = new ApplicationPreferences();
+
+
+
+
+        if(setCredentialsIfExist()){
+
+            String alert = getIntent().getStringExtra("alert");
+            if ( alert  != null) {
+                try {
+
+                    JSONObject jsonObject = new JSONObject(alert);
+                    Intent alertIntent = new Intent(MainActivity.this, AlertMapDetailActivity.class);
+                    alertIntent.putExtra("subcategory", jsonObject.getString("subCategory"));
+                    alertIntent.putExtra("description", jsonObject.getString("description"));
+                    alertIntent.putExtra("location", jsonObject.getString("location"));
+                    alertIntent.putExtra("severity", jsonObject.getString("severity"));
+                    startActivity(alertIntent);
+                    //this.finish();
+
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+                Log.d("DATA", "Contiene data");
+            }else {
+                Intent mIntent = new Intent(this, SplashActivity.class);
+                startActivity(mIntent);
+                this.finish();
+            }
+
+
+        }
 
         //PREFERENCES OF THE APPLICATIONS, TO SAVE THE CONSTANTS
         appPreferences = new ApplicationPreferences();

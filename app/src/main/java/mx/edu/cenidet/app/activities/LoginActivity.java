@@ -69,6 +69,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         LOGIN_CONTEXT = LoginActivity.this;
         context = LOGIN_CONTEXT;
 
+
         //SET TOOLBAR WITH BACK ARROW
         setToolbar();
 
@@ -76,27 +77,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         userType = getIntent().getStringExtra("userType");
 
         appPreferences = new ApplicationPreferences();
-
-        /*Intent intent = getIntent();
-        if (intent != null && intent.getExtras() != null) {
-            Bundle extras = intent.getExtras();
-            String alert = extras.getString("alert");
-            Log.d("DATA", alert);
-
-            try {
-                JSONObject jsonObject = new JSONObject(extras.getString("alert"));
-                Intent alertIntent = new Intent(context, AlertMapDetailActivity.class);
-                alertIntent.putExtra("subcategory", jsonObject.getString("subCategory"));
-                alertIntent.putExtra("description", jsonObject.getString("description"));
-                alertIntent.putExtra("location", jsonObject.getString("location"));
-                alertIntent.putExtra("severity", jsonObject.getString("severity"));
-                startActivity(alertIntent);
-            }catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }else {
-            Log.d("DATA", "Noo contiene data");
-        }*/
 
         if(setCredentialsIfExist()){
             mIntent = new Intent(this, SplashActivity.class);

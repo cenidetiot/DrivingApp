@@ -2,6 +2,7 @@ package mx.edu.cenidet.app.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -39,6 +40,8 @@ public class AlertMapDetailActivity extends AppCompatActivity implements OnMapRe
             subString =  location.split(",");
             pointLatitude = Double.parseDouble(subString[0]);
             pointLongitude = Double.parseDouble(subString[1]);
+        }else {
+            Log.d("NOTALERT" ,"No contiene los datos");
         }
     }
 
