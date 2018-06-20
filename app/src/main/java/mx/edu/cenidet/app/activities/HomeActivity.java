@@ -193,11 +193,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         viewPager.setCurrentItem(2);
                         fragmentTransaction = true;
                         break;
-                    case R.id.menu_my_campus:
+                    /*case R.id.menu_my_campus:
                         //fragment = new MyCampusFragment();
                         viewPager.setCurrentItem(3);
                         fragmentTransaction = true;
                         break;
+                        */
                     case R.id.menu_history:
                         drawerLayout.closeDrawers();
                         Intent intent = new Intent(getApplicationContext(), AlertHistoryActivity.class);
