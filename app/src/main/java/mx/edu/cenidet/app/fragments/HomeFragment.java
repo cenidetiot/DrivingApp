@@ -20,6 +20,7 @@ import mx.edu.cenidet.app.services.SendDataService;
 import www.fiware.org.ngsi.controller.AlertController;
 import www.fiware.org.ngsi.datamodel.entity.RoadSegment;
 import www.fiware.org.ngsi.datamodel.entity.Zone;
+import www.fiware.org.ngsi.utilities.ApplicationPreferences;
 
 /**
  * A simple {@link Fragment} subclass.

@@ -85,13 +85,17 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     private IntentFilter filter;
 
+    //TABLAYOUT ANF FRAGMENTS VARIABLES
+    private boolean fragmentTransaction = false;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         MAIN_CONTEXT = HomeActivity.this;
-
         appPreferences = new ApplicationPreferences();
         sendDataService = new SendDataService(this);
         alertController = new AlertController(this);
@@ -99,16 +103,19 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         roadSegmentControllerSdk = new RoadSegmentControllerSdk(MAIN_CONTEXT, this);
         offStreetParkingControllerSdk = new OffStreetParkingControllerSdk(MAIN_CONTEXT, this);
         sqLiteDrivingApp = new SQLiteDrivingApp(this);
-
         filter = new IntentFilter(Config.PUSH_NOTIFICATION);
         LocalBroadcastManager.getInstance(MAIN_CONTEXT).registerReceiver(new ResponseReceiver(), filter);
-
 
         //Inicializa los datos de conexión
         try {
             Tools.initialize("config.properties", getApplicationContext());
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        // SHOW ALERT DIALOG ASKING IF THE USER IS DRIVING
+        if(appPreferences.getPreferenceBoolean(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_USER_IS_DRIVING)!= true){
+            isDrivingUser();
         }
 
         //Mandar a llamar el toolbar una vez generado en el activity_main de la actividad
@@ -120,7 +127,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         //frameLayout = (FrameLayout)findViewById(R.id.headerNavigationDrawer).findViewById(R.id.tvUserName);
 
         //TabLayout
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_home_menu));//setText(R.string.menu_home));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_speed));//.setText(R.string.menu_speed));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_map));//setText(R.string.menu_campus_map));
@@ -129,7 +136,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
         //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_my_location));//setText(R.string.menu_my_location));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
         numberTab = tabLayout.getTabCount();
         PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), numberTab);
         viewPager.setAdapter(adapter);
@@ -157,32 +164,31 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                boolean fratmentTransaction = false;
                 Fragment fragment = null;
                 switch (item.getItemId()){
                     case R.id.menu_home:
                         //fragment = new HomeFragment();
                         viewPager.setCurrentItem(0);
-                        fratmentTransaction = true;
+                        fragmentTransaction = true;
                         break;
                     case R.id.menu_speed:
                         //fragment = new SpeedFragment();
                         viewPager.setCurrentItem(1);
-                        fratmentTransaction = true;
+                        fragmentTransaction = true;
                         break;
                     case R.id.menu_campus:
                         //fragment = new ZoneFragment();
                         viewPager.setCurrentItem(2);
-                        fratmentTransaction = true;
+                        fragmentTransaction = true;
                         break;
                     case R.id.menu_alerts:
                         //fragment = new AlertsFragment();
                         viewPager.setCurrentItem(3);
-                        fratmentTransaction = true;
+                        fragmentTransaction = true;
                         break;
                     case R.id.menu_my_campus:
                         viewPager.setCurrentItem(4);
-                        fratmentTransaction = true;
+                        fragmentTransaction = true;
                         break;
                     case R.id.menu_history:
                         drawerLayout.closeDrawers();
@@ -203,7 +209,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                 }
 
-                if(fratmentTransaction){
+                if(fragmentTransaction){
                     //changeFragment(fragment, item);
                     drawerLayout.closeDrawers();
                 }
@@ -351,13 +357,18 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                //acciones del boton Si
+                                //ACTIONS IF THE ANSWER IS NO
+                                appPreferences.saveOnPreferenceBoolean(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_USER_IS_DRIVING, false);
                             }
                         })
                 .setPositiveButton(R.string.message_is_driving_user_yes,
                         new DialogInterface.OnClickListener(){
                             public void onClick(DialogInterface dialog, int id){
-                                //acciones del boton Si
+                                // ACTIONS IF THE ANSWER IS YES
+                                appPreferences.saveOnPreferenceBoolean(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_USER_IS_DRIVING, true);
+                                viewPager.setCurrentItem(1);
+                                fragmentTransaction = true;
+
                             }
                         });
         AlertDialog alert = alertDialogBuilder.create();

@@ -3,7 +3,6 @@ package mx.edu.cenidet.app.fragments;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,7 +15,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
-import java.util.Date;
 
 import mx.edu.cenidet.app.R;
 import mx.edu.cenidet.app.activities.HomeActivity;
@@ -25,6 +23,7 @@ import mx.edu.cenidet.app.services.SendDataService;
 import www.fiware.org.ngsi.datamodel.entity.Alert;
 import www.fiware.org.ngsi.datamodel.entity.RoadSegment;
 import www.fiware.org.ngsi.datamodel.entity.Zone;
+import www.fiware.org.ngsi.utilities.ApplicationPreferences;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,17 +39,18 @@ public class SpeedFragment extends Fragment implements SendDataService.SendDataM
     private static final String STATUS = "Status";
     private DecimalFormat df;
     private SendDataService sendDataService;
+    private ApplicationPreferences appPreferences;
     private Alert suddenStopAlert = null;
     private String StopingStatus = "";
     private EventsDetect events;
-    private boolean driving = false;
     private RoadSegment roadSegment  = null;
 
     public SpeedFragment() {
         context = HomeActivity.MAIN_CONTEXT;
         sendDataService = new SendDataService(this);
-        df = new DecimalFormat("0.00");
+        appPreferences = new ApplicationPreferences();
         events = new EventsDetect();
+        df = new DecimalFormat("0.00");
     }
 
 
@@ -67,13 +67,13 @@ public class SpeedFragment extends Fragment implements SendDataService.SendDataM
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        isDrivingUser();
+        //isDrivingUser();
     }
 
     @Override
     public void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr) {
         tvSpeed.setText(df.format(speedMS)+"m/s, "+df.format(speedKmHr)+"km/hr");
-        if (driving) {
+        //if (driving) {
             //tvAcceleration.setText("Manejando");
             /*if (events.suddenStop(speedMS, new Date().getTime(), latitude,  longitude)){
                 rootView.setBackgroundColor(Color.parseColor("#e74c3c"));
@@ -90,9 +90,9 @@ public class SpeedFragment extends Fragment implements SendDataService.SendDataM
                 tvAcceleration.setText(roadSegment.getLocation().substring(1, roadSegment.getLocation().length()-1));
 
             }
-        }else {
+        /*}else {
             //tvAcceleration.setText("No manejando");
-        }
+        }*/
     }
 
     private void isDrivingUser(){
@@ -103,13 +103,13 @@ public class SpeedFragment extends Fragment implements SendDataService.SendDataM
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                driving = false;
+                                //driving = false;
                             }
                         })
                 .setPositiveButton(R.string.message_is_driving_user_yes,
                         new DialogInterface.OnClickListener(){
                             public void onClick(DialogInterface dialog, int id){
-                                driving = true;
+                                //driving = true;
                             }
                         });
         AlertDialog alert = alertDialogBuilder.create();

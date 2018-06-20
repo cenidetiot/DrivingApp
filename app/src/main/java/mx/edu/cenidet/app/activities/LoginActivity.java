@@ -75,8 +75,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         //Main Activity Intent --- Authenticate user as: (userType)
         userType = getIntent().getStringExtra("userType");
-
         appPreferences = new ApplicationPreferences();
+        //SAVE THE PREFERENCE USER_TYPE IN THE CONSTANTS
+        appPreferences.saveOnPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_USER_TYPE, userType);
 
         if(setCredentialsIfExist()){
             mIntent = new Intent(this, SplashActivity.class);

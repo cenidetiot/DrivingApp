@@ -25,9 +25,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         appPreferences = new ApplicationPreferences();
 
-
-
-
         if(setCredentialsIfExist()){
 
             String alert = getIntent().getStringExtra("alert");
@@ -52,7 +49,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(mIntent);
                 this.finish();
             }
-
 
         }
 
