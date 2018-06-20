@@ -75,7 +75,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         //Main Activity Intent --- Authenticate user as: (userType)
         userType = getIntent().getStringExtra("userType");
-
         appPreferences = new ApplicationPreferences();
 
         if(setCredentialsIfExist()){
@@ -345,11 +344,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         //email = etLoginEmail.getText().toString();
                         Log.i("Status:", "token: "+token+" email: "+email +" id: "+id+" userName: "+userName);
 
+                        //SAVE THE PREFERENCES CONSTANTS OF THE USER
                         appPreferences.saveOnPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_TOKEN, token);
                         appPreferences.saveOnPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_ID, ""+id);
                         appPreferences.saveOnPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_NAME, userName);
                         appPreferences.saveOnPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_EMAIL, email);
                         appPreferences.saveOnPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_PHONE, phone);
+
+                        //SAVE THE PREFERENCE USER_TYPE IN THE CONSTANTS
+                        appPreferences.saveOnPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_USER_TYPE, userType);
+                        Toast.makeText(context, appPreferences.getPreferenceString(getApplicationContext(),ConstantSdk.PREFERENCE_NAME_GENERAL,ConstantSdk.PREFERENCE_USER_TYPE), Toast.LENGTH_LONG).show();
+
                         goToHome();
 
                     } catch (JSONException e) {

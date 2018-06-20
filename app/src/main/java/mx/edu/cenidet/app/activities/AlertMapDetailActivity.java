@@ -2,6 +2,7 @@ package mx.edu.cenidet.app.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -26,6 +27,7 @@ public class AlertMapDetailActivity extends AppCompatActivity implements OnMapRe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alert_map_detail);
+        setToolbar();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.alert_map_detail);
@@ -49,6 +51,21 @@ public class AlertMapDetailActivity extends AppCompatActivity implements OnMapRe
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
         createOrUpdateMarkerByLocation(pointLatitude, pointLongitude, severity, subcategory, description );
+    }
+
+    // SET TOOLBAR METHOD
+    private void setToolbar(){
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle(R.string.alert_location);
+    }
+    //FUNCTION TO BACK TO THE ACTIVITY WITH THE ARROW
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     private void createOrUpdateMarkerByLocation(double latitude, double longitude, String severity, String subcategory, String description){

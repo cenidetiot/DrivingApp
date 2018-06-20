@@ -25,9 +25,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         appPreferences = new ApplicationPreferences();
 
-
-
-
         if(setCredentialsIfExist()){
 
             Intent redirectUser = new Intent(this, SplashActivity.class);
@@ -65,7 +62,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 Log.d("DATA", "Contiene data");
             }
-
 
         }
 

@@ -6,4 +6,11 @@ android:id="@+id/alert_map_detail"
 android:name="com.google.android.gms.maps.SupportMapFragment"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
-tools:context="mx.edu.cenidet.app.activities.AlertMapDetailActivity"/>
+tools:context="mx.edu.cenidet.app.activities.AlertMapDetailActivity" >
+
+    <include android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        android:title="@string/emptyTitleToolbar"
+        xmlns:android="http://schemas.android.com/apk/res/android" />
+
+</fragment>
