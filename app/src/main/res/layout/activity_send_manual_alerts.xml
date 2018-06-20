@@ -5,22 +5,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgroundDefault"
-    tools:context="mx.edu.cenidet.app.activities.SendManualAlertsActivity">
+    tools:context=".activities.SendManualAlertsActivity">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <include
+        android:id="@+id/toolbarAlerts"
+        layout="@layout/toolbar"
+        android:title="@string/emptyTitleToolbar" />
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignTop="@+id/toolbar"
+        android:layout_marginTop="50dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="15dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="15dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -34,10 +42,10 @@
                 android:textStyle="bold" />
 
             <LinearLayout
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal">
 
@@ -105,16 +113,16 @@
             <ImageView
                 android:id="@+id/imageViewSendAlert"
                 android:layout_width="@dimen/img_width_height"
-                android:layout_marginTop="8dp"
+                android:layout_height="@dimen/img_width_height"
                 android:layout_gravity="center_horizontal"
-                android:layout_height="@dimen/img_width_height" />
+                android:layout_marginTop="8dp" />
 
             <TextView
                 android:id="@+id/tvTitle"
-                android:gravity="center_horizontal"
                 android:layout_width="match_parent"
-                android:layout_marginTop="8dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_horizontal"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/headline"
                 android:textStyle="bold" />
@@ -122,10 +130,10 @@
             <TextView
                 android:id="@+id/tvSeverity"
                 android:layout_width="match_parent"
-                android:layout_marginTop="8dp"
-
-                android:gravity="center_horizontal"
                 android:layout_height="wrap_content"
+
+                android:layout_marginTop="8dp"
+                android:gravity="center_horizontal"
                 android:textColor="@android:color/white"
                 android:textStyle="bold" />
 
@@ -149,4 +157,5 @@
 
         </LinearLayout>
     </ScrollView>
+
 </RelativeLayout>

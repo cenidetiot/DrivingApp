@@ -56,11 +56,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         }
 
+        //PREFERENCES OF THE APPLICATIONS, TO SAVE THE CONSTANTS
+        appPreferences = new ApplicationPreferences();
+
         //Instance buttons of activities
         btnMobileUser = (Button) findViewById(R.id.btnMobileUser);
         btnSecurityGuard = (Button) findViewById(R.id.btnSecurityGuard);
         btnSecurityGuard.setOnClickListener(this);
         btnMobileUser.setOnClickListener(this);
+
+        //CHECK IF THERE ARE CREDENTIALS OF AN USER
+        if(setCredentialsIfExist()){
+            Intent redirectUser = new Intent(this, SplashActivity.class);
+            startActivity(redirectUser);
+            this.finish();
+        }
     }
      @Override
     public void onClick(View v) {

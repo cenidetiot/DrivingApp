@@ -91,6 +91,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         MAIN_CONTEXT = HomeActivity.this;
+
         appPreferences = new ApplicationPreferences();
         sendDataService = new SendDataService(this);
         alertController = new AlertController(this);
@@ -282,6 +283,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         Log.i("onPause", "-----------------------------------------------------------------------------");
     }
 
+    private boolean setCredentialsIfExist(){
+        return !(appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_TOKEN).equals("") && appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_NAME).equals(""));
+    }
 
     public void btnFloatingGUI(){
         btnFloatingUnknown = (FloatingActionButton)findViewById(R.id.btnFloatingUnknown);
@@ -379,12 +383,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                                     Alert alert = new Alert();
                                     alert.setId(new DevicePropertiesFunctions().getAlertId(MAIN_CONTEXT));
                                     alert.getAlertSource().setValue(new DevicePropertiesFunctions().getDeviceId(MAIN_CONTEXT));
-                                    alert.getCategory().setValue("UnknownAlert");
+                                    alert.getCategory().setValue("unknownAlert");
                                     alert.getDateObserved().setValue(Functions.getActualDate());
-                                    alert.getDescription().setValue("Unknown alert");
+                                    alert.getDescription().setValue("Unknown Alert");
                                     alert.getLocation().setValue(latitude + ", " + longitude);
                                     alert.getSeverity().setValue("critical");
-                                    alert.getSubCategory().setValue("Unknown");
+                                    alert.getSubCategory().setValue("unknown");
                                     alert.getValidFrom().setValue(Functions.getActualDate());
                                     alert.getValidTo().setValue(Functions.getActualDate());
                                     try {
