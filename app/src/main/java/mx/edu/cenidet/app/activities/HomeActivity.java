@@ -35,6 +35,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import mx.edu.cenidet.app.fragments.AlertsFragment;
+import mx.edu.cenidet.app.fragments.HomeFragment;
+import mx.edu.cenidet.app.fragments.MyCampusFragment;
+import mx.edu.cenidet.app.fragments.ZoneFragment;
 import mx.edu.cenidet.cenidetsdk.controllers.OffStreetParkingControllerSdk;
 import mx.edu.cenidet.cenidetsdk.controllers.RoadControllerSdk;
 import mx.edu.cenidet.cenidetsdk.controllers.RoadSegmentControllerSdk;
@@ -128,13 +132,14 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
         //TabLayout
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_home_menu));//setText(R.string.menu_home));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.menu_home));//setText(R.string.menu_home));
         //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_speed));//.setText(R.string.menu_speed));
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_map));//setText(R.string.menu_campus_map));
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_my_alerts));//.setText(R.string.menu_alerts));
-        //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_my_campus));//setText(R.string.menu_my_campus));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.menu_campus_map));//setText(R.string.menu_campus_map));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.menu_alerts));//.setText(R.string.menu_alerts));
+        if(appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_USER_TYPE).equals("securityGuard")){
+            tabLayout.addTab(tabLayout.newTab().setText(R.string.menu_my_campus));//setText(R.string.menu_my_campus));
+        }
 
-        //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_my_location));//setText(R.string.menu_my_location));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         numberTab = tabLayout.getTabCount();
@@ -146,7 +151,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
                 viewPager.setCurrentItem(position);
-                changeDrawerMenu(position);
+                //changeDrawerMenu(position);
                 Log.i("POSITION: ", "-------------------------------------"+position);
             }
 
@@ -180,18 +185,19 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     case R.id.menu_campus:
                         //fragment = new ZoneFragment();
-                        viewPager.setCurrentItem(2);
+                        viewPager.setCurrentItem(1);
                         fragmentTransaction = true;
                         break;
                     case R.id.menu_alerts:
                         //fragment = new AlertsFragment();
+                        viewPager.setCurrentItem(2);
+                        fragmentTransaction = true;
+                        break;
+                    case R.id.menu_my_campus:
+                        //fragment = new MyCampusFragment();
                         viewPager.setCurrentItem(3);
                         fragmentTransaction = true;
                         break;
-                    /*case R.id.menu_my_campus:
-                        viewPager.setCurrentItem(4);
-                        fragmentTransaction = true;
-                        break;*/
                     case R.id.menu_history:
                         drawerLayout.closeDrawers();
                         Intent intent = new Intent(getApplicationContext(), AlertHistoryActivity.class);
