@@ -205,7 +205,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
                         severity = "critical";
                     }
                     if (severity != "") {
-                        sendAlert( commonData, severity, "primero", latitude,  longitude);
+                        sendAlert( commonData, severity, "suddenStop", latitude,  longitude);
                     }
                     stopped = false;
                     stoppedSeconds = 0;
@@ -216,7 +216,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
             if(stopped){
                 stoppedSeconds ++;
                 if(stoppedSeconds > 8 && !suddenAlertSent){ //Critical
-                    sendAlert(commonData, "critical", "segundo " + stoppedSeconds,latitude, longitude);
+                    sendAlert(commonData, "critical", "suddenStop",latitude, longitude);
                     suddenAlertSent = true;
                     stopped = false;
                     stoppedSeconds = 0;

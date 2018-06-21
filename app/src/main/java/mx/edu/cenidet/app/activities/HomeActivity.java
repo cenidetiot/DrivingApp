@@ -375,8 +375,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                             public void onClick(DialogInterface dialog, int id){
                                 // ACTIONS IF THE ANSWER IS YES
                                 appPreferences.saveOnPreferenceBoolean(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_USER_IS_DRIVING, true);
-                                viewPager.setCurrentItem(1);
-                                fragmentTransaction = true;
+                                Intent intentDrivingView = new Intent(getApplicationContext(), DrivingView.class);
+                                startActivity(intentDrivingView);
 
                             }
                         });
