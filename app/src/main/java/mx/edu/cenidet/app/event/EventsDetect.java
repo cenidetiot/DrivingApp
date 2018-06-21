@@ -16,6 +16,8 @@ import android.content.Context;
 import java.text.SimpleDateFormat;
 import android.util.Log;
 
+import org.json.JSONObject;
+
 import www.fiware.org.ngsi.datamodel.entity.Alert;
 import www.fiware.org.ngsi.controller.AlertController;
 import www.fiware.org.ngsi.httpmethodstransaction.Response;
@@ -40,6 +42,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
     private static long stoppedSeconds = 0 ;
     private static double speedReached = 0;
     private static long dateSpeedReached = 0;
+    private static boolean isSuddenStop = false;
 
     /*Variables Globales de contra sentido */
     private static double totalDistance = 0;
@@ -135,7 +138,8 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
     
     public boolean suddenStop(double currentSpeed , long currentDate, double latitude, double longitude){
 
-        boolean alert =  false;
+        JSONObject alert = new JSONObject();
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
 
         String commonData =
@@ -171,12 +175,12 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
 
                         if (idealDistance > realDistance) {
                             result += "PARADA REPENTINA, ";
+                            isSuddenStop = true;
                         } else {
                             result += "PARADA NORMAL, ";
                         }
                         result += " Distancia Ideal: " + idealDistance + ", " + "Distancia Real: " + realDistance + ", " + "Vel.Alcanzada: " + speedReached + " m/s, " + "Fecha Vel.Alcanzada: " + sdf.format(dateSpeedReached);
-                        //alert = sendAlert(commonData + result, "critical", "suddenStop", latitude,longitude);
-                        alert = true;
+
                     }
                     stopped = true;
                 }
@@ -204,28 +208,38 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
                     } else if(stoppedSeconds > 8 ) { // Critical
                         severity = "critical";
                     }
-                    if (severity != "") {
+                    if (severity != "" && isSuddenStop) {
                         sendAlert( commonData, severity, "suddenStop", latitude,  longitude);
                     }
                     stopped = false;
                     stoppedSeconds = 0;
-                    alert = false;
+                    isSuddenStop = false;
                 }
             }
 
             if(stopped){
                 stoppedSeconds ++;
                 if(stoppedSeconds > 8 && !suddenAlertSent){ //Critical
-                    sendAlert(commonData, "critical", "suddenStop",latitude, longitude);
-                    suddenAlertSent = true;
+                    if (isSuddenStop){
+                        sendAlert(commonData, "critical", "suddenStop",latitude, longitude);
+                        suddenAlertSent = true;
+                    }
                     stopped = false;
                     stoppedSeconds = 0;
-                    alert = false;
+                    isSuddenStop = false;
                 }
             }
             
         }
         writeFile(commonData + result);
+
+        /*try {
+            alert.put("isStopeed", stopped);
+            alert.put();
+        } catch(Exception e){
+
+        }*/
+
 
         return stopped;
     }
