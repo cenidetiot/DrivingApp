@@ -139,12 +139,7 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
      * @param zoneId el identificador de la zona.
      */
     public void drawZone(String zoneId){
-<<<<<<< HEAD
-        Log.d("-ZONE ID ERROR--",zoneId);
-        if(!currentZone.equals("undetectedZone") && currentZone != null){
-=======
         if(zoneId != null && !zoneId.equals("undetectedZone") && !zoneId.equals("") ){
->>>>>>> 2baddbf0bb43ede925fe3f87f67adeb82c3f160e
             Zone zone = sqLiteDrivingApp.getZoneById(zoneId);
             JSONArray arrayLocation;
             String originalString, clearString;

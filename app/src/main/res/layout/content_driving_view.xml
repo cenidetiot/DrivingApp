@@ -9,38 +9,45 @@
     tools:context=".activities.DrivingView"
     tools:showIn="@layout/activity_driving_view">
 
-    <TextView
-        android:id="@+id/textEvent"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:fontFamily="@font/roboto_medium"
-        android:textColor="@color/white"
-        android:textSize="@dimen/title"
-        android:textStyle="bold"
-        android:layout_marginBottom="@dimen/desc_padding"
-    />
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textSpeed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:fontFamily="@font/roboto_medium"
-        android:textColor="@color/white"
-        android:textSize="@dimen/title"
-        android:textStyle="bold"
-    />
+        <TextView
+            android:id="@+id/textPruebas"
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/desc_padding"
+            android:fontFamily="@font/roboto_medium"
+            android:gravity="center_horizontal"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/textPruebas"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:fontFamily="@font/roboto_medium"
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        android:layout_marginTop="@dimen/desc_padding"
-        />
+        <TextView
+            android:id="@+id/textSpeed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/roboto_medium"
+            android:gravity="center_horizontal"
+            android:textColor="@color/white"
+            android:textSize="@dimen/title"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textEvent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/desc_padding"
+            android:fontFamily="@font/roboto_medium"
+            android:gravity="center_horizontal"
+            android:textColor="@color/white"
+            android:textSize="@dimen/title"
+            android:textStyle="bold" />
+    </LinearLayout>
+
 </FrameLayout>

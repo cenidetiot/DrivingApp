@@ -93,6 +93,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private boolean fragmentTransaction = false;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private int[] tabIcons = {
+            R.drawable.ic_home,
+            R.drawable.ic_campus_menu,
+            R.drawable.ic_alerts_menu,
+            R.drawable.ic_my_campus
+    };
 
 
     @Override
@@ -193,12 +199,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         viewPager.setCurrentItem(2);
                         fragmentTransaction = true;
                         break;
-                    /*case R.id.menu_my_campus:
+                    case R.id.menu_my_campus:
                         //fragment = new MyCampusFragment();
                         viewPager.setCurrentItem(3);
                         fragmentTransaction = true;
                         break;
-                        */
                     case R.id.menu_history:
                         drawerLayout.closeDrawers();
                         Intent intent = new Intent(getApplicationContext(), AlertHistoryActivity.class);

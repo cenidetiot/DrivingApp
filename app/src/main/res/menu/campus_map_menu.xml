@@ -3,6 +3,4 @@
     <item android:id="@+id/menu_see_map"
         android:title="@string/message_alert_see_map" />
 
-    <item android:id="@+id/menu_delete_campus"
-        android:title="@string/message_alert_delete"/>
 </menu>

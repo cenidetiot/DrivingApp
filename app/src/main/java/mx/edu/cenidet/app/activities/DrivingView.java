@@ -51,15 +51,10 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
         textSpeed = (TextView) findViewById(R.id.textSpeed);
         textEvent = (TextView) findViewById(R.id.textEvent);
         textPruebas = (TextView) findViewById(R.id.textPruebas);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.suddenStopButton);
+        FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.wrongWayButton);
+        FloatingActionButton fab3 = (FloatingActionButton) findViewById(R.id.speedButton);
 
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         sendDataService = new SendDataService(this);
         appPreferences = new ApplicationPreferences();
         events = new EventsDetect();
@@ -118,23 +113,21 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
 
                 if(suddenStop.getBoolean("isStopping")){
                     textEvent.setText("You are stopping");
-                    rootView.setBackgroundColor(Color.parseColor("#f1c40f"));
                     well = false;
                 }
 
                 if (suddenStop.getBoolean("isStopeed")) {
                     textEvent.setText("You are stopped");
-                    rootView.setBackgroundColor(Color.parseColor("#e74c3c"));
                     well = false;
                 }
 
                 if(suddenStop.getBoolean("isSuddenStop")){
                     textPruebas.setText(suddenStop.getString("result"));
+                    well = false;
                 }
 
                 if (well){
-                    textEvent.setText("You are driving Well");
-                    rootView.setBackgroundColor(Color.parseColor("#3498db"));
+                    textEvent.setText("You are driving well");
                 }
 
             }catch (Exception e){}

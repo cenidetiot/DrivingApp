@@ -43,11 +43,6 @@ public class MyCampusFragment extends Fragment {
         context = HomeActivity.MAIN_CONTEXT;
         sqLiteDrivingApp = new SQLiteDrivingApp(context);
         listZone = sqLiteDrivingApp.getAllZone();
-        /*if(listCampus.size() > 0){
-            for(int i=0; i<listCampus.size(); i++){
-                Log.i("Status: ", "My Campus name: "+listCampus.get(i).getName());
-            }
-        }*/
     }
 
 
@@ -94,11 +89,10 @@ public class MyCampusFragment extends Fragment {
                 intent.putExtra("location", location);
                 intent.putExtra("centerPoint", centerPoint);
                 startActivity(intent);
-                //Toast.makeText(getContext(), name, Toast.LENGTH_SHORT).show();
                 return true;
-            case R.id.menu_delete_campus:
-                Toast.makeText(getContext(), "Delete Campus", Toast.LENGTH_SHORT).show();
-                return true;
+            //case R.id.menu_delete_campus:
+                //Toast.makeText(getContext(), "Delete Campus", Toast.LENGTH_SHORT).show();
+                //return true;
         }
         return super.onContextItemSelected(item);
     }
