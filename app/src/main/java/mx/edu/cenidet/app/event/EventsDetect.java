@@ -34,8 +34,8 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
     private AlertController alertController;
 
     /*Variables globales de paradas repentinas*/
-    private static double gravity=9.81; // valor en m/s
-    private static double frictionCoefficient=0.95; //coeficiente de friccion entre los neumaticos y el piso
+    private static double gravity = 9.81; // valor en m/s
+    private static double frictionCoefficient = .75; //coeficiente de friccion entre los neumaticos y el piso
     private static double initialVelocity = 0 ,finalVelocity = 0;
     private static long initialDate = 0, finalDate = 0;
     private static boolean isStopping = false, wasStopped = false, suddenAlertSent = false, stopped = false ;
@@ -136,7 +136,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
     } 
 
     
-    public boolean suddenStop(double currentSpeed , long currentDate, double latitude, double longitude){
+    public JSONObject suddenStop(double currentSpeed , long currentDate, double latitude, double longitude){
 
         JSONObject alert = new JSONObject();
 
@@ -165,13 +165,19 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
             if (finalVelocity == 0 ){ //&& speedReached > 1.39){
                 if(wasStopped){
                     if(!stopped) {
+
+                        if (speedReached > 13.8889){
+                            frictionCoefficient = .65;
+                        }
+
                         double idealDistance = 0;
                         idealDistance = Math.pow(speedReached, 2) / (2 * frictionCoefficient * gravity);
+                        idealDistance += speedReached;
+
                         double realDistance = 0;
                         long diffDate = finalDate - dateSpeedReached;
                         long time = TimeUnit.MILLISECONDS.toSeconds(diffDate);
-
-                        realDistance = ((finalVelocity + speedReached) / 2) * (time);
+                        realDistance = ((finalVelocity + speedReached) / 2) * (time - 1);
 
                         if (idealDistance > realDistance) {
                             result += "PARADA REPENTINA, ";
@@ -222,8 +228,8 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
                 if(stoppedSeconds > 8 && !suddenAlertSent){ //Critical
                     if (isSuddenStop){
                         sendAlert(commonData, "critical", "suddenStop",latitude, longitude);
-                        suddenAlertSent = true;
                     }
+                    suddenAlertSent = true;
                     stopped = false;
                     stoppedSeconds = 0;
                     isSuddenStop = false;
@@ -233,15 +239,17 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
         }
         writeFile(commonData + result);
 
-        /*try {
+        try {
             alert.put("isStopeed", stopped);
-            alert.put();
-        } catch(Exception e){
+            alert.put("isStopping", isStopping);
+            alert.put("stoppendSeconds", speedigSeconds);
+            /*Datos de desarrollo*/
+            alert.put("result", result);
+            alert.put("isSuddenStop", isSuddenStop);
+        } catch(Exception e){ }
 
-        }*/
 
-
-        return stopped;
+        return alert;
     }
 
     /**
@@ -253,35 +261,40 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
         boolean isSpeeding  = false;
         double subtractSpeed;
 
-        if(speed > 1.39 ){
-            subtractSpeed = speed - maximumSpeed;
+        JSONObject alert = new JSONObject();
 
-            if (subtractSpeed < 0){
-                isSpeeding = true;
-                speedigSeconds ++;
-            }
+        subtractSpeed = speed - maximumSpeed;
 
-            /*if(subtractSpeed < 1){
-                return "tolerance";
-            }else if (subtractSpeed<=5){
-                return "informational";
-            }else if (subtractSpeed<=8){
-                return "low";
-            }else if (subtractSpeed<=12){
-                return "medium";
-            }else if (subtractSpeed<=16){
-                return "high";
+        if (subtractSpeed < 0){
+            isSpeeding = true;
+            speedigSeconds ++;
+        }else{
+
+
+            if(speedigSeconds < 3){
+                //return "tolerance";
+            }else if (speedigSeconds >= 3 && speedigSeconds < 5){
+                //return "informational";
+            }else if (speedigSeconds >= 5 && speedigSeconds < 7){
+                //return "low";
+            }else if (speedigSeconds >= 7 && speedigSeconds < 9){
+                //return "medium";
+            }else if (speedigSeconds >= 9 && speedigSeconds < 11){
+               // return "high";
             }else {
-                return "critical";
-            }*/
+             //   return "critical";
+            }
+            isSpeeding = false;
+            speedigSeconds = 0;
         }
 
         if (isSpeeding){
-            if (speedigSeconds > 3){
-
+            if (speedigSeconds >= 11){
+                //return "critical";
             }
         }
 
+        lastSpeed = speed;
         return "";
     }
 

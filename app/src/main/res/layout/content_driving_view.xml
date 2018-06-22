@@ -31,4 +31,16 @@
         android:textSize="@dimen/title"
         android:textStyle="bold"
     />
+
+    <TextView
+        android:id="@+id/textPruebas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="@font/roboto_medium"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:layout_marginTop="@dimen/desc_padding"
+        />
 </FrameLayout>

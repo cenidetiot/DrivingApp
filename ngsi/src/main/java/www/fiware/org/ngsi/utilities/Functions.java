@@ -151,6 +151,8 @@ public class Functions {
     public static boolean saveToFile(String fileName, String data){
         try {
             String path = Environment.getExternalStorageDirectory().getAbsolutePath()+"/fiware/";
+            String path2 = Environment.getRootDirectory().getAbsoluteFile() +"/fiware/";
+
             new File(path).mkdir();
             File file = new File(path+fileName);
             if (!file.exists()) {
@@ -160,13 +162,37 @@ public class Functions {
             fileOutputStream.write((data + System.getProperty("line.separator")).getBytes());
             fileOutputStream.flush();
             fileOutputStream.close();
-        }  catch(FileNotFoundException ex) {
+
+        }  catch(FileNotFoundException ex1) {
             
-            ex.printStackTrace();
+            ex1.printStackTrace();
+            try {
+
+                String path = Environment.getDataDirectory().getAbsoluteFile() +"/fiware/";
+
+                new File(path).mkdir();
+                File file = new File(path+fileName);
+                if (!file.exists()) {
+                    file.createNewFile();
+                }
+                FileOutputStream fileOutputStream = new FileOutputStream(file,true);
+                fileOutputStream.write((data + System.getProperty("line.separator")).getBytes());
+                fileOutputStream.flush();
+                fileOutputStream.close();
+
+            }catch(FileNotFoundException ex2) {
+
+            }catch(IOException ex3) {
+
+                ex3.printStackTrace();
+                // Log.d(TAG, ex.getMessage());
+                return false;
+            }
+
             return false;
-        }  catch(IOException ex) {
+        }  catch(IOException ex4) {
             
-           ex.printStackTrace();
+           ex4.printStackTrace();
            // Log.d(TAG, ex.getMessage());
            return false;
         }

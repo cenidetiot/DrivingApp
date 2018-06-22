@@ -13,6 +13,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.json.JSONObject;
+
 import java.text.DecimalFormat;
 import java.util.Date;
 
@@ -31,6 +33,7 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
     private Context context;
     private TextView textSpeed;
     private TextView textEvent;
+    private TextView textPruebas;
     private static final String STATUS = "Status";
     private EventsDetect events;
     private RoadSegment roadSegment  = null;
@@ -47,6 +50,7 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
         rootView.setBackgroundColor(Color.parseColor("#2980b9"));
         textSpeed = (TextView) findViewById(R.id.textSpeed);
         textEvent = (TextView) findViewById(R.id.textEvent);
+        textPruebas = (TextView) findViewById(R.id.textPruebas);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,18 +107,37 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
 
     @Override
     public void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr) {
+        textSpeed.setText(df.format(speedKmHr) + " km/h");
         if (appPreferences.getPreferenceBoolean(getApplicationContext(),
                 ConstantSdk.PREFERENCE_NAME_GENERAL,
                 ConstantSdk.PREFERENCE_USER_IS_DRIVING)){
-            textSpeed.setText(df.format(speedKmHr) + " km/h");
-            Log.d("EVENT", "Event detect is running");
-            if (events.suddenStop(speedMS, new Date().getTime(), latitude,  longitude)){
-                textEvent.setText("Sudden Stop Detected");
-                rootView.setBackgroundColor(Color.parseColor("#e74c3c"));
-            }else {
-                textEvent.setText("You are driving well");
-                rootView.setBackgroundColor(Color.parseColor("#2980b9"));
-            }
+            JSONObject suddenStop = events.suddenStop(speedMS, new Date().getTime(), latitude,  longitude);
+
+            try {
+                boolean well = true;
+
+                if(suddenStop.getBoolean("isStopping")){
+                    textEvent.setText("You are stopping");
+                    rootView.setBackgroundColor(Color.parseColor("#f1c40f"));
+                    well = false;
+                }
+
+                if (suddenStop.getBoolean("isStopeed")) {
+                    textEvent.setText("You are stopped");
+                    rootView.setBackgroundColor(Color.parseColor("#e74c3c"));
+                    well = false;
+                }
+
+                if(suddenStop.getBoolean("isSuddenStop")){
+                    textPruebas.setText(suddenStop.getString("result"));
+                }
+
+                if (well){
+                    textEvent.setText("You are driving Well");
+                    rootView.setBackgroundColor(Color.parseColor("#3498db"));
+                }
+
+            }catch (Exception e){}
         }
     }
 
