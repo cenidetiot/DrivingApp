@@ -149,7 +149,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         */
 
-        events = new EventsDetect(); 
+
         
         if (appPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_ID) != null){
             owner = appPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_ID);
@@ -221,26 +221,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         }
     };
 
-    public static double calculateAcceleration(ArrayList<Double> values) {
-        double acceleration = Math.sqrt(Math.pow(values.get(0), 2)
-                + Math.pow(values.get(1), 2) + Math.pow(values.get(2), 2));
-        return acceleration;
-    }
-
-    public String getRotation(Context context){
-        final int rotation = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getOrientation();
-        switch (rotation) {
-            case Surface.ROTATION_0:
-                return "vertical";
-            case Surface.ROTATION_90:
-                return "horizontal";
-            case Surface.ROTATION_180:
-                return "vertical inversa";
-            default:
-                return "horizontal inversa";
-        }
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -310,13 +290,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
                         Double.parseDouble(endStrings[0].substring(1, endStrings[0].length())),
                         Double.parseDouble(endStrings[1].substring(0,endStrings[1].length()-1)));
 
-                    /*StopingStatus += ", Contrasentido"+
-                    events.wrongWay(
-                        new LatLng(location.getLatitude(),location.getLongitude()),
-                        startPoint,
-                        endPoint,
-                        new Date().getTime()
-                    );*/
+
                 }
             }
             intent.putExtra(Constants.SERVICE_RESULT_STOPING, StopingStatus);
@@ -329,50 +303,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
     }
 
-
-    /**
-     * @param description Velocidad máxima permitida: 20 km/h. Velocidad actual del vehiculo es 25 km/h.
-     * @param severity
-     * @param subCategory UnauthorizedSpeeDetection
-     * @param latitude
-     * @param longitude
-     */
-    private void sendAlert(String description, String severity, String subCategory, double latitude, double longitude) {
-
-        Alert alert = new Alert();
-        alert.setId(new DevicePropertiesFunctions().getAlertId(context));
-        alert.getAlertSource().setValue(new DevicePropertiesFunctions().getDeviceId(context));
-        alert.getCategory().setValue("traffic");
-        alert.getDateObserved().setValue(Functions.getActualDate());
-        alert.getDescription().setValue(description);
-        alert.getLocation().setValue(latitude + ", " + longitude);
-        alert.getSeverity().setValue(severity);
-        alert.getSubCategory().setValue(subCategory);
-        alert.getValidFrom().setValue(Functions.getActualDate());
-        alert.getValidTo().setValue(Functions.getActualDate());
-        try {
-            alertController.createEntity(context, alert.getId(), alert);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void sendAlert1(Alert alert){
-
-        alert.setId(new DevicePropertiesFunctions().getAlertId(context));
-        alert.getAlertSource().setValue(new DevicePropertiesFunctions().getDeviceId(context));
-        alert.getCategory().setValue("traffic");
-        alert.getDateObserved().setValue(Functions.getActualDate());
-        alert.getValidFrom().setValue(Functions.getActualDate());
-        alert.getValidTo().setValue(Functions.getActualDate());
-        try {
-           alertController.createEntity(context, alert.getId(), alert);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    
 
     private void sendContext(Double latitude, Double longitude){
         device = createDevice(latitude, longitude);
