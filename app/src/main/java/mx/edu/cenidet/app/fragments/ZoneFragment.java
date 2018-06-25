@@ -106,8 +106,8 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
         //Ocultar el boton
         gMap.getUiSettings().setMyLocationButtonEnabled(false);
         //Dibuja la zona
-        drawZone(currentZone);
-        drawParking(currentZone);
+        //drawZone(currentZone);
+        //drawParking(currentZone);
     }
 
 

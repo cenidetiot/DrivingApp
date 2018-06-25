@@ -7,6 +7,7 @@ package mx.edu.cenidet.cenidetsdk.utilities;
 public class ConstantSdk {
     //CONSTANTES PARA LAS CONFIGURACIONES DE LAS PREFERENCIAS DEL DISPOSITIVO...
     public static final String PREFERENCE_NAME_GENERAL = "preference_driving";
+    public static final  String STATIC_PREFERENCES = "static_preferences";
 
     //LOGIN
     public static final String PREFERENCE_USER_TYPE = "user_type";
