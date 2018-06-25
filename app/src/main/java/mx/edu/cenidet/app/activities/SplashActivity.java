@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,9 +49,16 @@ public class SplashActivity extends AppCompatActivity implements DeviceTokenCont
         //objeto que utilizaremos para llamar a los metodos de la gestion del token de firebase
         appPreferences = new ApplicationPreferences();
         deviceTokenControllerSdk = new DeviceTokenControllerSdk(context, this);
-        fcmToken = appPreferences.getPreferenceString(getApplicationContext(),ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_FCMTOKEN);
+        fcmToken = appPreferences.getPreferenceString(getApplicationContext(),ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_FCMTOKEN);Log.d("TOKEN", fcmToken);
+
         if (!fcmToken.equals("") || fcmToken != null){
-            //deviceTokenControllerSdk.createDeviceToken(fcmToken, new DevicePropertiesFunctions().getDeviceId(context));
+            Log.d("TOKEN", fcmToken);
+            String userType = appPreferences.getPreferenceString(getApplicationContext(),ConstantSdk.PREFERENCE_NAME_GENERAL,ConstantSdk.PREFERENCE_USER_TYPE);
+            String preference = "All";
+            if (userType.equals("mobileUser")){
+                preference = "traffic";
+            }
+            deviceTokenControllerSdk.createDeviceToken(fcmToken, new DevicePropertiesFunctions().getDeviceId(context), preference);
         }
         if(listZone.size()== 0){
             zoneControllerSdk.readAllZone();

@@ -23,18 +23,25 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService imple
     public void onTokenRefresh() { 
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.d(TAG, "Refreshed token: " + refreshedToken);
-        fcmToken = appPreferences.getPreferenceString(getApplicationContext(),ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_FCMTOKEN);
-        if(refreshedToken != null){
-                appPreferences.saveOnPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_FCMTOKEN, refreshedToken);
-        }
-
+        appPreferences.saveOnPreferenceString(
+                getApplicationContext(),
+                ConstantSdk.PREFERENCE_NAME_GENERAL,
+                ConstantSdk.PREFERENCE_KEY_FCMTOKEN,
+                refreshedToken);
         sendRegistrationToServer(refreshedToken);
     }
     
     private void sendRegistrationToServer(String token) {
         Context context = getApplicationContext();
-        DeviceTokenControllerSdk deviceTokenControllerSdk = new DeviceTokenControllerSdk(context, this);
-        deviceTokenControllerSdk.createDeviceToken(token, new DevicePropertiesFunctions().getDeviceId(context));
+        String userType = appPreferences.getPreferenceString(getApplicationContext(),ConstantSdk.PREFERENCE_NAME_GENERAL,ConstantSdk.PREFERENCE_USER_TYPE);
+        if (userType!= null && !userType.equals("")) {
+            String preference = "All";
+            if (userType.equals("mobileUser")) {
+                preference = "traffic";
+            }
+            DeviceTokenControllerSdk deviceTokenControllerSdk = new DeviceTokenControllerSdk(context, this);
+            deviceTokenControllerSdk.createDeviceToken(token, new DevicePropertiesFunctions().getDeviceId(context), preference);
+        }
     }
 
     @Override
