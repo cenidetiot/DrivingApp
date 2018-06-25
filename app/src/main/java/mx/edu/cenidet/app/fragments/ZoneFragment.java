@@ -105,9 +105,8 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
         gMap.setMyLocationEnabled(true);
         //Ocultar el boton
         gMap.getUiSettings().setMyLocationButtonEnabled(false);
-        //Dibuja la zona
-        //drawZone(currentZone);
-        //drawParking(currentZone);
+        drawZones();
+        drawParking(currentZone);
     }
 
 
@@ -133,14 +132,19 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
         gMap.animateCamera(CameraUpdateFactory.newCameraPosition(camera));
     }
 
+    public void drawZones(){
+        ArrayList<Zone> Zones = sqLiteDrivingApp.getAllZone();
+        for (Zone zone : Zones){
+            drawZone(zone);
+        }
+    }
 
     /**
      * Dibuja la zona en el que se encuentra el dispositivo.
-     * @param zoneId el identificador de la zona.
+     * @param zone el identificador de la zona.
      */
-    public void drawZone(String zoneId){
-        if(zoneId != null && !zoneId.equals("undetectedZone") && !zoneId.equals("") ){
-            Zone zone = sqLiteDrivingApp.getZoneById(zoneId);
+    public void drawZone(Zone zone){
+
             JSONArray arrayLocation;
             String originalString, clearString;
             double latitude, longitude;
@@ -155,14 +159,13 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
                     latitude = Double.parseDouble(subString[0]);
                     longitude = Double.parseDouble(subString[1]);
                     listLocation.add(new LatLng(latitude,longitude));
-                    //Log.i("Status: ", "Latitude: "+latitude+ " Longitude: "+longitude);
                 }
                 gMap.addPolygon(new PolygonOptions()
-                        .addAll(listLocation).strokeColor(Color.RED));
+                        .addAll(listLocation).strokeColor(Color.parseColor("#2ecc71")));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }
+
     }
 
     /**
@@ -196,8 +199,10 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
                         LatLngBounds bounds = builder.build(); //Obtienes los limites del poligono
                         centerLatLngParking = bounds.getCenter(); //Obtienes el centro de los limites del poligono
                         if (gMap != null) {
-                            gMap.addPolygon(new PolygonOptions()
-                                    .addAll(listLocationParking).strokeColor(Color.BLUE));
+                            gMap.addPolygon(
+                                    new PolygonOptions().
+                                            addAll(listLocationParking)
+                                            .strokeColor(Color.parseColor("#3498db")));
                         }
                         createMarkerParking(centerLatLngParking.latitude, centerLatLngParking.longitude, listOffStreetParking.get(i).getName());
                     } catch (JSONException e) {

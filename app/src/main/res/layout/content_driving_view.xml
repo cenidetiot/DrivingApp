@@ -53,6 +53,16 @@
             android:textColor="@color/white"
             android:textSize="12sp"
             android:textStyle="bold" />
+        <TextView
+            android:id="@+id/textAcelerometer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/roboto_medium"
+            android:gravity="center_horizontal"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
 </FrameLayout>

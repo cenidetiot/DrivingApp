@@ -4,6 +4,10 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,6 +18,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONObject;
 
@@ -29,13 +34,18 @@ import www.fiware.org.ngsi.datamodel.entity.RoadSegment;
 import www.fiware.org.ngsi.datamodel.entity.Zone;
 import www.fiware.org.ngsi.utilities.ApplicationPreferences;
 
-public class DrivingView extends AppCompatActivity implements SendDataService.SendDataMethods {
+public class DrivingView extends AppCompatActivity implements SendDataService.SendDataMethods, SensorEventListener {
+
+    private SensorManager sensorManager;
+    private Sensor accelerometer;
 
     private View rootView;
     private Context context;
     private TextView textSpeed;
     private TextView textEvent;
     private TextView textPruebas;
+    private TextView textAcelerometer;
+
     private static final String STATUS = "Status";
     private EventsDetect events;
     private RoadSegment roadSegment  = null;
@@ -43,16 +53,23 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
     private DecimalFormat df;
     private ApplicationPreferences appPreferences;
 
+    private long lastUpdate = 0;
+    private float last_x, last_y, last_z;
+    private static final int SHAKE_THRESHOLD = 600;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driving_view);
         setToolbar();
-        rootView =findViewById(R.id.content_driving).getRootView();
+        rootView = findViewById(R.id.content_driving).getRootView();
         rootView.setBackgroundColor(Color.parseColor("#2980b9"));
         textSpeed = (TextView) findViewById(R.id.textSpeed);
         textEvent = (TextView) findViewById(R.id.textEvent);
         textPruebas = (TextView) findViewById(R.id.textPruebas);
+        textAcelerometer = (TextView) findViewById(R.id.textAcelerometer);
+        textAcelerometer.setText("Acelerometro");
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.suddenStopButton);
         FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.wrongWayButton);
         FloatingActionButton fab3 = (FloatingActionButton) findViewById(R.id.speedButton);
@@ -60,8 +77,15 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
         appPreferences = new ApplicationPreferences();
         events = new EventsDetect();
         df = new DecimalFormat("0.00");
-    }
 
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+
+
+
+
+    }
 
 
     private void setToolbar(){
@@ -71,15 +95,6 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle(R.string.menu_speed);
     }
-
-  /*  @Override
-    protected void onDraw(Canvas canvas) {
-        Paint paint = new Paint();
-        paint.setStyle(Paint.Style.FILL);
-        paint.setAntiAlias(false);
-        paint.setColor(Color.GREEN);
-        canvas.drawCircle(50, 50, 25, paint);
-    }*/
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -162,6 +177,26 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
 
     @Override
     public void sendEvent(String event) {
+
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        Sensor mySensor = event.sensor;
+        textAcelerometer.setText("Sensando...!");
+
+
+        if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            last_x = event.values[0];
+            last_y = event.values[1];
+            last_z = event.values[2];
+            textAcelerometer.setText(last_x + " : " + last_y + " : " + last_z);
+        }
+
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
 }

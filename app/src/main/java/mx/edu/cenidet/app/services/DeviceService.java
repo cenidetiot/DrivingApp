@@ -21,20 +21,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.view.Surface;
-import android.view.WindowManager;
 
 import com.google.android.gms.maps.model.LatLng;
 
 import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
-import mx.edu.cenidet.app.R;
 import  mx.edu.cenidet.app.event.EventsDetect;
 
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -59,7 +53,7 @@ import www.fiware.org.ngsi.utilities.Functions;
  * Created by Cipriano on 3/3/2018.
  */
 
-public class DeviceService extends Service implements DeviceController.DeviceResourceMethods, AlertController.AlertResourceMethods{
+public class DeviceService extends Service implements DeviceController.DeviceResourceMethods{
     private Context context;
     private static final String STATUS = "STATUS";
     //private double longitudeGPS, latitudeGPS;
@@ -132,7 +126,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         hashMapLatLngFromTo = new HashMap<String, Double>();
         distanceArray = new float[2];
         deviceSensor = new DeviceSensor();
-        alertController = new AlertController(this);
         //Modelo de datos Device, DeviceModel.
         deviceProperties = new DevicePropertiesFunctions();
         deviceUpdateModel = new DeviceUpdateModel();
@@ -142,15 +135,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         sqLiteController = new SQLiteController(context);
         device = new Device();
 
-
-        /* Sensor Accelerometer
-        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-        */
-
-
-        
         if (appPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_ID) != null){
             owner = appPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_ID);
         }else{
@@ -411,11 +395,5 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     public void onDeleteEntity(Response response) {}
     @Override
     public void onGetEntities(Response response) {}
-    @Override
-    public void onCreateEntityAlert(Response response) {}
-    @Override
-    public void onUpdateEntityAlert(Response response) {}
-    @Override
-    public void onGetEntitiesAlert(Response response) {}
 
 }
