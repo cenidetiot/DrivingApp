@@ -35,10 +35,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import mx.edu.cenidet.app.fragments.AlertsFragment;
-import mx.edu.cenidet.app.fragments.HomeFragment;
-import mx.edu.cenidet.app.fragments.MyCampusFragment;
-import mx.edu.cenidet.app.fragments.ZoneFragment;
+
 import mx.edu.cenidet.cenidetsdk.controllers.OffStreetParkingControllerSdk;
 import mx.edu.cenidet.cenidetsdk.controllers.RoadControllerSdk;
 import mx.edu.cenidet.cenidetsdk.controllers.RoadSegmentControllerSdk;
@@ -58,10 +55,15 @@ import www.fiware.org.ngsi.datamodel.entity.RoadSegment;
 import www.fiware.org.ngsi.datamodel.entity.Zone;
 import www.fiware.org.ngsi.httpmethodstransaction.Response;
 import www.fiware.org.ngsi.utilities.ApplicationPreferences;
-import www.fiware.org.ngsi.utilities.Constants;
 import www.fiware.org.ngsi.utilities.DevicePropertiesFunctions;
 import www.fiware.org.ngsi.utilities.Functions;
 import www.fiware.org.ngsi.utilities.Tools;
+
+
+import mx.edu.cenidet.app.fragments.AlertsFragment;
+import mx.edu.cenidet.app.fragments.ZoneFragment;
+import mx.edu.cenidet.app.fragments.HomeFragment;
+import mx.edu.cenidet.app.fragments.MyCampusFragment;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener, SendDataService.SendDataMethods, AlertController.AlertResourceMethods, RoadSegmentControllerSdk.RoadSegmentServiceMethods, RoadControllerSdk.RoadServiceMethods, OffStreetParkingControllerSdk.OffStreetParkingServiceMethods{
     private DrawerLayout drawerLayout;
@@ -94,9 +96,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private int[] tabIcons = {
-            R.drawable.ic_home,
-            R.drawable.ic_campus_menu,
-            R.drawable.ic_alerts_menu,
+            R.drawable.ic_home_menu,
+            R.drawable.ic_map,
+            R.drawable.ic_my_alerts,
             R.drawable.ic_my_campus
     };
 
@@ -106,6 +108,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         MAIN_CONTEXT = HomeActivity.this;
+
         appPreferences = new ApplicationPreferences();
         sendDataService = new SendDataService(this);
         alertController = new AlertController(this);
@@ -122,36 +125,19 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        // SHOW ALERT DIALOG ASKING IF THE USER IS DRIVING
-        if(appPreferences.getPreferenceBoolean(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_USER_IS_DRIVING)!= true){
-            isDrivingUser();
-        }
-
         //Mandar a llamar el toolbar una vez generado en el activity_main de la actividad
         setToolbar();
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.navView);
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+
+        setUpTabLayout();
+        setUpViewPager(viewPager);
         btnFloatingGUI();
         setFragmentDefault();
         //frameLayout = (FrameLayout)findViewById(R.id.headerNavigationDrawer).findViewById(R.id.tvUserName);
 
-        //TabLayout
-        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.menu_home));//setText(R.string.menu_home));
-        //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_speed));//.setText(R.string.menu_speed));
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.menu_campus_map));//setText(R.string.menu_campus_map));
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.menu_alerts));//.setText(R.string.menu_alerts));
-        if(appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_USER_TYPE).equals("securityGuard")){
-            tabLayout.addTab(tabLayout.newTab().setText(R.string.menu_my_campus));//setText(R.string.menu_my_campus));
-        }
-
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
-        numberTab = tabLayout.getTabCount();
-        PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), numberTab);
-        viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -199,11 +185,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         viewPager.setCurrentItem(2);
                         fragmentTransaction = true;
                         break;
-                    case R.id.menu_my_campus:
+                    /*case R.id.menu_my_campus:
                         //fragment = new MyCampusFragment();
                         viewPager.setCurrentItem(3);
                         fragmentTransaction = true;
-                        break;
+                        break;*/
                     case R.id.menu_history:
                         drawerLayout.closeDrawers();
                         Intent intent = new Intent(getApplicationContext(), AlertHistoryActivity.class);
@@ -237,8 +223,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         tvUserName.setText(appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_NAME));
         navigationView.addHeaderView(view);
 
-        //Para preguntar si el usuario se encuentra manejando
-        //isDrivingUser();
 
         //Descarga los Road y RoadSegment
         listRoad = sqLiteDrivingApp.getAllRoad();
@@ -261,13 +245,38 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             offStreetParkingControllerSdk.getAllOffStreetParking();
         }
 
-
         //Inicia el servicio para la captura de la posición.
         Intent deviceService = new Intent(MAIN_CONTEXT, DeviceService.class);
         startService(deviceService);
         Log.i("onCreate", "-----------------------------------------------------------------------------");
-    }
 
+        // SHOW ALERT DIALOG ASKING IF THE USER IS DRIVING
+        if(appPreferences.getPreferenceBoolean(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_USER_IS_DRIVING)!= true){
+            isDrivingUser();
+        }
+
+    }
+    public void setUpTabLayout(){
+        //TabLayout set text title
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.menu_home));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.menu_campus_map));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.menu_alerts));
+        if(appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_USER_TYPE).equals("securityGuard")){
+            tabLayout.addTab(tabLayout.newTab().setText(R.string.menu_my_campus));
+            tabLayout.getTabAt(3).setIcon(tabIcons[3]);
+        }
+        //TabLayout set up tab icons
+        tabLayout.getTabAt(0).setIcon(tabIcons[0]);
+        tabLayout.getTabAt(1).setIcon(tabIcons[1]);
+        tabLayout.getTabAt(2).setIcon(tabIcons[2]);
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        numberTab = tabLayout.getTabCount();
+    }
+    public void setUpViewPager(ViewPager viewPager){
+        PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), numberTab);
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+    }
     private class ResponseReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {

@@ -2,6 +2,7 @@ package mx.edu.cenidet.app.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 
@@ -15,23 +16,19 @@ import mx.edu.cenidet.app.fragments.SpeedFragment;
  * Created by Cipriano on 2/14/2018.
  */
 
-public class PagerAdapter extends FragmentStatePagerAdapter {
+public class PagerAdapter extends FragmentPagerAdapter {
     private int numberOfTsb;
     private int position;
+
     public PagerAdapter(FragmentManager fm, int numberOfTsb) {
         super(fm);
         this.numberOfTsb = numberOfTsb;
     }
-    /*public PagerAdapter(FragmentManager fm,int numberOfTsb, int position){
-        super(fm);
-        this.numberOfTsb = numberOfTsb;
-        this.position = position;
-    }*/
 
     @Override
     public Fragment getItem(int position) {
-        Log.i("ADAPTER: ", "POSITION: -------------------"+(position));
-        switch (position){
+        Log.i("ADAPTER: ", "POSITION: -------------------" + (position));
+        switch (position) {
             /*case 0:
                 return new HomeFragment();
             case 1:
@@ -61,4 +58,5 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         return numberOfTsb;
     }
+
 }

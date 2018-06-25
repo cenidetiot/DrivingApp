@@ -1,10 +1,12 @@
 package mx.edu.cenidet.app.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,8 +17,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import mx.edu.cenidet.app.R;
+import mx.edu.cenidet.app.activities.DrivingView;
 import mx.edu.cenidet.app.activities.HomeActivity;
 import mx.edu.cenidet.app.services.SendDataService;
+
 import www.fiware.org.ngsi.controller.AlertController;
 import www.fiware.org.ngsi.datamodel.entity.RoadSegment;
 import www.fiware.org.ngsi.datamodel.entity.Zone;
@@ -36,6 +40,7 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
     private TextView tvDetailCampus;
     private TextView tvRoadSegment;
     private ImageView imagenViewDetailCampus;
+    private FloatingActionButton speedButton;
     //private FloatingActionButton btnFloating;
     private AlertController alertController;
 
@@ -58,7 +63,14 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
         tvDetailCampus = (TextView) rootView.findViewById(R.id.tvDetailCampus);
         imagenViewDetailCampus = (ImageView) rootView.findViewById(R.id.imagenViewDetailCampus);
         tvRoadSegment = (TextView) rootView.findViewById(R.id.tvRoadSegment);
-
+        speedButton = (FloatingActionButton) rootView.findViewById(R.id.speedButton);
+        speedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent drivingView = new Intent(context, DrivingView.class);
+                startActivity(drivingView);
+            }
+        });
         //contactPhoto = (ImageView) rootView.findViewById(R.id.contactPhoto);
         /*if (contactPhoto != null)
             contactPhoto.setImageBitmap(retrieveContactPhoto(context));*/
@@ -72,6 +84,7 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
     }
 
     @Override
+
     public void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr) {
         this.latitude = latitude;
         this.longitude = longitude;
@@ -92,7 +105,6 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
                 imagenViewDetailCampus.setImageResource(R.mipmap.ic_outside_foreground);
                 tvDetailCampus.setText(context.getString(R.string.message_any_campus));
             }
-            //tvDetailCampus.setText("No te encuentras en ningun campus");
         }
     }
 
@@ -101,7 +113,6 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
         if(tvRoadSegment != null){
             if(roadSegment != null){
                 tvRoadSegment.setText("ID: "+roadSegment.getIdRoadSegment()+"\n"+context.getString(R.string.name)+": "+roadSegment.getName()+"\n"+context.getString(R.string.message_minimum)+": "+roadSegment.getMinimumAllowedSpeed()+"km/h\n"+context.getString(R.string.message_maximum)+": "+roadSegment.getMaximumAllowedSpeed()+"km/h");
-                //tvRoadSegment.setText("ID: "+roadSegment.getIdRoadSegment()+"\nName: "+roadSegment.getName()+"\nMinimum: "+roadSegment.getMinimumAllowedSpeed()+"km/h\nMaximum: "+roadSegment.getMaximumAllowedSpeed()+"km/h");
             }else{
                 tvRoadSegment.setText(context.getString(R.string.message_not_road_segment));
             }

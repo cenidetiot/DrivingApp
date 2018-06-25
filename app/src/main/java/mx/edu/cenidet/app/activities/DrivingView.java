@@ -1,7 +1,9 @@
 package mx.edu.cenidet.app.activities;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -70,6 +72,15 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle(R.string.menu_speed);
     }
+
+  /*  @Override
+    protected void onDraw(Canvas canvas) {
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.FILL);
+        paint.setAntiAlias(false);
+        paint.setColor(Color.GREEN);
+        canvas.drawCircle(50, 50, 25, paint);
+    }*/
 
     @Override
     public boolean onSupportNavigateUp() {
