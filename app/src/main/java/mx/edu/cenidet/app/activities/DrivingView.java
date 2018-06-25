@@ -40,6 +40,7 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
     private static final String STATUS = "Status";
     private EventsDetect events;
     private RoadSegment roadSegment  = null;
+    private PulsatorLayout pulsator1;
     private SendDataService sendDataService;
     private DecimalFormat df;
     private ApplicationPreferences appPreferences;
@@ -54,24 +55,22 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
         textSpeed = (TextView) findViewById(R.id.textSpeed);
         textEvent = (TextView) findViewById(R.id.textEvent);
         textPruebas = (TextView) findViewById(R.id.textPruebas);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.suddenStopButton);
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.suddenStopButton);
         FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.wrongWayButton);
-        FloatingActionButton fab3 = (FloatingActionButton) findViewById(R.id.speedButton);
+        FloatingActionButton fab3 = (FloatingActionButton) findViewById(R.id.speedButton);*/
 
-        PulsatorLayout pulsator1 = (PulsatorLayout) findViewById(R.id.pulsator);
+        pulsator1 = (PulsatorLayout) findViewById(R.id.pulsator1);
         pulsator1.start();
-        PulsatorLayout pulsator2 = (PulsatorLayout) findViewById(R.id.pulsator2);
+        /*PulsatorLayout pulsator2 = (PulsatorLayout) findViewById(R.id.pulsator2);
         pulsator2.start();
         PulsatorLayout pulsator3 = (PulsatorLayout) findViewById(R.id.pulsator3);
-        pulsator3.start();
+        pulsator3.start();*/
 
         sendDataService = new SendDataService(this);
         appPreferences = new ApplicationPreferences();
         events = new EventsDetect();
         df = new DecimalFormat("0.00");
     }
-
-
 
     private void setToolbar(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -81,14 +80,6 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
         getSupportActionBar().setTitle(R.string.menu_speed);
     }
 
-  /*  @Override
-    protected void onDraw(Canvas canvas) {
-        Paint paint = new Paint();
-        paint.setStyle(Paint.Style.FILL);
-        paint.setAntiAlias(false);
-        paint.setColor(Color.GREEN);
-        canvas.drawCircle(50, 50, 25, paint);
-    }*/
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -107,7 +98,6 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
                 ConstantSdk.PREFERENCE_NAME_GENERAL,
                 ConstantSdk.PREFERENCE_USER_IS_DRIVING,
                 true);
-
     }
 
     @Override
@@ -131,23 +121,26 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
             try {
                 boolean well = true;
 
-                if(suddenStop.getBoolean("isStopping")){
+                if(suddenStop.getBoolean("isStopping")) {
                     textEvent.setText("You are stopping");
+                    pulsator1.setColor(Color.parseColor("#f1c40f"));
                     well = false;
                 }
-
-                if (suddenStop.getBoolean("isStopeed")) {
+                if (suddenStop.getBoolean("isStopped")) {
                     textEvent.setText("You are stopped");
+                    pulsator1.setColor(Color.parseColor("#e67e22"));
                     well = false;
                 }
 
                 if(suddenStop.getBoolean("isSuddenStop")){
                     textPruebas.setText(suddenStop.getString("result"));
+                    pulsator1.setColor(Color.parseColor("#e74c3c"));
                     well = false;
                 }
 
                 if (well){
                     textEvent.setText("You are driving well");
+                    pulsator1.setColor(Color.parseColor("#55efc4"));
                 }
 
             }catch (Exception e){}
