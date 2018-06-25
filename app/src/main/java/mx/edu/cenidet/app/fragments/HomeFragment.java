@@ -97,7 +97,8 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
             //Log.i("STATUS: ","Campus Name: "+campus.getName()+" statusLocation: "+statusLocation);
             if (imagenViewDetailCampus != null && tvDetailCampus != null) {
                 imagenViewDetailCampus.setImageResource(R.mipmap.ic_inside_foreground);
-                tvDetailCampus.setText(context.getString(R.string.message_name_campus) + ": " + zone.getName().getValue() + "\n" + context.getString(R.string.message_address_campus) + ": " + zone.getAddress().getValue());
+                tvDetailCampus.setText(zone.getName().getValue() + "\n" + zone.getAddress().getValue());
+                //tvDetailCampus.setText(context.getString(R.string.message_name_campus) + ": " + zone.getName().getValue() + "\n" + context.getString(R.string.message_address_campus) + ": " + zone.getAddress().getValue());
             }
         } else {
             Log.i("STATUS 1: ", "DetectCampus...!" + statusLocation);
@@ -112,7 +113,8 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
     public void detectRoadSegment(double latitude, double longitude, RoadSegment roadSegment) {
         if(tvRoadSegment != null){
             if(roadSegment != null){
-                tvRoadSegment.setText("ID: "+roadSegment.getIdRoadSegment()+"\n"+context.getString(R.string.name)+": "+roadSegment.getName()+"\n"+context.getString(R.string.message_minimum)+": "+roadSegment.getMinimumAllowedSpeed()+"km/h\n"+context.getString(R.string.message_maximum)+": "+roadSegment.getMaximumAllowedSpeed()+"km/h");
+                //tvRoadSegment.setText("ID: "+roadSegment.getIdRoadSegment()+"\n"+context.getString(R.string.name)+": "+roadSegment.getName()+"\n"+context.getString(R.string.message_minimum)+": "+roadSegment.getMinimumAllowedSpeed()+"km/h\n"+context.getString(R.string.message_maximum)+": "+roadSegment.getMaximumAllowedSpeed()+"km/h");
+                tvRoadSegment.setText(roadSegment.getName()+"\n"+context.getString(R.string.message_minimum)+": "+roadSegment.getMinimumAllowedSpeed()+"km/h\n"+context.getString(R.string.message_maximum)+": "+roadSegment.getMaximumAllowedSpeed()+"km/h");
             }else{
                 tvRoadSegment.setText(context.getString(R.string.message_not_road_segment));
             }
@@ -128,7 +130,6 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
     public void sendEvent(String event) {
 
     }
-
 
 
     //Android - Get Contact Photo from phone number

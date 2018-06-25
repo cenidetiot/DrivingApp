@@ -52,7 +52,6 @@
                 app:backgroundTint="@color/colorPrimary"
                 app:borderWidth="5dp"
                 app:fabSize="mini" />
-
             <!--ImageView
                 android:id="@+id/contactPhoto"
                 android:layout_width="wrap_content"

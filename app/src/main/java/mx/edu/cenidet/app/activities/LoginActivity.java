@@ -353,7 +353,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                         //SAVE THE PREFERENCE USER_TYPE IN THE CONSTANTS
                         appPreferences.saveOnPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_USER_TYPE, userType);
-                        Toast.makeText(context, appPreferences.getPreferenceString(getApplicationContext(),ConstantSdk.PREFERENCE_NAME_GENERAL,ConstantSdk.PREFERENCE_USER_TYPE), Toast.LENGTH_LONG).show();
+                        //Toast.makeText(context, appPreferences.getPreferenceString(getApplicationContext(),ConstantSdk.PREFERENCE_NAME_GENERAL,ConstantSdk.PREFERENCE_USER_TYPE), Toast.LENGTH_LONG).show();
 
                         goToHome();
 

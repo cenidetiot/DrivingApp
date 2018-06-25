@@ -251,9 +251,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         Log.i("onCreate", "-----------------------------------------------------------------------------");
 
         // SHOW ALERT DIALOG ASKING IF THE USER IS DRIVING
-        if(appPreferences.getPreferenceBoolean(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_USER_IS_DRIVING)!= true){
+        /*if(appPreferences.getPreferenceBoolean(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_USER_IS_DRIVING)!= true){
             isDrivingUser();
-        }
+        }*/
 
     }
     public void setUpTabLayout(){
