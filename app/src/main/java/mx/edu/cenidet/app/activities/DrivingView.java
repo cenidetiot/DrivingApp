@@ -29,6 +29,7 @@ import mx.edu.cenidet.app.R;
 import mx.edu.cenidet.app.event.EventsDetect;
 import mx.edu.cenidet.app.services.SendDataService;
 import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
+import pl.bclogic.pulsator4droid.library.PulsatorLayout;
 import www.fiware.org.ngsi.datamodel.entity.Alert;
 import www.fiware.org.ngsi.datamodel.entity.RoadSegment;
 import www.fiware.org.ngsi.datamodel.entity.Zone;
@@ -49,6 +50,7 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
     private static final String STATUS = "Status";
     private EventsDetect events;
     private RoadSegment roadSegment  = null;
+    private PulsatorLayout pulsator1;
     private SendDataService sendDataService;
     private DecimalFormat df;
     private ApplicationPreferences appPreferences;
@@ -70,9 +72,17 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
         textAcelerometer = (TextView) findViewById(R.id.textAcelerometer);
         textAcelerometer.setText("Acelerometro");
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.suddenStopButton);
-        FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.wrongWayButton);
-        FloatingActionButton fab3 = (FloatingActionButton) findViewById(R.id.speedButton);
+        //FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.suddenStopButton);
+        //FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.wrongWayButton);
+        //FloatingActionButton fab3 = (FloatingActionButton) findViewById(R.id.speedButton);
+
+        pulsator1 = (PulsatorLayout) findViewById(R.id.pulsator1);
+        pulsator1.start();
+        /*PulsatorLayout pulsator2 = (PulsatorLayout) findViewById(R.id.pulsator2);
+        pulsator2.start();
+        PulsatorLayout pulsator3 = (PulsatorLayout) findViewById(R.id.pulsator3);
+        pulsator3.start();*/
+
         sendDataService = new SendDataService(this);
         appPreferences = new ApplicationPreferences();
         events = new EventsDetect();
@@ -81,12 +91,7 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-
-
-
-
     }
-
 
     private void setToolbar(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -113,7 +118,6 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
                 ConstantSdk.PREFERENCE_NAME_GENERAL,
                 ConstantSdk.PREFERENCE_USER_IS_DRIVING,
                 true);
-
     }
 
     @Override
@@ -137,23 +141,26 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
             try {
                 boolean well = true;
 
-                if(suddenStop.getBoolean("isStopping")){
+                if(suddenStop.getBoolean("isStopping")) {
                     textEvent.setText("You are stopping");
+                    pulsator1.setColor(Color.parseColor("#f1c40f"));
                     well = false;
                 }
-
-                if (suddenStop.getBoolean("isStopeed")) {
+                if (suddenStop.getBoolean("isStopped")) {
                     textEvent.setText("You are stopped");
+                    pulsator1.setColor(Color.parseColor("#e67e22"));
                     well = false;
                 }
 
                 if(suddenStop.getBoolean("isSuddenStop")){
                     textPruebas.setText(suddenStop.getString("result"));
+                    pulsator1.setColor(Color.parseColor("#e74c3c"));
                     well = false;
                 }
 
                 if (well){
                     textEvent.setText("You are driving well");
+                    pulsator1.setColor(Color.parseColor("#55efc4"));
                 }
 
             }catch (Exception e){}

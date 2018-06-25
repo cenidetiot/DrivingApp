@@ -14,31 +14,16 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="80dp">
-
-        </FrameLayout>
-
-        <TextView
-            android:id="@+id/textSpeed"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:fontFamily="@font/roboto_medium"
-            android:gravity="center_horizontal"
-            android:textColor="@color/white"
-            android:textSize="@dimen/title"
-            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/textEvent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginBottom="15dp"
+            android:layout_weight="1"
             android:fontFamily="@font/roboto_medium"
-            android:gravity="center_horizontal"
+            android:gravity="center_vertical"
             android:textColor="@color/white"
             android:textSize="@dimen/title"
             android:textStyle="bold" />
@@ -48,12 +33,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
             android:fontFamily="@font/roboto_medium"
             android:gravity="center_horizontal"
             android:textColor="@color/white"
             android:textSize="12sp"
             android:textStyle="bold" />
-        <TextView
+
+         <TextView
             android:id="@+id/textAcelerometer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -63,6 +50,41 @@
             android:textColor="@color/white"
             android:textSize="12sp"
             android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:orientation="horizontal">
+
+            <pl.bclogic.pulsator4droid.library.PulsatorLayout
+                android:id="@+id/pulsator1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                app:pulse_count="4"
+                app:pulse_duration="7000"
+                app:pulse_interpolator="Linear"
+                app:pulse_repeat="0"
+                app:pulse_startFromScratch="false">
+
+                <TextView
+                    android:id="@+id/textSpeed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/roboto_medium"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/title"
+                    android:textStyle="bold" />
+
+            </pl.bclogic.pulsator4droid.library.PulsatorLayout>
+
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </FrameLayout>
