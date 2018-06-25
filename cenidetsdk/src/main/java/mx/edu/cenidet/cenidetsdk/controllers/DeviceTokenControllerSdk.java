@@ -57,13 +57,15 @@ public class DeviceTokenControllerSdk implements MethodGET.MethodGETCallback, Me
         void updateDeviceToken(Response response);
     }
 
-    public void createDeviceToken(String fcmToken, String refDevice){
+    public void createDeviceToken(String fcmToken, String refDevice, String preferences){
         method = "createDeviceToken";
         String URL = URL_BASE_HOST + ConfigServer.http_api.getPropiedad() +"/"+ ConfigServer.http_device.getPropiedad() +"/"+ ConfigServer.http_token.getPropiedad();
         Response response = new Response();
+
         String json = "{\n" +
                 "\t\"fcmToken\":\""+fcmToken+"\",\n" +
-                "\t\"refDevice\":\""+refDevice+"\"\n" +
+                "\t\"refDevice\":\""+refDevice+"\",\n" +
+                "\t\"preferences\":\""+preferences+"\"\n" +
                 "}";
         JSONObject jsonDeviceToken = response.parseJsonObject(json);
         Log.i("Status", "JSON jsonDeviceToken: "+jsonDeviceToken);

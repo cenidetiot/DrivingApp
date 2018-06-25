@@ -49,12 +49,12 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
     private static double startToLastDistance = 0, startToCurrentDistance = 0;
     private static double endToLastDistance = 0, endToCurrentDistance = 0;
     private static LatLng lastPoint;
-    private static boolean  wrongWayAlertSent = false, isWrongWay;
-    private static long wrongWayDate = 0;
+    private static boolean  wrongWayAlertSent = false, isWrongWay = false;
+    private static long wrongWaySeconds = 0;
 
     /*Variables globales de velocidad*/
-    private static double lastSpeed = 0;
     private static int speedigSeconds;
+    private static boolean speedingAlertSent = false;
 
 
     public  EventsDetect () {
@@ -85,9 +85,12 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
         return  alert;
     }
 
-    public boolean wrongWay(LatLng currentPoint, LatLng startPoint, LatLng endPoint, long currentDate){
-        
-        boolean wrong = false;
+    public JSONObject wrongWay(LatLng currentPoint, LatLng startPoint, LatLng endPoint, long currentDate){
+
+        String[] currentCoords = currentPoint.toString().split(",");
+        double longitude = Double.parseDouble(currentCoords[0]);
+        double latitude = Double.parseDouble(currentCoords[1]);
+        JSONObject alert = new JSONObject();
 
         totalDistance = SphericalUtil.computeDistanceBetween(startPoint, endPoint);
         startToLastDistance = SphericalUtil.computeDistanceBetween(startPoint, lastPoint);
@@ -95,40 +98,55 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
         endToLastDistance = SphericalUtil.computeDistanceBetween(endPoint, lastPoint);
         endToCurrentDistance = SphericalUtil.computeDistanceBetween(startPoint, endPoint);
 
-        /* Determina contrasentido */
-        if(!(startToCurrentDistance > startToLastDistance && endToLastDistance > endToCurrentDistance)){
-            isWrongWay = true;
-            wrongWayDate = currentDate;
-            wrong = true;
-        }
-        long wrongWayTmp = new Date().getTime()- wrongWayDate;
-        long wrongWaySeconds = TimeUnit.MILLISECONDS.toSeconds(wrongWayTmp);
-        if (wrongWaySeconds > 3){
-            String severity =  "";
-            if(wrongWaySeconds > 3 && wrongWaySeconds <= 5){ // informational
-                severity = "informational";
-            } else if(wrongWaySeconds > 5 && wrongWaySeconds <= 7){ // low
-                severity = "low";
-            } else if(wrongWaySeconds > 7 && wrongWaySeconds <= 9){ // medium
-                severity = "medium";
-            } if(wrongWaySeconds > 9 && wrongWaySeconds <= 11){ // high 
-                severity =  "high";
-            } else { // critical
-                severity = "critical";
-            }
-            String[] currentCoords = currentPoint.toString().split(",");
-            sendAlert(
-                "Wrong Way Automatic Detection", 
-                severity, 
-                "wrongWay", 
-                Double.parseDouble(currentCoords[0]), 
-                Double.parseDouble(currentCoords[1])
-            );
-            wrong = true;
 
+        if(!(startToCurrentDistance > startToLastDistance && endToLastDistance > endToCurrentDistance)){
+            if (!isWrongWay) {
+                isWrongWay = true;
+            }
+        }else{
+
+            if (isWrongWay) {
+                String severity = "";
+                if (wrongWaySeconds < 3) {
+                    if (wrongWaySeconds >= 3 && wrongWaySeconds < 5) {
+                        severity = "informational";
+                    } else if (wrongWaySeconds >= 5 && wrongWaySeconds < 7) {
+                        severity = "low";
+                    } else if (wrongWaySeconds >= 7 && wrongWaySeconds < 9) {
+                        severity = "medium";
+                    } else if (wrongWaySeconds >= 9 && wrongWaySeconds < 11) {
+                        severity = "high";
+                    } else {
+                        severity = "critical";
+                    }
+                }
+                if (severity != "") {
+                    sendAlert("Wrong Way Detection", severity, "wrongWay", latitude, longitude);
+                }
+            }
+            isWrongWay = false;
+            wrongWaySeconds = 0;
+            wrongWayAlertSent = false;
         }
+
+        if (isWrongWay){
+            wrongWaySeconds ++;
+            if (wrongWaySeconds >= 11 && wrongWayAlertSent){
+                sendAlert("Wrong Way", "critical", "wrongWay", latitude, longitude);
+                wrongWayAlertSent = true;
+                isWrongWay = false;
+                wrongWaySeconds = 0;
+            }
+        }
+
         lastPoint = currentPoint;
-        return wrong;
+
+        try {
+            alert.put("isWrongWay", isWrongWay);
+            alert.put("wrongWaySeconds", wrongWaySeconds);
+        } catch(Exception e){ }
+
+        return alert;
     }
 
     public void writeFile(String text){
@@ -242,7 +260,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
         try {
             alert.put("isStopeed", stopped);
             alert.put("isStopping", isStopping);
-            alert.put("stoppendSeconds", speedigSeconds);
+            alert.put("stoppendSeconds", stoppedSeconds);
             /*Datos de desarrollo*/
             alert.put("result", result);
             alert.put("isSuddenStop", isSuddenStop);
@@ -257,45 +275,73 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
      * @param speed velocidad anterior.
      * @return la severidad del exceso de velocidad.
      */
-    public static String speeding(double maximumSpeed, double speed){
+    public JSONObject speeding(double minimumSpeed,double maximumSpeed, double speed, double latitude, double longitude){
         boolean isSpeeding  = false;
-        double subtractSpeed;
+        boolean under = false, over = false;
 
         JSONObject alert = new JSONObject();
 
-        subtractSpeed = speed - maximumSpeed;
+        if (!(speed > minimumSpeed && speed < maximumSpeed) && !speedingAlertSent){
+            if (!isSpeeding) {
+                if (speed < minimumSpeed) {
+                    under = true;
+                    over = false;
+                }
+                if (speed > maximumSpeed) {
+                    over = true;
+                    under = false;
+                }
+                isSpeeding = true;
+            }
 
-        if (subtractSpeed < 0){
-            isSpeeding = true;
-            speedigSeconds ++;
         }else{
 
-
-            if(speedigSeconds < 3){
-                //return "tolerance";
-            }else if (speedigSeconds >= 3 && speedigSeconds < 5){
-                //return "informational";
-            }else if (speedigSeconds >= 5 && speedigSeconds < 7){
-                //return "low";
-            }else if (speedigSeconds >= 7 && speedigSeconds < 9){
-                //return "medium";
-            }else if (speedigSeconds >= 9 && speedigSeconds < 11){
-               // return "high";
-            }else {
-             //   return "critical";
+            if (isSpeeding) {
+                String severity = "";
+                if (speedigSeconds < 3) {
+                    if (speedigSeconds >= 3 && speedigSeconds < 5) {
+                        severity = "informational";
+                    } else if (speedigSeconds >= 5 && speedigSeconds < 7) {
+                        severity = "low";
+                    } else if (speedigSeconds >= 7 && speedigSeconds < 9) {
+                        severity = "medium";
+                    } else if (speedigSeconds >= 9 && speedigSeconds < 11) {
+                        severity = "high";
+                    } else {
+                        severity = "critical";
+                    }
+                }
+                if (severity != "")
+                    sendAlert("Speeding", severity, "spedding", latitude, longitude);
             }
             isSpeeding = false;
             speedigSeconds = 0;
+            over = false;
+            under = false;
+            speedingAlertSent= false;
         }
 
         if (isSpeeding){
-            if (speedigSeconds >= 11){
-                //return "critical";
+            speedigSeconds ++;
+            if (speedigSeconds >= 11 && !speedingAlertSent){
+                sendAlert("Speeding", "critical", "spedding", latitude, longitude);
+                speedingAlertSent = true;
+                isSpeeding = false;
+                speedigSeconds = 0;
+                over = false;
+                under = false;
             }
         }
 
-        lastSpeed = speed;
-        return "";
+        try {
+            alert.put("isSpeeding", isSpeeding);
+            alert.put("under", under);
+            alert.put("over", over);
+            alert.put("over", speedigSeconds);
+        } catch(Exception e){ }
+
+
+        return alert;
     }
 
 
