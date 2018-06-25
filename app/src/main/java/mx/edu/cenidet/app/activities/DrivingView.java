@@ -58,8 +58,12 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
         FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.wrongWayButton);
         FloatingActionButton fab3 = (FloatingActionButton) findViewById(R.id.speedButton);
 
-        PulsatorLayout pulsator = (PulsatorLayout) findViewById(R.id.pulsator);
-        pulsator.start();
+        PulsatorLayout pulsator1 = (PulsatorLayout) findViewById(R.id.pulsator);
+        pulsator1.start();
+        PulsatorLayout pulsator2 = (PulsatorLayout) findViewById(R.id.pulsator2);
+        pulsator2.start();
+        PulsatorLayout pulsator3 = (PulsatorLayout) findViewById(R.id.pulsator3);
+        pulsator3.start();
 
         sendDataService = new SendDataService(this);
         appPreferences = new ApplicationPreferences();
@@ -97,6 +101,7 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
     @Override
     public void onStart() {
         super.onStart();
+        events = new EventsDetect();
         appPreferences.saveOnPreferenceBoolean(
                 getApplicationContext(),
                 ConstantSdk.PREFERENCE_NAME_GENERAL,

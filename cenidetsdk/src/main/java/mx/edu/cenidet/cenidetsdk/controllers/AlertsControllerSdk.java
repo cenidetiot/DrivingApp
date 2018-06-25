@@ -58,17 +58,17 @@ public class AlertsControllerSdk implements MethodGET.MethodGETCallback, MethodP
         mGET.execute(URL);
     }
 
-    public void currentAlertByZone(String alertId){
+    public void currentAlertByZone(String zoneId){
         //Zone_1523325691338
         method = "currentAlertByZone";
-        String URL = URL_BASE_HOST +ConfigServer.http_service.getPropiedad()+ConfigServer.http_current.getPropiedad()+"/"+alertId;
+        String URL = URL_BASE_HOST +ConfigServer.http_service.getPropiedad()+ConfigServer.http_current.getPropiedad()+"/"+zoneId;
         mGET = new MethodGET(this);
         mGET.execute(URL);
     }
 
-    public void historyAlertByZone(String alertId){
+    public void historyAlertByZone(String zoneId){
         method = "historyAlertByZone";
-        String URL = URL_BASE_HOST +ConfigServer.http_service.getPropiedad()+ConfigServer.http_history.getPropiedad()+"/"+alertId;
+        String URL = URL_BASE_HOST +ConfigServer.http_service.getPropiedad()+ConfigServer.http_history.getPropiedad()+"/"+zoneId;
         mGET = new MethodGET(this);
         mGET.execute(URL);
     }

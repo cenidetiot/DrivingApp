@@ -25,7 +25,7 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService imple
         Log.d(TAG, "Refreshed token: " + refreshedToken);
         appPreferences.saveOnPreferenceString(
                 getApplicationContext(),
-                ConstantSdk.PREFERENCE_NAME_GENERAL,
+                ConstantSdk.STATIC_PREFERENCES,
                 ConstantSdk.PREFERENCE_KEY_FCMTOKEN,
                 refreshedToken);
         sendRegistrationToServer(refreshedToken);

@@ -71,7 +71,12 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
             if(zoneId.equals("undetectedZone")){
                 Toast.makeText(context, R.string.message_undetected_zone, Toast.LENGTH_SHORT).show();
             }else {
-                alertsControllerSdk.historyAlertByZone(zoneId);
+                String typeUser = applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_USER_TYPE);
+                String tempQuery = zoneId;
+                if (typeUser != null && typeUser !="" && typeUser.equals("mobileUser")){
+                    tempQuery += "?id=Alert:Device_Smartphone_.*";
+                }
+                alertsControllerSdk.historyAlertByZone(tempQuery);
             }
         }
         //zoneId = "Zone_1523325691338";
