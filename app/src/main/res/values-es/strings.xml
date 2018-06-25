@@ -76,8 +76,8 @@
     <string name="message_address_campus">Dirección</string>
     <string name="message_any_campus">No te encuentras en ningún campus.</string>
     <string name="message_not_road_segment">No estás en un segmento de carretera.</string>
-    <string name="message_maximum">Máximo</string>
-    <string name="message_minimum">Mínimo</string>
+    <string name="message_maximum">Máximo Vel.Permitida</string>
+    <string name="message_minimum">Mínimo Vel.Permitida</string>
 
     <!--FloatingActionButton-->
     <string name="message_floating_unknown">Emergencia desconocida</string>
