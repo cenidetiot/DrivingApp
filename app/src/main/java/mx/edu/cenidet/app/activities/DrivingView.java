@@ -24,6 +24,7 @@ import mx.edu.cenidet.app.R;
 import mx.edu.cenidet.app.event.EventsDetect;
 import mx.edu.cenidet.app.services.SendDataService;
 import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
+import pl.bclogic.pulsator4droid.library.PulsatorLayout;
 import www.fiware.org.ngsi.datamodel.entity.Alert;
 import www.fiware.org.ngsi.datamodel.entity.RoadSegment;
 import www.fiware.org.ngsi.datamodel.entity.Zone;
@@ -56,6 +57,9 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.suddenStopButton);
         FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.wrongWayButton);
         FloatingActionButton fab3 = (FloatingActionButton) findViewById(R.id.speedButton);
+
+        PulsatorLayout pulsator = (PulsatorLayout) findViewById(R.id.pulsator);
+        pulsator.start();
 
         sendDataService = new SendDataService(this);
         appPreferences = new ApplicationPreferences();
