@@ -3,6 +3,7 @@ package mx.edu.cenidet.app.activities;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Interpolator;
 import android.graphics.Paint;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -54,11 +55,10 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
     private SendDataService sendDataService;
     private DecimalFormat df;
     private ApplicationPreferences appPreferences;
-
-    private long count = 0;
-    private float last_x, last_y, last_z;
-    private long [] xs , ys, zs;
-
+    private boolean well = false;
+    private long lastUpdateAcc = 0, lastUpdateGPS = 0;
+    private float last_x, last_y, last_z, speed;
+    private static final int SHAKE_THRESHOLD = 600;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,34 +137,45 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
         if (appPreferences.getPreferenceBoolean(getApplicationContext(),
                 ConstantSdk.PREFERENCE_NAME_GENERAL,
                 ConstantSdk.PREFERENCE_USER_IS_DRIVING)){
-            JSONObject suddenStop = events.suddenStop(speedMS, new Date().getTime(), latitude,  longitude);
 
-            try {
-                boolean well = true;
+                JSONObject suddenStop = events.suddenStop(speedMS, new Date().getTime(), latitude, longitude);
 
-                if(suddenStop.getBoolean("isStopping")) {
-                    textEvent.setText("You are stopping");
-                    pulsator1.setColor(Color.parseColor("#f1c40f"));
-                    well = false;
-                }
-                if (suddenStop.getBoolean("isStopped")) {
-                    textEvent.setText("You are stopped");
-                    pulsator1.setColor(Color.parseColor("#e67e22"));
-                    well = false;
-                }
+                try {
+                    well = true;
 
-                if(suddenStop.getBoolean("isSuddenStop")){
-                    textPruebas.setText(suddenStop.getString("result"));
-                    pulsator1.setColor(Color.parseColor("#e74c3c"));
-                    well = false;
-                }
+                    if (well){
+                        textEvent.setText("You are driving well");
+                        //azul
+                        //pulsator1.setBackgroundColor(Color.parseColor("#55efc4"));
+                        pulsator1.setColor(Color.parseColor("#55efc4"));
+                        //pulsator1.setInterpolator(PulsatorLayout.INTERP_ACCELERATE_DECELERATE);
+                    }
 
-                if (well){
-                    textEvent.setText("You are driving well");
-                    pulsator1.setColor(Color.parseColor("#55efc4"));
-                }
+                    if(suddenStop.getBoolean("isStopping")) {
+                        textEvent.setText("You are stopping");
+                        //amarillo
+                        //pulsator1.setBackgroundColor(Color.parseColor("#f1c40f"));
+                        pulsator1.setColor(Color.parseColor("#f1c40f"));
+                        well = false;
+                    }
+                    if (suddenStop.getBoolean("isStopped")) {
+                        textEvent.setText("You are stopped");
+                        //naranja
+                        //pulsator1.setBackgroundColor(Color.parseColor("#e67e22"));
+                        pulsator1.setColor(Color.parseColor("#e67e22"));
+                        well = false;
+                    }
 
-            }catch (Exception e){}
+                    if(suddenStop.getBoolean("isSuddenStop")){
+                        textPruebas.setText(suddenStop.getString("result"));
+                        //rojo
+                        //pulsator1.setBackgroundColor(Color.parseColor("#e74c3c"));
+                        pulsator1.setColor(Color.parseColor("#e74c3c"));
+                        well = false;
+                    }
+
+                }catch (Exception e){}
+
         }
     }
 
@@ -194,24 +205,18 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
 
 
         if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            last_x = event.values[0];
-            last_y = event.values[1];
-            last_z = event.values[2];
-            /*textAcelerometer.setText(Math.floor(last_x) + " : " +
-                    Math.floor(last_y) + " : " +
-                    Math.floor(last_z));*/
-            String axis = Math.floor(last_x) + " : " + Math.floor(last_y) + " : " +
-                    Math.floor(last_z);
-
-            if (events.saveAxis(last_x, last_y, last_z)){
-                textAcelerometer.setText("Avanzando \n" + axis);
-            }else{
-                textAcelerometer.setText("Detenido \n" + axis);
+            float x = event.values[0];
+            float y = event.values[1];
+            float  z = event.values[2];
+            long curTime = System.currentTimeMillis();
+            if((curTime-lastUpdateAcc)>= 1000){
+                lastUpdateAcc = curTime;
+                last_x = x;
+                last_y = y;
+                last_z = z;
             }
-
-
+            textAcelerometer.setText(last_x + " : " + last_y + " : " + last_z);
         }
-
     }
 
     @Override
