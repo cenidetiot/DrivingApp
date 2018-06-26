@@ -55,9 +55,10 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
     private DecimalFormat df;
     private ApplicationPreferences appPreferences;
 
-    private long lastUpdate = 0;
+    private long count = 0;
     private float last_x, last_y, last_z;
-    private static final int SHAKE_THRESHOLD = 600;
+    private long [] xs , ys, zs;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,14 +191,25 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
     @Override
     public void onSensorChanged(SensorEvent event) {
         Sensor mySensor = event.sensor;
-        textAcelerometer.setText("Sensando...!");
 
 
         if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             last_x = event.values[0];
             last_y = event.values[1];
             last_z = event.values[2];
-            textAcelerometer.setText(last_x + " : " + last_y + " : " + last_z);
+            /*textAcelerometer.setText(Math.floor(last_x) + " : " +
+                    Math.floor(last_y) + " : " +
+                    Math.floor(last_z));*/
+            String axis = Math.floor(last_x) + " : " + Math.floor(last_y) + " : " +
+                    Math.floor(last_z);
+
+            if (events.saveAxis(last_x, last_y, last_z)){
+                textAcelerometer.setText("Avanzando \n" + axis);
+            }else{
+                textAcelerometer.setText("Detenido \n" + axis);
+            }
+
+
         }
 
     }

@@ -6,6 +6,7 @@ import com.google.maps.android.SphericalUtil;
 import com.google.android.gms.maps.model.LatLng;
 import android.location.Location;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -44,6 +45,11 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
     private static long dateSpeedReached = 0;
     private static boolean isSuddenStop = false;
 
+    private long count = 0;
+    private float last_x, last_y, last_z;
+    private ArrayList<Double> xs, ys, zs;
+    private  boolean going = false;
+
     /*Variables Globales de contra sentido */
     private static double totalDistance = 0;
     private static double startToLastDistance = 0, startToCurrentDistance = 0;
@@ -60,6 +66,9 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
     public  EventsDetect () {
         context = HomeActivity.MAIN_CONTEXT;
         alertController = new AlertController(this);
+        xs = new ArrayList<Double>();
+        ys = new ArrayList<Double>();
+        zs = new ArrayList<Double>();
         //this.idDevice = new DevicePropertiesFunctions().getAlertId(context);
 
     }
@@ -153,6 +162,12 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
         Functions.saveToFile(fileName, text);
     } 
 
+    public boolean saveAxis (double x, double y, double z ) {
+        xs.add(x);
+        ys.add(y);
+        zs.add(z);
+        return going;
+    }
     
     public JSONObject suddenStop(double currentSpeed , long currentDate, double latitude, double longitude){
 
