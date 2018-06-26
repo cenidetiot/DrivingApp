@@ -195,6 +195,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
                     isStopping = true;
                 }
 
+
                 if (finalVelocity == 0) { //&& speedReached > 1.39){
                     if (wasStopped) {
                         if (!stopped) {

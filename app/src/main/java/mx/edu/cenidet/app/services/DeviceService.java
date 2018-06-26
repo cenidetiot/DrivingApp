@@ -98,6 +98,8 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     private double speedFrom, speedTo;
     private HashMap<String, Double> hashMapSpeedFromTo;
     private HashMap<String, Double> hashMapLatLngFromTo;
+    private long lastUpdateAcc = 0, lastUpdateGPS = 0;
+
 
 
     /** variables de control y configuración**/
@@ -156,7 +158,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, locationListenerGPS);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListenerNetwork);
+        //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListenerNetwork);
         
         
         return START_NOT_STICKY;
@@ -165,7 +167,11 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     private final LocationListener locationListenerGPS = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
+            long curTime = System.currentTimeMillis();
+            if((curTime-lastUpdateAcc)>= 1000) {
+                lastUpdateAcc = curTime;
                 eventDetecion(location);
+            }
         }
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {

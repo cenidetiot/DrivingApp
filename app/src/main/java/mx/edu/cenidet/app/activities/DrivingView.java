@@ -91,7 +91,7 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, accelerometer, 000000);
     }
 
     private void setToolbar(){
@@ -147,7 +147,10 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
                         textEvent.setText("You are driving well");
                         //azul
                         //pulsator1.setBackgroundColor(Color.parseColor("#55efc4"));
+
                         pulsator1.setColor(Color.parseColor("#55efc4"));
+                        pulsator1.start();
+
                         //pulsator1.setInterpolator(PulsatorLayout.INTERP_ACCELERATE_DECELERATE);
                     }
 
@@ -155,14 +158,18 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
                         textEvent.setText("You are stopping");
                         //amarillo
                         //pulsator1.setBackgroundColor(Color.parseColor("#f1c40f"));
+
                         pulsator1.setColor(Color.parseColor("#f1c40f"));
+                        pulsator1.start();
                         well = false;
                     }
                     if (suddenStop.getBoolean("isStopped")) {
                         textEvent.setText("You are stopped");
                         //naranja
                         //pulsator1.setBackgroundColor(Color.parseColor("#e67e22"));
+
                         pulsator1.setColor(Color.parseColor("#e67e22"));
+                        pulsator1.start();
                         well = false;
                     }
 
@@ -170,7 +177,9 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
                         textPruebas.setText(suddenStop.getString("result"));
                         //rojo
                         //pulsator1.setBackgroundColor(Color.parseColor("#e74c3c"));
+
                         pulsator1.setColor(Color.parseColor("#e74c3c"));
+                        pulsator1.start();
                         well = false;
                     }
 
@@ -209,13 +218,18 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
             float y = event.values[1];
             float  z = event.values[2];
             long curTime = System.currentTimeMillis();
-            if((curTime-lastUpdateAcc)>= 1000){
+            //if((curTime-lastUpdateAcc)>= 1000){
                 lastUpdateAcc = curTime;
                 last_x = x;
                 last_y = y;
                 last_z = z;
-            }
-            textAcelerometer.setText(last_x + " : " + last_y + " : " + last_z);
+                String going = "Detenido";
+                if (last_y < 9 || last_y >= 10){
+                    going = "Moviendose";
+                }
+                textAcelerometer.setText(last_x + " : " + last_y + " : " + last_z + "\n"+ going);
+            //}
+
         }
     }
 
