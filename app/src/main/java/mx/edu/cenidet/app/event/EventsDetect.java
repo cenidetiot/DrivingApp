@@ -37,7 +37,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
     private static double gravity = 9.81; // valor en m/s
     private static double frictionCoefficient = .75; //coeficiente de friccion entre los neumaticos y el piso
     private static double initialVelocity = 0 ,finalVelocity = 0;
-    private static long initialDate = 0, finalDate = 0;
+    private static long initialDate = 0, finalDate = 0, lastUpdate;
     private static boolean isStopping = false, wasStopped = false, suddenAlertSent = false, stopped = false ;
     private static long stoppedSeconds = 0 ;
     private static double speedReached = 0;
@@ -154,120 +154,124 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
     } 
 
     
-    public JSONObject suddenStop(double currentSpeed , long currentDate, double latitude, double longitude){
+    public JSONObject suddenStop(double currentSpeed , long currentDate, double latitude, double longitude) {
 
         JSONObject alert = new JSONObject();
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
 
         String commonData =
-            currentSpeed + ", " +
-            "Fecha Actual: "+ sdf.format(currentDate) + ",";
-            
+                currentSpeed + ", " +
+                        "Fecha Actual: " + sdf.format(currentDate) + ",";
+
 
         String result = "";
-        
-        initialVelocity = finalVelocity;
-        finalVelocity = currentSpeed;
-        initialDate = finalDate;
-        finalDate = currentDate;
 
-        if (((finalVelocity < initialVelocity) || (finalVelocity == 0 && initialVelocity == 0)) && stopped == false && suddenAlertSent == false){
-        
-            if (!isStopping){
-                speedReached = initialVelocity;
-                dateSpeedReached = initialDate;
-                isStopping = true;
-            }
+            initialVelocity = finalVelocity;
+            finalVelocity = currentSpeed;
+            initialDate = finalDate;
+            finalDate = currentDate;
 
-            if (finalVelocity == 0 ){ //&& speedReached > 1.39){
-                if(wasStopped){
-                    if(!stopped) {
+            if (((finalVelocity < initialVelocity) || (finalVelocity == 0 && initialVelocity == 0)) && stopped == false && suddenAlertSent == false) {
 
-                        if (speedReached > 13.8889){
-                            frictionCoefficient = .65;
+                if (!isStopping) {
+                    speedReached = initialVelocity;
+                    dateSpeedReached = initialDate;
+                    isStopping = true;
+                }
+
+                if (finalVelocity == 0) { //&& speedReached > 1.39){
+                    if (wasStopped) {
+                        if (!stopped) {
+
+                            if (speedReached > 13.8889) {
+                                frictionCoefficient = .65;
+                            }
+
+                            double idealDistance = 0;
+                            idealDistance = Math.pow(speedReached, 2) / (2 * frictionCoefficient * gravity);
+                            idealDistance += speedReached;
+
+                            double realDistance = 0;
+                            long diffDate = finalDate - dateSpeedReached;
+                            long time = TimeUnit.MILLISECONDS.toSeconds(diffDate);
+                            if (time >= 1) {
+                                time = time - 1;
+                            }
+                            //realDistance = ((finalVelocity + speedReached) / 2) * (time - 1);
+                            realDistance = ((finalVelocity + speedReached) / 2) * (time);
+                            if (idealDistance > realDistance) {
+                                result += "PARADA REPENTINA, ";
+                                isSuddenStop = true;
+                            } else {
+                                result += "PARADA NORMAL, ";
+                            }
+                            result += " Distancia Ideal: " + idealDistance + ", " + "Distancia Real: " + realDistance + ", " + "Vel.Alcanzada: " + speedReached + " m/s, " + "Fecha Vel.Alcanzada: " + sdf.format(dateSpeedReached);
+
                         }
+                        stopped = true;
+                    }
+                    wasStopped = true;
+                }
 
-                        double idealDistance = 0;
-                        idealDistance = Math.pow(speedReached, 2) / (2 * frictionCoefficient * gravity);
-                        idealDistance += speedReached;
+            } else {
+                if (finalVelocity > 0) {
+                    speedReached = 0;
+                    dateSpeedReached = 0;
+                    isStopping = false;
+                    suddenAlertSent = false;
+                    wasStopped = false;
 
-                        double realDistance = 0;
-                        long diffDate = finalDate - dateSpeedReached;
-                        long time = TimeUnit.MILLISECONDS.toSeconds(diffDate);
-                        realDistance = ((finalVelocity + speedReached) / 2) * (time - 1);
-
-                        if (idealDistance > realDistance) {
-                            result += "PARADA REPENTINA, ";
-                            isSuddenStop = true;
-                        } else {
-                            result += "PARADA NORMAL, ";
+                    if (stopped) {
+                        String severity = "";
+                        if (stoppedSeconds > 1 && stoppedSeconds <= 2) { //informational
+                            severity = "informational";
+                        } else if (stoppedSeconds > 2 && stoppedSeconds <= 4) { // Low
+                            severity = "low";
+                        } else if (stoppedSeconds > 4 && stoppedSeconds <= 6) { // Medium
+                            severity = "medium";
+                        } else if (stoppedSeconds > 6 && stoppedSeconds <= 8) { // High
+                            severity = "high";
+                        } else if (stoppedSeconds > 8) { // Critical
+                            severity = "critical";
                         }
-                        result += " Distancia Ideal: " + idealDistance + ", " + "Distancia Real: " + realDistance + ", " + "Vel.Alcanzada: " + speedReached + " m/s, " + "Fecha Vel.Alcanzada: " + sdf.format(dateSpeedReached);
-
+                        if (severity != "" && isSuddenStop) {
+                            sendAlert(commonData, severity, "suddenStop", latitude, longitude);
+                        }
+                        stopped = false;
+                        stoppedSeconds = 0;
+                        isSuddenStop = false;
                     }
-                    stopped = true;
                 }
-                wasStopped = true;
-            }
 
-        } else{
-            if(finalVelocity > 0){
-                speedReached = 0;
-                dateSpeedReached = 0;
-                isStopping = false;
-                suddenAlertSent = false;
-                wasStopped = false;
-
-                if(stopped){
-                    String severity =  "";
-                    if(stoppedSeconds > 1 && stoppedSeconds <= 2 ){ //informational
-                        severity = "informational";
-                    } else if(stoppedSeconds > 2 && stoppedSeconds <=4){ // Low
-                        severity = "low";
-                    } else if(stoppedSeconds > 4 && stoppedSeconds <=6){ // Medium
-                        severity = "medium";
-                    } else if(stoppedSeconds > 6 && stoppedSeconds <=8){ // High
-                        severity = "high";
-                    } else if(stoppedSeconds > 8 ) { // Critical
-                        severity = "critical";
+                if (stopped) {
+                    stoppedSeconds++;
+                    if (stoppedSeconds > 8 && !suddenAlertSent) { //Critical
+                        if (isSuddenStop) {
+                            sendAlert(commonData, "critical", "suddenStop", latitude, longitude);
+                        }
+                        suddenAlertSent = true;
+                        stopped = false;
+                        stoppedSeconds = 0;
+                        isSuddenStop = false;
                     }
-                    if (severity != "" && isSuddenStop) {
-                        sendAlert( commonData, severity, "suddenStop", latitude,  longitude);
-                    }
-                    stopped = false;
-                    stoppedSeconds = 0;
-                    isSuddenStop = false;
                 }
+
             }
+            writeFile(commonData + result);
 
-            if(stopped){
-                stoppedSeconds ++;
-                if(stoppedSeconds > 8 && !suddenAlertSent){ //Critical
-                    if (isSuddenStop){
-                        sendAlert(commonData, "critical", "suddenStop",latitude, longitude);
-                    }
-                    suddenAlertSent = true;
-                    stopped = false;
-                    stoppedSeconds = 0;
-                    isSuddenStop = false;
-                }
+            try {
+                alert.put("isStopped", stopped);
+                alert.put("isStopping", isStopping);
+                alert.put("stoppedSeconds", stoppedSeconds);
+                /*Datos de desarrollo*/
+                alert.put("result", result);
+                alert.put("isSuddenStop", isSuddenStop);
+            } catch (Exception e) {
             }
-            
-        }
-        writeFile(commonData + result);
-
-        try {
-            alert.put("isStopeed", stopped);
-            alert.put("isStopping", isStopping);
-            alert.put("stoppendSeconds", stoppedSeconds);
-            /*Datos de desarrollo*/
-            alert.put("result", result);
-            alert.put("isSuddenStop", isSuddenStop);
-        } catch(Exception e){ }
-
 
         return alert;
+
     }
 
     /**
