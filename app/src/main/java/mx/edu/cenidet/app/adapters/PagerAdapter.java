@@ -44,9 +44,9 @@ public class PagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return new HomeFragment();
             case 1:
-                return new ZoneFragment();
-            case 2:
                 return new AlertsFragment();
+            case 2:
+                return new ZoneFragment();
             case 3:
                 return new MyCampusFragment();
             default:

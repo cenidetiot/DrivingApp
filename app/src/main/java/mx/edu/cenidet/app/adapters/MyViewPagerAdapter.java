@@ -68,3 +68,4 @@ public class MyViewPagerAdapter extends android.support.v4.view.PagerAdapter {
         container.removeView(view);
     }
 }
+

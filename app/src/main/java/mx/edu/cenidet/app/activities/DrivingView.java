@@ -138,18 +138,18 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
                 ConstantSdk.PREFERENCE_USER_IS_DRIVING)){
 
                 JSONObject suddenStop = events.suddenStop(speedMS, new Date().getTime(), latitude, longitude);
-                JSONObject speedDetection = events.speeding(5, 3, speedMS, latitude, longitude);
+                //JSONObject speedDetection = events.speeding(5, 3, speedMS, latitude, longitude);
                 //JSONObject wrongWayDetection = events.wrongWay(new LatLng(latitude,longitude), new LatLng(18.8788526,-99.221681),new LatLng(18.8769425,-99.222669), new Date().getTime());
 
 
             try {
                     well = true;
-                    if(speedDetection.getBoolean("isSpeeding")){
+                    /*if(speedDetection.getBoolean("isSpeeding")){
                         textSpeedEvent.setText("unauthorizedSpeedDetection");
                     }
                     else{
                         textSpeedEvent.setText("speed allowed");
-                    }
+                    }*/
                    /* if(wrongWayDetection.getBoolean("isWrongWay")){
                         textWrongEvent.setText("wrongWayDetection");
                     }
@@ -219,7 +219,7 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
                 last_y = y;
                 last_z = z;
                 String going = "Detenido";
-                if (last_z < 9.6 || last_z >= 9.9){
+                if (last_z < 9.6 || last_z >= 9.95){
                     going = "Moviendose";
                 }
                 textAcelerometer.setText(last_x + " : " + last_y + " : " + last_z + "\n"+ going);
