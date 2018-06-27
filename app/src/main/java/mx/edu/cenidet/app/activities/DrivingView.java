@@ -130,53 +130,95 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
                 false);
     }
 
+    public void onRoadSegment(double speedMS, double longitude, double latitude) {
+        String speedText = "";
+
+        JSONObject speedDetection = events.speeding(
+                roadSegment.getMinimumAllowedSpeed(),
+                roadSegment.getMaximumAllowedSpeed(),
+                speedMS, latitude, longitude);
+        try {
+            if (speedDetection.getBoolean("isSpeeding")) {
+                speedText = "unauthorized SpeedDetection ";
+            } else {
+                speedText = "speed allowed ";
+            }
+            if (speedDetection.getBoolean("under")) {
+                speedText += "under";
+            }
+            if (speedDetection.getBoolean("over")) {
+                speedText += "over";
+            }
+            textSpeedEvent.setText(speedText);
+        }catch (Exception w){
+
+        }
+
+    }
+
     @Override
     public void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr) {
         textSpeed.setText(df.format(speedKmHr) + " km/h");
+
         if (appPreferences.getPreferenceBoolean(getApplicationContext(),
                 ConstantSdk.PREFERENCE_NAME_GENERAL,
                 ConstantSdk.PREFERENCE_USER_IS_DRIVING)){
 
-                JSONObject suddenStop = events.suddenStop(speedMS, new Date().getTime(), latitude, longitude);
-                JSONObject speedDetection = events.speeding(5, 3, speedMS, latitude, longitude);
-                //JSONObject wrongWayDetection = events.wrongWay(new LatLng(latitude,longitude), new LatLng(18.8788526,-99.221681),new LatLng(18.8769425,-99.222669), new Date().getTime());
-
+            JSONObject suddenStop = events.suddenStop(speedMS, new Date().getTime(), latitude, longitude);
 
             try {
-                    well = true;
-                    if(speedDetection.getBoolean("isSpeeding")){
-                        textSpeedEvent.setText("unauthorizedSpeedDetection");
-                    }
-                    else{
-                        textSpeedEvent.setText("speed allowed");
-                    }
-                   /* if(wrongWayDetection.getBoolean("isWrongWay")){
-                        textWrongEvent.setText("wrongWayDetection");
-                    }
-                    else{
-                        textWrongEvent.setText("correct way");
-                    }*/
-                    if (well){
-                        textEvent.setText("You are driving well");
-                        textSpeed.setTextColor(Color.parseColor("#2980b9"));
-                    }
+                if (roadSegment != null){
+                    textSpeedEvent.setText("tim");
+                    //onRoadSegment(speedMS, longitude, latitude);
 
-                    if(suddenStop.getBoolean("isStopping")) {
-                        textEvent.setText("You are stopping");
-                        textSpeed.setTextColor(Color.parseColor("#d35400"));
-                        well = false;
-                    }
-                    if (suddenStop.getBoolean("isStopped")) {
-                        textEvent.setText("You are stopped");
-                        textSpeed.setTextColor(Color.parseColor("#2c3e50"));
-                        well = false;
-                    }
 
-                    if(suddenStop.getBoolean("isSuddenStop")){
-                        textPruebas.setText(suddenStop.getString("result"));
-                        textSpeed.setTextColor(Color.parseColor("#c0392b"));
-                        well = false;
-                    }
+                    String [] startCoords = roadSegment.getStartPoint().split(",");
+                    String [] endCoords = roadSegment.getEndPoint().split(",");
+                    LatLng startLatLng = new LatLng(
+                            (double) Double.parseDouble(startCoords[0]),
+                            (double) Double.parseDouble(startCoords[1]));
+                    LatLng endLatLng = new LatLng(
+                            (double) Double.parseDouble(endCoords[0]),
+                            (double) Double.parseDouble(endCoords[1]));
+
+                    JSONObject wrongWay = events.wrongWay(
+                            new LatLng(longitude, latitude),
+                            startLatLng,
+                            endLatLng,
+                            new Date().getTime()
+                    );
+
+
+
+                }else  {
+                    textSpeedEvent.setText("");
+                }
+
+
+                well = true;
+
+
+                if (well){
+                    textEvent.setText("You are driving well");
+                    textSpeed.setTextColor(Color.parseColor("#2980b9"));
+                }
+
+                if(suddenStop.getBoolean("isStopping")) {
+                    textEvent.setText("You are stopping");
+                    textSpeed.setTextColor(Color.parseColor("#d35400"));
+                    well = false;
+                }
+                if (suddenStop.getBoolean("isStopped")) {
+                    textEvent.setText("You are stopped");
+                    textSpeed.setTextColor(Color.parseColor("#2c3e50"));
+                    well = false;
+                }
+
+                if(suddenStop.getBoolean("isSuddenStop")){
+                    textPruebas.setText(suddenStop.getString("result"));
+                    textSpeed.setTextColor(Color.parseColor("#c0392b"));
+                    well = false;
+                }
 
                 }catch (Exception e){}
 
@@ -189,8 +231,8 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
     }
 
     @Override
-    public void detectRoadSegment(double latitude, double longitude, RoadSegment roadSegment) {
-
+    public void detectRoadSegment(double latitude, double longitude, RoadSegment _roadSegment) {
+        roadSegment = _roadSegment;
     }
 
     @Override

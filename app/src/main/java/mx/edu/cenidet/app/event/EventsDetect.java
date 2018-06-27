@@ -99,6 +99,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
         String[] currentCoords = currentPoint.toString().split(",");
         double longitude = Double.parseDouble(currentCoords[0]);
         double latitude = Double.parseDouble(currentCoords[1]);
+
         JSONObject alert = new JSONObject();
 
         totalDistance = SphericalUtil.computeDistanceBetween(startPoint, endPoint);

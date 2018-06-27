@@ -158,7 +158,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, locationListenerGPS);
-        //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListenerNetwork);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListenerNetwork);
         
         
         return START_NOT_STICKY;
