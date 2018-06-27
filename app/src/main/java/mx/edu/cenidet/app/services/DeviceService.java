@@ -167,11 +167,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     private final LocationListener locationListenerGPS = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            long curTime = System.currentTimeMillis();
-            if((curTime-lastUpdateAcc)>= 1000) {
-                lastUpdateAcc = curTime;
                 eventDetecion(location);
-            }
         }
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {

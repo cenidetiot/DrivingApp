@@ -21,6 +21,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
@@ -44,6 +46,7 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
     private View rootView;
     private Context context;
     private TextView textSpeed;
+    private TextView textSpeedEvent, textWrongEvent;
     private TextView textEvent;
     private TextView textPruebas;
     private TextView textAcelerometer;
@@ -68,21 +71,17 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
         rootView = findViewById(R.id.content_driving).getRootView();
         rootView.setBackgroundColor(Color.parseColor("#2980b9"));
         textSpeed = (TextView) findViewById(R.id.textSpeed);
+        textSpeedEvent = (TextView) findViewById(R.id.textSpeedEvent);
+        textWrongEvent = (TextView) findViewById(R.id.textWrongWayEvent);
         textEvent = (TextView) findViewById(R.id.textEvent);
         textPruebas = (TextView) findViewById(R.id.textPruebas);
         textAcelerometer = (TextView) findViewById(R.id.textAcelerometer);
         textAcelerometer.setText("Acelerometro");
 
-        //FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.suddenStopButton);
-        //FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.wrongWayButton);
-        //FloatingActionButton fab3 = (FloatingActionButton) findViewById(R.id.speedButton);
 
         pulsator1 = (PulsatorLayout) findViewById(R.id.pulsator1);
+        pulsator1.setColor(Color.parseColor("#f1c40f"));
         pulsator1.start();
-        /*PulsatorLayout pulsator2 = (PulsatorLayout) findViewById(R.id.pulsator2);
-        pulsator2.start();
-        PulsatorLayout pulsator3 = (PulsatorLayout) findViewById(R.id.pulsator3);
-        pulsator3.start();*/
 
         sendDataService = new SendDataService(this);
         appPreferences = new ApplicationPreferences();
@@ -139,47 +138,43 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
                 ConstantSdk.PREFERENCE_USER_IS_DRIVING)){
 
                 JSONObject suddenStop = events.suddenStop(speedMS, new Date().getTime(), latitude, longitude);
+                //JSONObject speedDetection = events.speeding(5, 3, speedMS, latitude, longitude);
+                //JSONObject wrongWayDetection = events.wrongWay(new LatLng(latitude,longitude), new LatLng(18.8788526,-99.221681),new LatLng(18.8769425,-99.222669), new Date().getTime());
 
-                try {
+
+            try {
                     well = true;
-
+                    /*if(speedDetection.getBoolean("isSpeeding")){
+                        textSpeedEvent.setText("unauthorizedSpeedDetection");
+                    }
+                    else{
+                        textSpeedEvent.setText("speed allowed");
+                    }*/
+                   /* if(wrongWayDetection.getBoolean("isWrongWay")){
+                        textWrongEvent.setText("wrongWayDetection");
+                    }
+                    else{
+                        textWrongEvent.setText("correct way");
+                    }*/
                     if (well){
                         textEvent.setText("You are driving well");
-                        //azul
-                        //pulsator1.setBackgroundColor(Color.parseColor("#55efc4"));
-
-                        pulsator1.setColor(Color.parseColor("#55efc4"));
-                        pulsator1.start();
-
-                        //pulsator1.setInterpolator(PulsatorLayout.INTERP_ACCELERATE_DECELERATE);
+                        textSpeed.setTextColor(Color.parseColor("#2980b9"));
                     }
 
                     if(suddenStop.getBoolean("isStopping")) {
                         textEvent.setText("You are stopping");
-                        //amarillo
-                        //pulsator1.setBackgroundColor(Color.parseColor("#f1c40f"));
-
-                        pulsator1.setColor(Color.parseColor("#f1c40f"));
-                        pulsator1.start();
+                        textSpeed.setTextColor(Color.parseColor("#d35400"));
                         well = false;
                     }
                     if (suddenStop.getBoolean("isStopped")) {
                         textEvent.setText("You are stopped");
-                        //naranja
-                        //pulsator1.setBackgroundColor(Color.parseColor("#e67e22"));
-
-                        pulsator1.setColor(Color.parseColor("#e67e22"));
-                        pulsator1.start();
+                        textSpeed.setTextColor(Color.parseColor("#2c3e50"));
                         well = false;
                     }
 
                     if(suddenStop.getBoolean("isSuddenStop")){
                         textPruebas.setText(suddenStop.getString("result"));
-                        //rojo
-                        //pulsator1.setBackgroundColor(Color.parseColor("#e74c3c"));
-
-                        pulsator1.setColor(Color.parseColor("#e74c3c"));
-                        pulsator1.start();
+                        textSpeed.setTextColor(Color.parseColor("#c0392b"));
                         well = false;
                     }
 
@@ -218,17 +213,18 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
             float y = event.values[1];
             float  z = event.values[2];
             long curTime = System.currentTimeMillis();
-            //if((curTime-lastUpdateAcc)>= 1000){
+            if((curTime-lastUpdateAcc)>= 1000){
                 lastUpdateAcc = curTime;
                 last_x = x;
                 last_y = y;
                 last_z = z;
                 String going = "Detenido";
-                if (last_y < 9 || last_y >= 10){
+                if (last_z < 9.6 || last_z >= 9.95){
                     going = "Moviendose";
                 }
                 textAcelerometer.setText(last_x + " : " + last_y + " : " + last_z + "\n"+ going);
-            //}
+                events.saveAxis(last_x,last_y,last_z);
+            }
 
         }
     }

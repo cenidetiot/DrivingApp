@@ -97,8 +97,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private ViewPager viewPager;
     private int[] tabIcons = {
             R.drawable.ic_home_menu,
-            R.drawable.ic_map,
             R.drawable.ic_my_alerts,
+            R.drawable.ic_map,
             R.drawable.ic_my_campus
     };
 
@@ -177,12 +177,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     case R.id.menu_campus:
                         //fragment = new ZoneFragment();
-                        viewPager.setCurrentItem(1);
+                        viewPager.setCurrentItem(2);
                         fragmentTransaction = true;
                         break;
                     case R.id.menu_alerts:
                         //fragment = new AlertsFragment();
-                        viewPager.setCurrentItem(2);
+                        viewPager.setCurrentItem(1);
                         fragmentTransaction = true;
                         break;
                     /*case R.id.menu_my_campus:
@@ -259,8 +259,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     public void setUpTabLayout(){
         //TabLayout set text title
         tabLayout.addTab(tabLayout.newTab().setText(R.string.menu_home));
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.menu_campus_map));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.menu_alerts));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.menu_campus_map));
         if(appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_USER_TYPE).equals("securityGuard")){
             tabLayout.addTab(tabLayout.newTab().setText(R.string.menu_my_campus));
             tabLayout.getTabAt(3).setIcon(tabIcons[3]);
