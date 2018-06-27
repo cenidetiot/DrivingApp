@@ -51,8 +51,8 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
     private  boolean going = false;
 
     /*Variables Globales de contra sentido */
-    private static double totalDistance = 0;
-    private static double startToLastDistance = 0, startToCurrentDistance = 0;
+    private static double x=0,y=0,z=0;
+    private static double totalDistance = 0, startToLastDistance = 0, startToCurrentDistance = 0;
     private static double endToLastDistance = 0, endToCurrentDistance = 0;
     private static LatLng lastPoint;
     private static boolean  wrongWayAlertSent = false, isWrongWay = false;
@@ -163,9 +163,12 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
     } 
 
     public boolean saveAxis (double x, double y, double z ) {
-        xs.add(x);
+        /*xs.add(x);
         ys.add(y);
-        zs.add(z);
+        zs.add(z);*/
+        this.x = x;
+        this.y = y;
+        this.z = z;
         return going;
     }
     
@@ -175,10 +178,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
 
-        String commonData =
-                currentSpeed + ", " +
-                        "Fecha Actual: " + sdf.format(currentDate) + ",";
-
+        String commonData = currentSpeed + ", " + "x: "+x+", y: "+y+", z: "+z+", Fecha Actual: " + sdf.format(currentDate) + ",";
 
         String result = "";
 
@@ -331,8 +331,9 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
                         severity = "critical";
                     }
                 }
-                if (severity != "")
-                    sendAlert("Speeding", severity, "spedding", latitude, longitude);
+                if (severity != "") {
+                    //sendAlert("Speeding", severity, "spedding", latitude, longitude);
+                }
             }
             isSpeeding = false;
             speedigSeconds = 0;
@@ -344,7 +345,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
         if (isSpeeding){
             speedigSeconds ++;
             if (speedigSeconds >= 11 && !speedingAlertSent){
-                sendAlert("Speeding", "critical", "spedding", latitude, longitude);
+                //sendAlert("Speeding", "critical", "spedding", latitude, longitude);
                 speedingAlertSent = true;
                 isSpeeding = false;
                 speedigSeconds = 0;
@@ -357,7 +358,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
             alert.put("isSpeeding", isSpeeding);
             alert.put("under", under);
             alert.put("over", over);
-            alert.put("over", speedigSeconds);
+            alert.put("speedSeconds", speedigSeconds);
         } catch(Exception e){ }
 
 

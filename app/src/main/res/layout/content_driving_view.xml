@@ -12,6 +12,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:gravity="center"
         android:orientation="vertical"
         android:paddingTop="20dp">
@@ -27,6 +29,26 @@
             android:textColor="@color/white"
             android:textSize="@dimen/title"
             android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textSpeedEvent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:fontFamily="@font/roboto_medium"
+            android:gravity="center_horizontal"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textWrongWayEvent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/textAcelerometer"
@@ -49,14 +71,14 @@
             android:fontFamily="@font/roboto_medium"
             android:gravity="center_horizontal"
             android:textColor="@color/white"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="424dp"
+        android:layout_height="389dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="0dp"
