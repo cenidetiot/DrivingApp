@@ -224,7 +224,7 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
                 last_y = y;
                 last_z = z;
                 String going = "Detenido";
-                if (last_y < 9 || last_y >= 10){
+                if (last_y < 9.6 || last_y >= 9.9){
                     going = "Moviendose";
                 }
                 textAcelerometer.setText(last_x + " : " + last_y + " : " + last_z + "\n"+ going);
