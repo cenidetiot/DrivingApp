@@ -158,7 +158,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, locationListenerGPS);
-        //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListenerNetwork);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListenerNetwork);
         
         
         return START_NOT_STICKY;
@@ -184,7 +184,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     };
 
 
-    /*private final LocationListener locationListenerNetwork = new LocationListener() {
+    private final LocationListener locationListenerNetwork = new LocationListener() {
 
         @Override
         public void onLocationChanged(Location location) {
@@ -205,7 +205,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         public void onProviderDisabled(String provider) {
 
         }
-    };*/
+    };
 
     @Override
     public void onDestroy() {
@@ -217,15 +217,17 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         if (locationListenerGPS != null){
             locationManager.removeUpdates(locationListenerGPS);
         }
-        /*if (locationListenerNetwork != null){
+        if (locationListenerNetwork != null){
             locationManager.removeUpdates(locationListenerNetwork);
-        }*/
+        }
     }
 
     private void eventDetecion(Location location){
 
         Alert suddenStopAlert = null;
         String StopingStatus = "";
+
+
 
         if (location != null) {
             
@@ -282,7 +284,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
             intent.putExtra(Constants.SERVICE_RESULT_STOPING, StopingStatus);
             intent.putExtra(Constants.ROAD_SEGMENT, roadSegment);
             LocalBroadcastManager.getInstance(DeviceService.this).sendBroadcast(intent);
-
+            Log.d("SERVIC", " -- " +speedMS);
         } else {
             Log.i(STATUS, "Error obtener valores gps o network...!");
         }

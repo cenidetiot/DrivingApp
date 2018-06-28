@@ -53,6 +53,7 @@ public class SendDataService {
         sqLiteDrivingApp = new SQLiteDrivingApp(context);
         listZone =  sqLiteDrivingApp.getAllZone();
         //campus = new Campus();
+        Log.d("SEND DATA", ""+ speedMS);
     }
 
 

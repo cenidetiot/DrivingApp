@@ -1,6 +1,9 @@
 package mx.edu.cenidet.app.activities;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Interpolator;
@@ -12,6 +15,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -37,11 +41,14 @@ import www.fiware.org.ngsi.datamodel.entity.Alert;
 import www.fiware.org.ngsi.datamodel.entity.RoadSegment;
 import www.fiware.org.ngsi.datamodel.entity.Zone;
 import www.fiware.org.ngsi.utilities.ApplicationPreferences;
+import www.fiware.org.ngsi.utilities.Constants;
 
-public class DrivingView extends AppCompatActivity implements SendDataService.SendDataMethods, SensorEventListener {
+public class DrivingView extends AppCompatActivity implements SensorEventListener {
 
     private SensorManager sensorManager;
     private Sensor accelerometer;
+    private IntentFilter filter;
+    private ResponseReceiver receiver;
 
     private View rootView;
     private Context context;
@@ -50,6 +57,9 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
     private TextView textEvent;
     private TextView textPruebas;
     private TextView textAcelerometer;
+
+    private double latitude, longitude;
+    private double speedMS, speedKmHr;
 
     private static final String STATUS = "Status";
     private EventsDetect events;
@@ -83,7 +93,6 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
         pulsator1.setColor(Color.parseColor("#f1c40f"));
         pulsator1.start();
 
-        sendDataService = new SendDataService(this);
         appPreferences = new ApplicationPreferences();
 
         events = new EventsDetect();
@@ -92,6 +101,24 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorManager.registerListener(this, accelerometer, 000000);
+    }
+
+    private class ResponseReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            switch (intent.getAction()) {
+                case Constants.SERVICE_CHANGE_LOCATION_DEVICE:
+                    latitude = intent.getDoubleExtra(Constants.SERVICE_RESULT_LATITUDE, 0);
+                    longitude = intent.getDoubleExtra(Constants.SERVICE_RESULT_LONGITUDE, 0);
+                    speedMS = intent.getDoubleExtra(Constants.SERVICE_RESULT_SPEED_MS, 0);
+                    speedKmHr = intent.getDoubleExtra(Constants.SERVICE_RESULT_SPEED_KMHR, 0);
+                    roadSegment = (RoadSegment) intent.getExtras().get(Constants.ROAD_SEGMENT);
+                    //Toast.makeText(getApplicationContext(), "Velocidad" + speedMS, Toast.LENGTH_SHORT).show();
+                    Log.d("DRIVINGVIEW", " "+ speedMS);
+                    sendLocationSpeed(latitude,longitude,speedMS,speedKmHr);
+                    break;
+            }
+        }
     }
 
     private void setToolbar(){
@@ -113,6 +140,9 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
     @Override
     public void onStart() {
         super.onStart();
+        filter = new IntentFilter(Constants.SERVICE_CHANGE_LOCATION_DEVICE);
+        receiver = new ResponseReceiver();
+        LocalBroadcastManager.getInstance(context).registerReceiver(receiver, filter);
         appPreferences.saveOnPreferenceBoolean(
                 getApplicationContext(),
                 ConstantSdk.PREFERENCE_NAME_GENERAL,
@@ -123,10 +153,8 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
     @Override
     public void onStop() {
         super.onStop();
-        //sensorManager.unregisterListener(this);
-        //sendDataService = null;
-        Log.d("ON STOP METHOD","ENTROOOOO");
-        //finish();
+
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(receiver);
         appPreferences.saveOnPreferenceBoolean(
                 getApplicationContext(),
                 ConstantSdk.PREFERENCE_NAME_GENERAL,
@@ -134,7 +162,7 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
                 false);
     }
 
-    public void onRoadSegment(double speedMS, double longitude, double latitude) {
+    public void speeding(double speedMS, double longitude, double latitude) {
         String speedText = "";
 
         JSONObject speedDetection = events.speeding(
@@ -161,21 +189,72 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
 
     }
 
-    @Override
+    public void sudden (double speedMS , double latitude, double longitude) {
+        JSONObject suddenStop = events.suddenStop(speedMS, new Date().getTime(), latitude, longitude);
+        try {
+
+            boolean stopped = suddenStop.getBoolean("isStopped");
+            boolean stopping =  suddenStop.getBoolean("isStopping");
+            boolean sudden =  suddenStop.getBoolean("isSuddenStop");
+            boolean acelerating =  suddenStop.getBoolean("isAcelerating");
+            //textEvent.setText("stopped " + stopped + " stopping " + stopping + " sudden " + sudden + " acelerating " + acelerating);
+
+
+            if (!stopped && !stopping & !sudden){
+                    if (acelerating) {
+                        textEvent.setText("You are acelerating");
+                    }else {
+                        textEvent.setText("You are OK");
+                    }
+                    textSpeed.setTextColor(Color.parseColor("#2980b9"));
+                }else {
+                    if (stopping){
+                        textEvent.setText("You are stopping");
+                        textSpeed.setTextColor(Color.parseColor("#d35400"));
+                    }
+                    if (stopped){
+                        textEvent.setText("You are stopped");
+                        rootView.setBackgroundColor(Color.parseColor("#2c3e50"));
+                        textSpeed.setTextColor(Color.parseColor("#2c3e50"));
+                    }
+                    if (sudden){
+                        textPruebas.setText(suddenStop.getString("result"));
+                        textSpeed.setTextColor(Color.parseColor("#c0392b"));
+                    }
+
+                }
+        }catch (Exception e){}
+    }
+
+    public void wrongWay (LatLng currentLatLng, LatLng startLatLng, LatLng endLatLng ){
+
+        JSONObject wrongWay = events.wrongWay(
+                currentLatLng,
+                startLatLng,
+                endLatLng,
+                new Date().getTime()
+        );
+
+        try {
+
+        }catch (Exception e ){
+
+        }
+    }
+
     public void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr) {
+
         textSpeed.setText(df.format(speedKmHr) + " km/h");
 
         if (appPreferences.getPreferenceBoolean(getApplicationContext(),
                 ConstantSdk.PREFERENCE_NAME_GENERAL,
                 ConstantSdk.PREFERENCE_USER_IS_DRIVING)){
 
-            JSONObject suddenStop = events.suddenStop(speedMS, new Date().getTime(), latitude, longitude);
+            sudden(speedMS, latitude, longitude);
 
             try {
-               /* if (roadSegment != null){
-                    //onRoadSegment(speedKmHr, longitude, latitude);
-
-
+               if (roadSegment != null){
+                    speeding(speedKmHr, longitude, latitude);
                     String [] startCoords = roadSegment.getStartPoint().split(",");
                     String [] endCoords = roadSegment.getEndPoint().split(",");
                     LatLng startLatLng = new LatLng(
@@ -184,70 +263,17 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
                     LatLng endLatLng = new LatLng(
                             (double) Double.parseDouble(endCoords[0]),
                             (double) Double.parseDouble(endCoords[1]));
-
-                    JSONObject wrongWay = events.wrongWay(
-                            new LatLng(longitude, latitude),
-                            startLatLng,
-                            endLatLng,
-                            new Date().getTime()
-                    );
-
-
-
+                    wrongWay(new LatLng(longitude, latitude), startLatLng, endLatLng);
                 }else  {
                     textSpeedEvent.setText("");
                 }
-                */
 
-                well = true;
-
-
-                if (well){
-                    textEvent.setText("You are driving well");
-                    textSpeed.setTextColor(Color.parseColor("#2980b9"));
-                }
-
-                if(suddenStop.getBoolean("isStopping")) {
-                    textEvent.setText("You are stopping");
-                    textSpeed.setTextColor(Color.parseColor("#d35400"));
-                    well = false;
-                }
-                if (suddenStop.getBoolean("isStopped")) {
-                    textEvent.setText("You are stopped");
-                    textSpeed.setTextColor(Color.parseColor("#2c3e50"));
-                    well = false;
-                }
-
-                if(suddenStop.getBoolean("isSuddenStop")){
-                    textPruebas.setText(suddenStop.getString("result"));
-                    textSpeed.setTextColor(Color.parseColor("#c0392b"));
-                    well = false;
-                }
-
-                }catch (Exception e){}
+            } catch (Exception e){}
 
         }
     }
 
-    @Override
-    public void detectZone(Zone zone, boolean statusLocation) {
 
-    }
-
-    @Override
-    public void detectRoadSegment(double latitude, double longitude, RoadSegment _roadSegment) {
-        roadSegment = _roadSegment;
-    }
-
-    @Override
-    public void sendDataAccelerometer(double ax, double ay, double az) {
-
-    }
-
-    @Override
-    public void sendEvent(String event) {
-
-    }
 
     @Override
     public void onSensorChanged(SensorEvent event) {

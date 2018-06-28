@@ -184,6 +184,10 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
 
         String result = "";
 
+        boolean _isStopped = false;
+        boolean _isStopping = false;
+        boolean _isAcelerating = false;
+
             initialVelocity = finalVelocity;
             finalVelocity = currentSpeed;
             initialDate = finalDate;
@@ -233,6 +237,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
                 }
 
             } else {
+
                 if (finalVelocity > 0) {
                     speedReached = 0;
                     dateSpeedReached = 0;
@@ -279,9 +284,18 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
             writeFile(commonData + result);
             Log.d("Sudden", "ejecutando");
 
+
+
+            if (finalVelocity < initialVelocity)
+                _isStopping = true;
+            if (finalVelocity > initialVelocity)
+                _isAcelerating = true;
+
+
             try {
                 alert.put("isStopped", stopped);
-                alert.put("isStopping", isStopping);
+                alert.put("isStopping", _isStopping);
+                alert.put("isAcelerating", _isAcelerating);
                 alert.put("stoppedSeconds", stoppedSeconds);
                 /*Datos de desarrollo*/
                 alert.put("result", result);
