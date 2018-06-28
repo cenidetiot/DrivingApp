@@ -85,6 +85,7 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
 
         sendDataService = new SendDataService(this);
         appPreferences = new ApplicationPreferences();
+
         events = new EventsDetect();
         df = new DecimalFormat("0.00");
 
@@ -112,7 +113,6 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
     @Override
     public void onStart() {
         super.onStart();
-        events = new EventsDetect();
         appPreferences.saveOnPreferenceBoolean(
                 getApplicationContext(),
                 ConstantSdk.PREFERENCE_NAME_GENERAL,
@@ -123,6 +123,10 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
     @Override
     public void onStop() {
         super.onStop();
+        //sensorManager.unregisterListener(this);
+        //sendDataService = null;
+        Log.d("ON STOP METHOD","ENTROOOOO");
+        //finish();
         appPreferences.saveOnPreferenceBoolean(
                 getApplicationContext(),
                 ConstantSdk.PREFERENCE_NAME_GENERAL,
@@ -143,6 +147,7 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
             } else {
                 speedText = "speed allowed ";
             }
+
             if (speedDetection.getBoolean("under")) {
                 speedText += "under";
             }
@@ -167,9 +172,8 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
             JSONObject suddenStop = events.suddenStop(speedMS, new Date().getTime(), latitude, longitude);
 
             try {
-                if (roadSegment != null){
-                    textSpeedEvent.setText("tim");
-                    //onRoadSegment(speedMS, longitude, latitude);
+               /* if (roadSegment != null){
+                    //onRoadSegment(speedKmHr, longitude, latitude);
 
 
                     String [] startCoords = roadSegment.getStartPoint().split(",");
@@ -193,7 +197,7 @@ public class DrivingView extends AppCompatActivity implements SendDataService.Se
                 }else  {
                     textSpeedEvent.setText("");
                 }
-
+                */
 
                 well = true;
 

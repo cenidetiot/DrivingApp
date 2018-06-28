@@ -61,6 +61,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
     /*Variables globales de velocidad*/
     private static int speedigSeconds;
     private static boolean speedingAlertSent = false;
+    boolean isSpeeding  = false;
 
 
     public  EventsDetect () {
@@ -276,6 +277,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
 
             }
             writeFile(commonData + result);
+            Log.d("Sudden", "ejecutando");
 
             try {
                 alert.put("isStopped", stopped);
@@ -287,6 +289,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
             } catch (Exception e) {
             }
 
+
         return alert;
 
     }
@@ -297,26 +300,31 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
      * @return la severidad del exceso de velocidad.
      */
     public JSONObject speeding(double minimumSpeed,double maximumSpeed, double speed, double latitude, double longitude){
-        boolean isSpeeding  = false;
+        boolean speedingValue;
+        speedingValue = false;
+
         boolean under = false, over = false;
 
         JSONObject alert = new JSONObject();
 
-        if (!(speed > minimumSpeed && speed < maximumSpeed) && !speedingAlertSent){
-            if (!isSpeeding) {
-                if (speed < minimumSpeed) {
-                    under = true;
-                    over = false;
-                }
-                if (speed > maximumSpeed) {
-                    over = true;
-                    under = false;
-                }
-                isSpeeding = true;
+        if (!(speed > minimumSpeed && speed < maximumSpeed)){
+
+
+
+            if (speed < minimumSpeed) {
+                under = true;
+                over = false;
+            }
+            if (speed > maximumSpeed) {
+                over = true;
+                under = false;
             }
 
-        }else{
+            isSpeeding = true;
 
+
+
+        }else{
             if (isSpeeding) {
                 String severity = "";
                 if (speedigSeconds < 3) {
@@ -354,6 +362,8 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
                 under = false;
             }
         }
+
+        Log.d("SPEEDING", " - " + isSpeeding);
 
         try {
             alert.put("isSpeeding", isSpeeding);
