@@ -6,6 +6,7 @@ import com.google.maps.android.SphericalUtil;
 import com.google.android.gms.maps.model.LatLng;
 import android.location.Location;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -54,7 +55,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
     private static double x=0,y=0,z=0;
     private static double totalDistance = 0, startToLastDistance = 0, startToCurrentDistance = 0;
     private static double endToLastDistance = 0, endToCurrentDistance = 0;
-    private static LatLng lastPoint;
+    private static LatLng lastPoint =null;
     private static boolean  wrongWayAlertSent = false, isWrongWay = false;
     private static long wrongWaySeconds = 0;
 
@@ -97,57 +98,80 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
 
     public JSONObject wrongWay(LatLng currentPoint, LatLng startPoint, LatLng endPoint, long currentDate){
 
-        String[] currentCoords = currentPoint.toString().split(",");
-        double longitude = Double.parseDouble(currentCoords[0]);
-        double latitude = Double.parseDouble(currentCoords[1]);
+
+        double longitude = currentPoint.longitude;
+        double latitude = currentPoint.latitude;
+        boolean stop = false;
 
         JSONObject alert = new JSONObject();
 
-        totalDistance = SphericalUtil.computeDistanceBetween(startPoint, endPoint);
-        startToLastDistance = SphericalUtil.computeDistanceBetween(startPoint, lastPoint);
-        startToCurrentDistance = SphericalUtil.computeDistanceBetween(startPoint, currentPoint);
-        endToLastDistance = SphericalUtil.computeDistanceBetween(endPoint, lastPoint);
-        endToCurrentDistance = SphericalUtil.computeDistanceBetween(startPoint, endPoint);
+        if (lastPoint != null) {
+
+            totalDistance = SphericalUtil.computeDistanceBetween(startPoint, endPoint);
+            startToLastDistance = SphericalUtil.computeDistanceBetween(startPoint, lastPoint);
+            startToCurrentDistance = SphericalUtil.computeDistanceBetween(startPoint, currentPoint);
+            endToLastDistance = SphericalUtil.computeDistanceBetween(endPoint, lastPoint);
+            endToCurrentDistance = SphericalUtil.computeDistanceBetween(endPoint, currentPoint);
+
+            DecimalFormat df = new DecimalFormat("0.0000");
+            Log.d("Total",  ""+ totalDistance);
+            Log.d("STARTTOLAST", "" + df.format(startToLastDistance));
+            Log.d("STARTTOCURRENT", "" + df.format(startToCurrentDistance));
+            Log.d("ENDTOLAST" , ""+ df.format(endToLastDistance ));
+            Log.d("ENDTOCURRENT", "" + df.format(endToCurrentDistance));
 
 
-        if(!(startToCurrentDistance > startToLastDistance && endToLastDistance > endToCurrentDistance)){
-            if (!isWrongWay) {
-                isWrongWay = true;
-            }
-        }else{
+            if (!(startToCurrentDistance >= startToLastDistance && endToLastDistance >= endToCurrentDistance)) {
 
-            if (isWrongWay) {
-                String severity = "";
-                if (wrongWaySeconds < 3) {
-                    if (wrongWaySeconds >= 3 && wrongWaySeconds < 5) {
-                        severity = "informational";
-                    } else if (wrongWaySeconds >= 5 && wrongWaySeconds < 7) {
-                        severity = "low";
-                    } else if (wrongWaySeconds >= 7 && wrongWaySeconds < 9) {
-                        severity = "medium";
-                    } else if (wrongWaySeconds >= 9 && wrongWaySeconds < 11) {
-                        severity = "high";
-                    } else {
-                        severity = "critical";
+                    isWrongWay = true;
+
+            } else {
+
+                if (isWrongWay) {
+                    String severity = "";
+                    if (wrongWaySeconds < 3) {
+                        if (wrongWaySeconds >= 3 && wrongWaySeconds < 5) {
+                            severity = "informational";
+                        } else if (wrongWaySeconds >= 5 && wrongWaySeconds < 7) {
+                            severity = "low";
+                        } else if (wrongWaySeconds >= 7 && wrongWaySeconds < 9) {
+                            severity = "medium";
+                        } else if (wrongWaySeconds >= 9 && wrongWaySeconds < 11) {
+                            severity = "high";
+                        } else {
+                            severity = "critical";
+                        }
+                    }
+                    if (severity != "") {
+                        //sendAlert("Wrong Way Detection", severity, "wrongWay", latitude, longitude);
                     }
                 }
-                if (severity != "") {
-                    sendAlert("Wrong Way Detection", severity, "wrongWay", latitude, longitude);
-                }
-            }
-            isWrongWay = false;
-            wrongWaySeconds = 0;
-            wrongWayAlertSent = false;
-        }
-
-        if (isWrongWay){
-            wrongWaySeconds ++;
-            if (wrongWaySeconds >= 11 && wrongWayAlertSent){
-                sendAlert("Wrong Way", "critical", "wrongWay", latitude, longitude);
-                wrongWayAlertSent = true;
                 isWrongWay = false;
                 wrongWaySeconds = 0;
+                wrongWayAlertSent = false;
             }
+
+            if (isWrongWay) {
+                wrongWaySeconds++;
+                if (wrongWaySeconds >= 11 && wrongWayAlertSent) {
+                    //sendAlert("Wrong Way", "critical", "wrongWay", latitude, longitude);
+                    wrongWayAlertSent = true;
+                    isWrongWay = false;
+                    wrongWaySeconds = 0;
+                }
+            }
+
+
+
+            writeFile( "distances.csv",
+                    "total : " + totalDistance + "," +
+                "startToCurrent : " + startToCurrentDistance +"," +
+                "startToLast :" + startToLastDistance + "," +
+                "endToCurrent : " + endToCurrentDistance + "," +
+                "endToLast : " + endToLastDistance + "," +
+                            "Wrong:" + isWrongWay
+            );
+            Log.d("WRON", "" + isWrongWay);
         }
 
         lastPoint = currentPoint;
@@ -160,7 +184,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
         return alert;
     }
 
-    public void writeFile(String text){
+    public void writeFile( String fileName ,String text){
         Functions.saveToFile(fileName, text);
     } 
 
@@ -281,7 +305,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
                 }
 
             }
-            writeFile(commonData + result);
+            writeFile("velocity.csv",commonData + result);
             Log.d("Sudden", "ejecutando");
 
 

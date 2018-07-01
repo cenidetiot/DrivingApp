@@ -190,6 +190,7 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
 
     public void sudden (double speedMS , double latitude, double longitude) {
         JSONObject suddenStop = events.suddenStop(speedMS, new Date().getTime(), latitude, longitude);
+
         try {
 
             boolean stopped = suddenStop.getBoolean("isStopped");
@@ -227,7 +228,7 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
 
     public void wrongWay (LatLng currentLatLng, LatLng startLatLng, LatLng endLatLng ){
 
-        JSONObject wrongWay = events.wrongWay(
+        JSONObject wrong = events.wrongWay(
                 currentLatLng,
                 startLatLng,
                 endLatLng,
@@ -235,18 +236,18 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
         );
 
         try {
-
-
-
-
-        }catch (Exception e ){
-
-        }
+            if (wrong.getBoolean("isWrongWay")){
+                textWrongEvent.setText("contrasentido");
+            }else{
+                textWrongEvent.setText("sentido correcto");
+            }
+        }catch (Exception e ){ }
     }
 
     public void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr) {
 
-        textSpeed.setText(df.format(speedKmHr) + " km/h");
+
+        textSpeed.setText(df.format(speedKmHr) + " km/h" + latitude + " , " + longitude);
 
         if (appPreferences.getPreferenceBoolean(getApplicationContext(),
                 ConstantSdk.PREFERENCE_NAME_GENERAL,
@@ -257,20 +258,26 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
             try {
                if (roadSegment != null){
                     speeding(speedKmHr, longitude, latitude);
-                    String [] startCoords = roadSegment.getStartPoint().split(",");
-                    String [] endCoords = roadSegment.getEndPoint().split(",");
+
+                    String start = roadSegment.getStartPoint();
+                    String [] startCoords = start.substring(1, start.length() - 1).split(",");
+                    String end = roadSegment.getEndPoint();
+                    String [] endCoords = end.substring(1, end.length() - 1).split(",");
                     LatLng startLatLng = new LatLng(
                             (double) Double.parseDouble(startCoords[0]),
                             (double) Double.parseDouble(startCoords[1]));
                     LatLng endLatLng = new LatLng(
                             (double) Double.parseDouble(endCoords[0]),
                             (double) Double.parseDouble(endCoords[1]));
-                    wrongWay(new LatLng(longitude, latitude), startLatLng, endLatLng);
+
+                   wrongWay(new LatLng(latitude, longitude), startLatLng, endLatLng);
                 }else  {
-                    textSpeedEvent.setText("");
+                    //textSpeedEvent.setText("");
                 }
 
-            } catch (Exception e){}
+            } catch (Exception e){
+                e.printStackTrace();
+            }
 
         }
     }
