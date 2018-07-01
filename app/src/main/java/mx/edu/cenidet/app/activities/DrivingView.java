@@ -90,7 +90,6 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
 
 
         pulsator1 = (PulsatorLayout) findViewById(R.id.pulsator1);
-        pulsator1.setColor(Color.parseColor("#f1c40f"));
         pulsator1.start();
 
         appPreferences = new ApplicationPreferences();
