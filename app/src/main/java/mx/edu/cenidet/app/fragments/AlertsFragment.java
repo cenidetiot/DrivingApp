@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -23,6 +24,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import mx.edu.cenidet.app.activities.DrivingView;
 import mx.edu.cenidet.cenidetsdk.controllers.AlertsControllerSdk;
 import mx.edu.cenidet.cenidetsdk.httpmethods.Response;
 import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
@@ -46,6 +48,7 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
     private AdapterView.AdapterContextMenuInfo info;
     private String subcategory, description, location, severity;
     private ApplicationPreferences applicationPreferences;
+    private FloatingActionButton speedButton;
     private String zoneId;
 
     public AlertsFragment() {
@@ -59,6 +62,14 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_alerts, container, false);
+        speedButton = (FloatingActionButton) rootView.findViewById(R.id.speedButton);
+        speedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent drivingView = new Intent(context, DrivingView.class);
+                startActivity(drivingView);
+            }
+        });
         //alertsControllerSdk.readAlertsByCampus();
         if(applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_CURRENT_ZONE) != null){
             zoneId = applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_CURRENT_ZONE);

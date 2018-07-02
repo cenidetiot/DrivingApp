@@ -3,10 +3,12 @@ package mx.edu.cenidet.app.fragments;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -31,6 +33,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import java.util.ArrayList;
 
+import mx.edu.cenidet.app.activities.DrivingView;
 import mx.edu.cenidet.cenidetsdk.db.SQLiteDrivingApp;
 import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
 import mx.edu.cenidet.app.R;
@@ -67,6 +70,7 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
     private LatLng centerLatLngParking = null;
     private ArrayList<OffStreetParking> listOffStreetParking;
     private JSONArray arrayLocationParking;
+    private FloatingActionButton speedButton;
 
     public ZoneFragment() {
         context = HomeActivity.MAIN_CONTEXT;
@@ -80,6 +84,14 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        speedButton = (FloatingActionButton) rootView.findViewById(R.id.speedButton);
+        speedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent drivingView = new Intent(context, DrivingView.class);
+                startActivity(drivingView);
+            }
+        });
         rootView = inflater.inflate(R.layout.fragment_zone, container, false);
         return rootView;
     }

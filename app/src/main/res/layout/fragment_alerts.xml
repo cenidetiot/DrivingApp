@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="mx.edu.cenidet.app.fragments.AlertsFragment">
 
     <ListView
@@ -9,5 +10,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!--include android:id="@+id/btnFloating" layout="@layout/floating_button"/-->
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/speedButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="80dp"
+        android:layout_marginTop="90dp"
+        android:clickable="true"
+        android:src="@drawable/ic_speed"
+        app:backgroundTint="@color/colorPrimary"
+        app:borderWidth="5dp"
+        app:fabSize="mini" />
+
 </FrameLayout>
