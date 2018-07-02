@@ -63,7 +63,7 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
         tvDetailCampus = (TextView) rootView.findViewById(R.id.tvDetailCampus);
         imagenViewDetailCampus = (ImageView) rootView.findViewById(R.id.imagenViewDetailCampus);
         tvRoadSegment = (TextView) rootView.findViewById(R.id.tvRoadSegment);
-        speedButton = (FloatingActionButton) rootView.findViewById(R.id.speedButton);
+        speedButton = (FloatingActionButton) rootView.findViewById(R.id.speedButtonHome);
         speedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

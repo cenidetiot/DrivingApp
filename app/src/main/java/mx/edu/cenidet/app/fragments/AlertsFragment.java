@@ -62,7 +62,7 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_alerts, container, false);
-        speedButton = (FloatingActionButton) rootView.findViewById(R.id.speedButton);
+        speedButton = (FloatingActionButton) rootView.findViewById(R.id.speedButtonAlerts);
         speedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

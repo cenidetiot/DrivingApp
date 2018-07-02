@@ -84,7 +84,7 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        speedButton = (FloatingActionButton) rootView.findViewById(R.id.speedButton);
+        speedButton = (FloatingActionButton) rootView.findViewById(R.id.speedButtonZone);
         speedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

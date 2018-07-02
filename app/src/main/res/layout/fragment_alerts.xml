@@ -11,7 +11,7 @@
         android:layout_height="match_parent" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/speedButton"
+        android:id="@+id/speedButtonAlerts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
