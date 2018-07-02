@@ -38,6 +38,14 @@
     <color name="dot_light_screen4">#e67e22</color>
     <color name="dot_light_screen5">#c0392b</color>
 
+    <!-- Driving Buttons Colors -->
+    <color name="driving_green">#27ae60</color>
+    <color name="driving_blue">#2980b9</color>
+    <color name="driving_dark_blue">#34495e</color>
+    <color name="driving_yellow">#f39c12</color>
+    <color name="driving_orange">#e67e22</color>
+    <color name="driving_red">#e74c3c</color>
+
     <array name="array_dot_active">
         <item>@color/dot_light_screen1</item>
         <item>@color/dot_light_screen2</item>

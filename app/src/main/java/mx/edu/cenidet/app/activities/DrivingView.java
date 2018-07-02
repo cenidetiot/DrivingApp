@@ -58,6 +58,10 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
     private TextView textPruebas;
     private TextView textAcelerometer;
 
+    private FloatingActionButton floatingSpeeding;
+    private FloatingActionButton floatingSudden;
+    private FloatingActionButton floatingWrong;
+
     private double latitude, longitude;
     private double speedMS, speedKmHr;
 
@@ -87,6 +91,14 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
         textPruebas = (TextView) findViewById(R.id.textPruebas);
         textAcelerometer = (TextView) findViewById(R.id.textAcelerometer);
         textAcelerometer.setText("Acelerometro");
+
+        floatingSpeeding = (FloatingActionButton) findViewById(R.id.floatingActionSpeeding);
+        floatingSudden = (FloatingActionButton) findViewById(R.id.floatingActionSudden);
+        floatingWrong = (FloatingActionButton) findViewById(R.id.floatingActionWrong);
+        floatingSpeeding.setBackgroundTintList(getResources().getColorStateList(R.color.driving_green));
+        floatingSudden.setBackgroundTintList(getResources().getColorStateList(R.color.driving_green));
+        floatingWrong.setBackgroundTintList(getResources().getColorStateList(R.color.driving_green));
+
 
 
         pulsator1 = (PulsatorLayout) findViewById(R.id.pulsator1);
@@ -168,19 +180,29 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
                 roadSegment.getMinimumAllowedSpeed(),
                 roadSegment.getMaximumAllowedSpeed(),
                 speedMS, latitude, longitude);
+
         try {
-            if (speedDetection.getBoolean("isSpeeding")) {
+            //its ok  =  green
+            boolean isSpeeding = speedDetection.getBoolean("isSpeeding");
+            boolean under = speedDetection.getBoolean("under"); // orange
+            boolean over = speedDetection.getBoolean("over");  // red
+
+            if (isSpeeding) {
                 speedText = "unauthorized SpeedDetection ";
             } else {
                 speedText = "speed allowed ";
+                floatingSpeeding.setBackgroundTintList(getResources().getColorStateList(R.color.driving_green));
             }
 
-            if (speedDetection.getBoolean("under")) {
+            if (under) {
                 speedText += "under";
+                floatingSpeeding.setBackgroundTintList(getResources().getColorStateList(R.color.driving_orange));
             }
-            if (speedDetection.getBoolean("over")) {
+            if (over) {
                 speedText += "over";
+                floatingSpeeding.setBackgroundTintList(getResources().getColorStateList(R.color.driving_red));
             }
+
             textSpeedEvent.setText(speedText);
         }catch (Exception w){
 
@@ -192,37 +214,41 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
         JSONObject suddenStop = events.suddenStop(speedMS, new Date().getTime(), latitude, longitude);
 
         try {
-
-            boolean stopped = suddenStop.getBoolean("isStopped");
-            boolean stopping =  suddenStop.getBoolean("isStopping");
-            boolean sudden =  suddenStop.getBoolean("isSuddenStop");
-            boolean acelerating =  suddenStop.getBoolean("isAcelerating");
-            //textEvent.setText("stopped " + stopped + " stopping " + stopping + " sudden " + sudden + " acelerating " + acelerating);
+            //its ok = green
+            boolean stopped = suddenStop.getBoolean("isStopped");  //red
+            boolean stopping =  suddenStop.getBoolean("isStopping"); //orange
+            boolean sudden =  suddenStop.getBoolean("isSuddenStop"); //red
+            boolean acelerating =  suddenStop.getBoolean("isAcelerating");//blue
 
 
             if (!stopped && !stopping & !sudden){
-                    if (acelerating) {
-                        textEvent.setText("You are acelerating");
-                    }else {
-                        textEvent.setText("You are OK");
-                    }
-                    textSpeed.setTextColor(Color.parseColor("#2980b9"));
+                if (acelerating) {
+                    textEvent.setText("You are acelerating");
+                    floatingSudden.setBackgroundTintList(getResources().getColorStateList(R.color.driving_blue));
                 }else {
-                    if (stopping){
-                        textEvent.setText("You are stopping");
-                        textSpeed.setTextColor(Color.parseColor("#d35400"));
-                    }
-                    if (stopped){
-                        textEvent.setText("You are stopped");
-                        rootView.setBackgroundColor(Color.parseColor("#2c3e50"));
-                        textSpeed.setTextColor(Color.parseColor("#2c3e50"));
-                    }
-                    if (sudden){
-                        textPruebas.setText(suddenStop.getString("result"));
-                        textSpeed.setTextColor(Color.parseColor("#c0392b"));
-                    }
-
+                    textEvent.setText("You are OK");
+                    floatingSudden.setBackgroundTintList(getResources().getColorStateList(R.color.driving_green));
                 }
+                textSpeed.setTextColor(Color.parseColor("#2980b9"));
+            }else {
+                if (stopping){
+                    textEvent.setText("You are stopping");
+                    textSpeed.setTextColor(Color.parseColor("#d35400"));
+                    floatingSudden.setBackgroundTintList(getResources().getColorStateList(R.color.driving_orange));
+                }
+                if (stopped){
+                    textEvent.setText("You are stopped");
+                    rootView.setBackgroundColor(Color.parseColor("#2c3e50"));
+                    textSpeed.setTextColor(Color.parseColor("#2c3e50"));
+                    floatingSudden.setBackgroundTintList(getResources().getColorStateList(R.color.driving_red));
+                }
+                if (sudden){
+                    textPruebas.setText(suddenStop.getString("result"));
+                    textSpeed.setTextColor(Color.parseColor("#c0392b"));
+                    floatingSudden.setBackgroundTintList(getResources().getColorStateList(R.color.driving_red));
+                }
+
+            }
         }catch (Exception e){}
     }
 
@@ -236,10 +262,16 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
         );
 
         try {
-            if (wrong.getBoolean("isWrongWay")){
+            // its ok = green
+            boolean isWrong =  wrong.getBoolean("isWrongWay"); // red
+
+            if (isWrong){
                 textWrongEvent.setText("contrasentido");
+                floatingWrong.setBackgroundTintList(getResources().getColorStateList(R.color.driving_red));
             }else{
                 textWrongEvent.setText("sentido correcto");
+                floatingWrong.setBackgroundTintList(getResources().getColorStateList(R.color.driving_green));
+
             }
         }catch (Exception e ){ }
     }
