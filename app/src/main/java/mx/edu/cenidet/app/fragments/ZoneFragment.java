@@ -70,7 +70,7 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
     private LatLng centerLatLngParking = null;
     private ArrayList<OffStreetParking> listOffStreetParking;
     private JSONArray arrayLocationParking;
-    private FloatingActionButton speedButton;
+    private FloatingActionButton speedButtonZone;
 
     public ZoneFragment() {
         context = HomeActivity.MAIN_CONTEXT;
@@ -84,15 +84,15 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        speedButton = (FloatingActionButton) rootView.findViewById(R.id.speedButtonZone);
-        speedButton.setOnClickListener(new View.OnClickListener() {
+        rootView = inflater.inflate(R.layout.fragment_zone, container, false);
+        speedButtonZone = (FloatingActionButton) rootView.findViewById(R.id.speedButtonZone);
+        speedButtonZone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent drivingView = new Intent(context, DrivingView.class);
+                Intent drivingView = new Intent(getContext(), DrivingView.class);
                 startActivity(drivingView);
             }
         });
-        rootView = inflater.inflate(R.layout.fragment_zone, container, false);
         return rootView;
     }
 

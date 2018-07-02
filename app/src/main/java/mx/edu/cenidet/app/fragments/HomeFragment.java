@@ -40,7 +40,7 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
     private TextView tvDetailCampus;
     private TextView tvRoadSegment;
     private ImageView imagenViewDetailCampus;
-    private FloatingActionButton speedButton;
+    private FloatingActionButton speedButtonHome;
     //private FloatingActionButton btnFloating;
     private AlertController alertController;
 
@@ -63,8 +63,8 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
         tvDetailCampus = (TextView) rootView.findViewById(R.id.tvDetailCampus);
         imagenViewDetailCampus = (ImageView) rootView.findViewById(R.id.imagenViewDetailCampus);
         tvRoadSegment = (TextView) rootView.findViewById(R.id.tvRoadSegment);
-        speedButton = (FloatingActionButton) rootView.findViewById(R.id.speedButtonHome);
-        speedButton.setOnClickListener(new View.OnClickListener() {
+        speedButtonHome = (FloatingActionButton) rootView.findViewById(R.id.speedButtonHome);
+        speedButtonHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent drivingView = new Intent(context, DrivingView.class);

@@ -48,7 +48,7 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
     private AdapterView.AdapterContextMenuInfo info;
     private String subcategory, description, location, severity;
     private ApplicationPreferences applicationPreferences;
-    private FloatingActionButton speedButton;
+    private FloatingActionButton speedButtonAlerts;
     private String zoneId;
 
     public AlertsFragment() {
@@ -62,11 +62,11 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_alerts, container, false);
-        speedButton = (FloatingActionButton) rootView.findViewById(R.id.speedButtonAlerts);
-        speedButton.setOnClickListener(new View.OnClickListener() {
+        speedButtonAlerts = (FloatingActionButton) rootView.findViewById(R.id.speedButtonAlerts);
+        speedButtonAlerts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent drivingView = new Intent(context, DrivingView.class);
+                Intent drivingView = new Intent(getContext(), DrivingView.class);
                 startActivity(drivingView);
             }
         });
