@@ -47,6 +47,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
             android:textColor="@color/white"
             android:textSize="13sp" />
 
@@ -58,7 +60,6 @@
             android:layout_weight="1"
             android:fontFamily="@font/roboto_medium"
             android:gravity="center_horizontal"
-            android:text=" "
             android:textColor="@color/white"
             android:textSize="12sp"
             android:textStyle="bold" />
@@ -77,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="474dp"
             android:layout_alignParentTop="true"
-            android:layout_margin="20dp"
+            android:layout_margin="12dp"
             app:pulse_color="@color/white"
             app:pulse_count="4"
             app:pulse_duration="7000"

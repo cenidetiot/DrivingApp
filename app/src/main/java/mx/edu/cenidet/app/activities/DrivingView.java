@@ -201,7 +201,7 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
             boolean over = speedDetection.getBoolean("over");  // red
 
             if (isSpeeding) {
-                speedText = "Unauthorized SpeedDetection ";
+                speedText = "Unauthorized Speed Detection ";
                 anim(floatingSpeeding);
             } else {
                 speedText = "speed allowed ";
@@ -217,7 +217,7 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
                 floatingSpeeding.setBackgroundTintList(getResources().getColorStateList(R.color.driving_red));
             }
 
-            //textSpeedEvent.setText(speedText);
+            textSpeedEvent.setText(speedText);
         }catch (Exception w){
 
         }
@@ -282,11 +282,11 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
             boolean isWrong =  wrong.getBoolean("isWrongWay"); // red
 
             if (isWrong){
-                //textWrongEvent.setText("contrasentido");
+                textWrongEvent.setText("Wrong Way Detection");
                 floatingWrong.setBackgroundTintList(getResources().getColorStateList(R.color.driving_red));
                 anim(floatingWrong);
             }else{
-                //textWrongEvent.setText("sentido correcto");
+                textWrongEvent.setText("");
                 floatingWrong.setBackgroundTintList(getResources().getColorStateList(R.color.driving_green));
 
             }
