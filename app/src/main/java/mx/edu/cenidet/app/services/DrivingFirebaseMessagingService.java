@@ -28,6 +28,8 @@ import mx.edu.cenidet.app.utils.Config;
 import mx.edu.cenidet.app.utils.NotificationUtils;
 import mx.edu.cenidet.cenidetsdk.httpmethods.Response;
 import mx.edu.cenidet.app.R;
+import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
+import www.fiware.org.ngsi.utilities.ApplicationPreferences;
 
 public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -41,6 +43,12 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
     private String description = "";
 
     private NotificationUtils notificationUtils;
+    private ApplicationPreferences appPreferences;
+
+
+    DrivingFirebaseMessagingService(){
+        appPreferences = new ApplicationPreferences();
+    }
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -49,25 +57,18 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "REMOTE NULL");
             return;
         }
-
-        // Check if message contains a notification payload.
-        /*if (remoteMessage.getNotification() != null) {
-            handleNotification(
-                    remoteMessage.getNotification().getTitle(),
-                    remoteMessage.getNotification().getBody());
-        }*/
-
-        // Check if message contains a data payload.
-        if (remoteMessage.getData().size() > 0) {
-            try {
-                JSONObject json = new JSONObject(remoteMessage.getData().toString());
-                handleDataMessage(json);
-            } catch (Exception e) {
-                Log.e(TAG, "Exception: " + e.getMessage());
+        if (setCredentialsIfExist()) {
+            if (remoteMessage.getData().size() > 0) {
+                try {
+                    JSONObject json = new JSONObject(remoteMessage.getData().toString());
+                    handleDataMessage(json);
+                } catch (Exception e) {
+                    Log.e(TAG, "Exception: " + e.getMessage());
+                }
             }
+            NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
+            notificationUtils.playNotificationSound();
         }
-        NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
-        notificationUtils.playNotificationSound();
     }
 
 
@@ -175,6 +176,10 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(notificationId , notificationBuilder.build());
+    }
+
+    private boolean setCredentialsIfExist(){
+        return !(appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_TOKEN).equals("") && appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_NAME).equals(""));
     }
 
 }

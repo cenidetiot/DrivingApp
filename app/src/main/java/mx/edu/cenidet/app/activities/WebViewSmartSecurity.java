@@ -26,7 +26,7 @@ public class WebViewSmartSecurity extends AppCompatActivity {
         webview.getSettings().setSupportMultipleWindows(true);
         webview.setWebViewClient(new WebViewClient());
         webview.setWebChromeClient(new WebChromeClient());
-        webview.loadUrl("https://smartsdksecurity.com.mx");
+        webview.loadUrl("https://viva-smartsdk.duckdns.org");
     }
 
     private void setToolbar(){
