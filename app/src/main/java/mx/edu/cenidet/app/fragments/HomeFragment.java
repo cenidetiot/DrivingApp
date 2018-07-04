@@ -21,6 +21,7 @@ import mx.edu.cenidet.app.activities.DrivingView;
 import mx.edu.cenidet.app.activities.HomeActivity;
 import mx.edu.cenidet.app.services.SendDataService;
 
+import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
 import www.fiware.org.ngsi.controller.AlertController;
 import www.fiware.org.ngsi.datamodel.entity.RoadSegment;
 import www.fiware.org.ngsi.datamodel.entity.Zone;
@@ -50,6 +51,9 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
     private String contactID; // contacts unique ID
     private String id;
 
+    private ApplicationPreferences appPreferences;
+
+
     public HomeFragment() {
         context = HomeActivity.MAIN_CONTEXT;
         sendDataService = new SendDataService(this);
@@ -71,6 +75,7 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
                 startActivity(drivingView);
             }
         });
+
         //contactPhoto = (ImageView) rootView.findViewById(R.id.contactPhoto);
         /*if (contactPhoto != null)
             contactPhoto.setImageBitmap(retrieveContactPhoto(context));*/

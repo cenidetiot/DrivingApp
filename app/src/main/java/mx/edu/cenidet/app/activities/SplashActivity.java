@@ -49,11 +49,15 @@ public class SplashActivity extends AppCompatActivity implements DeviceTokenCont
         //objeto que utilizaremos para llamar a los metodos de la gestion del token de firebase
         appPreferences = new ApplicationPreferences();
         deviceTokenControllerSdk = new DeviceTokenControllerSdk(context, this);
-        fcmToken = appPreferences.getPreferenceString(getApplicationContext(),ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_FCMTOKEN);
-        Log.d("TOKEN", fcmToken);
+        fcmToken = appPreferences.getPreferenceString(
+                getApplicationContext(),
+                ConstantSdk.STATIC_PREFERENCES,
+                ConstantSdk.PREFERENCE_KEY_FCMTOKEN
+        );
+        Log.d("Alertas", "Token in SPLASH" + fcmToken);
 
         if (!fcmToken.equals("") || fcmToken != null){
-            Log.d("TOKEN", fcmToken);
+
             String userType = appPreferences.getPreferenceString(getApplicationContext(),ConstantSdk.PREFERENCE_NAME_GENERAL,ConstantSdk.PREFERENCE_USER_TYPE);
             String preference = "All";
             if (userType.equals("mobileUser")){
@@ -61,6 +65,7 @@ public class SplashActivity extends AppCompatActivity implements DeviceTokenCont
             }
             deviceTokenControllerSdk.createDeviceToken(fcmToken, new DevicePropertiesFunctions().getDeviceId(context), preference);
         }
+
         if(listZone.size()== 0){
             zoneControllerSdk.readAllZone();
         }

@@ -12,7 +12,7 @@ import www.fiware.org.ngsi.utilities.ApplicationPreferences;
 import www.fiware.org.ngsi.utilities.DevicePropertiesFunctions;
 
 
-public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService implements DeviceTokenControllerSdk.DeviceTokenServiceMethods {
+public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService  {
     private static final String TAG = "Alertas";
     private ApplicationPreferences appPreferences;
     private String fcmToken;
@@ -23,39 +23,19 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService imple
     public void onTokenRefresh() { 
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.d(TAG, "Refreshed token: " + refreshedToken);
-        appPreferences.saveOnPreferenceString(
-                getApplicationContext(),
-                ConstantSdk.STATIC_PREFERENCES,
-                ConstantSdk.PREFERENCE_KEY_FCMTOKEN,
-                refreshedToken);
         sendRegistrationToServer(refreshedToken);
     }
     
     private void sendRegistrationToServer(String token) {
         Context context = getApplicationContext();
-        String userType = appPreferences.getPreferenceString(getApplicationContext(),ConstantSdk.PREFERENCE_NAME_GENERAL,ConstantSdk.PREFERENCE_USER_TYPE);
-        if (userType!= null && !userType.equals("")) {
-            String preference = "All";
-            if (userType.equals("mobileUser")) {
-                preference = "traffic";
-            }
-            DeviceTokenControllerSdk deviceTokenControllerSdk = new DeviceTokenControllerSdk(context, this);
-            deviceTokenControllerSdk.createDeviceToken(token, new DevicePropertiesFunctions().getDeviceId(context), preference);
-        }
+        appPreferences.saveOnPreferenceString(
+                context,
+                ConstantSdk.STATIC_PREFERENCES,
+                ConstantSdk.PREFERENCE_KEY_FCMTOKEN,
+                token
+        );
+        Log.d(TAG, "TOKEN" + token);
     }
 
-    @Override
-    public void createDeviceToken(Response response) {
 
-    }
-
-    @Override
-    public void readDeviceToken(Response response) {
-
-    }
-
-    @Override
-    public void updateDeviceToken(Response response) {
-
-    }
 }
