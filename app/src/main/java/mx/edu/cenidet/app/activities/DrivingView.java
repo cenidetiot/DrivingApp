@@ -21,6 +21,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +46,7 @@ import www.fiware.org.ngsi.datamodel.entity.RoadSegment;
 import www.fiware.org.ngsi.datamodel.entity.Zone;
 import www.fiware.org.ngsi.utilities.ApplicationPreferences;
 import www.fiware.org.ngsi.utilities.Constants;
+import mx.edu.cenidet.app.utils.MyBounceInterpolator;
 
 public class DrivingView extends AppCompatActivity implements SensorEventListener {
 
@@ -88,9 +93,7 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
         textSpeedEvent = (TextView) findViewById(R.id.textSpeedEvent);
         textWrongEvent = (TextView) findViewById(R.id.textWrongWayEvent);
         textEvent = (TextView) findViewById(R.id.textEvent);
-        textPruebas = (TextView) findViewById(R.id.textPruebas);
         textAcelerometer = (TextView) findViewById(R.id.textAcelerometer);
-        textAcelerometer.setText("Acelerometro");
 
         floatingSpeeding = (FloatingActionButton) findViewById(R.id.floatingActionSpeeding);
         floatingSudden = (FloatingActionButton) findViewById(R.id.floatingActionSudden);
@@ -173,6 +176,16 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
                 false);
     }
 
+    public void anim(FloatingActionButton button) {
+        Animation myAnim = AnimationUtils.loadAnimation(this, R.transition.bounce);
+
+        // Use bounce interpolator with amplitude 0.2 and frequency 20
+        MyBounceInterpolator interpolator = new MyBounceInterpolator(0.2, 20);
+        myAnim.setInterpolator(interpolator);
+
+        button.startAnimation(myAnim);
+    }
+
     public void speeding(double speedMS, double longitude, double latitude) {
         String speedText = "";
 
@@ -188,7 +201,8 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
             boolean over = speedDetection.getBoolean("over");  // red
 
             if (isSpeeding) {
-                speedText = "unauthorized SpeedDetection ";
+                speedText = "Unauthorized SpeedDetection ";
+                anim(floatingSpeeding);
             } else {
                 speedText = "speed allowed ";
                 floatingSpeeding.setBackgroundTintList(getResources().getColorStateList(R.color.driving_green));
@@ -203,7 +217,7 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
                 floatingSpeeding.setBackgroundTintList(getResources().getColorStateList(R.color.driving_red));
             }
 
-            textSpeedEvent.setText(speedText);
+            //textSpeedEvent.setText(speedText);
         }catch (Exception w){
 
         }
@@ -230,6 +244,7 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
                     floatingSudden.setBackgroundTintList(getResources().getColorStateList(R.color.driving_green));
                 }
                 textSpeed.setTextColor(Color.parseColor("#2980b9"));
+
             }else {
                 if (stopping){
                     textEvent.setText("You are stopping");
@@ -241,9 +256,10 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
                     rootView.setBackgroundColor(Color.parseColor("#2c3e50"));
                     textSpeed.setTextColor(Color.parseColor("#2c3e50"));
                     floatingSudden.setBackgroundTintList(getResources().getColorStateList(R.color.driving_red));
+                    anim(floatingSudden);
                 }
                 if (sudden){
-                    textPruebas.setText(suddenStop.getString("result"));
+                    //textPruebas.setText(suddenStop.getString("result"));
                     textSpeed.setTextColor(Color.parseColor("#c0392b"));
                     floatingSudden.setBackgroundTintList(getResources().getColorStateList(R.color.driving_red));
                 }
@@ -266,10 +282,11 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
             boolean isWrong =  wrong.getBoolean("isWrongWay"); // red
 
             if (isWrong){
-                textWrongEvent.setText("contrasentido");
+                //textWrongEvent.setText("contrasentido");
                 floatingWrong.setBackgroundTintList(getResources().getColorStateList(R.color.driving_red));
+                anim(floatingWrong);
             }else{
-                textWrongEvent.setText("sentido correcto");
+                //textWrongEvent.setText("sentido correcto");
                 floatingWrong.setBackgroundTintList(getResources().getColorStateList(R.color.driving_green));
 
             }
@@ -279,7 +296,7 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
     public void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr) {
 
 
-        textSpeed.setText(df.format(speedKmHr) + " km/h" + latitude + " , " + longitude);
+        textSpeed.setText(df.format(speedKmHr) + " km/h");
 
         if (appPreferences.getPreferenceBoolean(getApplicationContext(),
                 ConstantSdk.PREFERENCE_NAME_GENERAL,
@@ -335,7 +352,7 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
                 if (last_z < 9.6 || last_z >= 9.95){
                     going = "Moviendose";
                 }
-                textAcelerometer.setText(last_x + " : " + last_y + " : " + last_z + "\n"+ going);
+                //textAcelerometer.setText(last_x + " : " + last_y + " : " + last_z + "\n"+ going);
                 events.saveAxis(last_x,last_y,last_z);
             }
 
