@@ -36,6 +36,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 
+import mx.edu.cenidet.cenidetsdk.controllers.DeviceTokenControllerSdk;
 import mx.edu.cenidet.cenidetsdk.controllers.OffStreetParkingControllerSdk;
 import mx.edu.cenidet.cenidetsdk.controllers.RoadControllerSdk;
 import mx.edu.cenidet.cenidetsdk.controllers.RoadSegmentControllerSdk;
@@ -65,7 +66,14 @@ import mx.edu.cenidet.app.fragments.ZoneFragment;
 import mx.edu.cenidet.app.fragments.HomeFragment;
 import mx.edu.cenidet.app.fragments.MyCampusFragment;
 
-public class HomeActivity extends AppCompatActivity implements View.OnClickListener, SendDataService.SendDataMethods, AlertController.AlertResourceMethods, RoadSegmentControllerSdk.RoadSegmentServiceMethods, RoadControllerSdk.RoadServiceMethods, OffStreetParkingControllerSdk.OffStreetParkingServiceMethods{
+public class HomeActivity extends AppCompatActivity
+        implements View.OnClickListener,
+        SendDataService.SendDataMethods,
+        AlertController.AlertResourceMethods,
+        RoadSegmentControllerSdk.RoadSegmentServiceMethods,
+        RoadControllerSdk.RoadServiceMethods,
+        OffStreetParkingControllerSdk.OffStreetParkingServiceMethods,
+        DeviceTokenControllerSdk.DeviceTokenServiceMethods {
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     public static Context MAIN_CONTEXT = null;
@@ -78,6 +86,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private RoadControllerSdk roadControllerSdk;
     private RoadSegmentControllerSdk roadSegmentControllerSdk;
     private OffStreetParkingControllerSdk offStreetParkingControllerSdk;
+    private DeviceTokenControllerSdk deviceTokenControllerSdk;
     private SQLiteDrivingApp sqLiteDrivingApp;
 
     private FloatingActionButton btnFloatingUnknown;
@@ -115,6 +124,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         roadControllerSdk = new RoadControllerSdk(MAIN_CONTEXT, this);
         roadSegmentControllerSdk = new RoadSegmentControllerSdk(MAIN_CONTEXT, this);
         offStreetParkingControllerSdk = new OffStreetParkingControllerSdk(MAIN_CONTEXT, this);
+        deviceTokenControllerSdk = new DeviceTokenControllerSdk(MAIN_CONTEXT, this);
+
         sqLiteDrivingApp = new SQLiteDrivingApp(this);
         filter = new IntentFilter(Config.PUSH_NOTIFICATION);
         LocalBroadcastManager.getInstance(MAIN_CONTEXT).registerReceiver(new ResponseReceiver(), filter);
@@ -203,6 +214,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     case R.id.menu_logout:
                         sqLiteDrivingApp.deleteDatabase(MAIN_CONTEXT);
                         appPreferences.removeSharedPreferences(MAIN_CONTEXT, ConstantSdk.PREFERENCE_NAME_GENERAL);
+                        deviceTokenControllerSdk.updateDeviceToken(new DevicePropertiesFunctions().getDeviceId(MAIN_CONTEXT));
                         Intent intentMainActivity = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intentMainActivity);
                         finish();
@@ -277,6 +289,22 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
     }
+
+    @Override
+    public void createDeviceToken(mx.edu.cenidet.cenidetsdk.httpmethods.Response response) {
+
+    }
+
+    @Override
+    public void readDeviceToken(mx.edu.cenidet.cenidetsdk.httpmethods.Response response) {
+
+    }
+
+    @Override
+    public void updateDeviceToken(mx.edu.cenidet.cenidetsdk.httpmethods.Response response) {
+
+    }
+
     private class ResponseReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {

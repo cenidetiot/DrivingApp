@@ -65,7 +65,8 @@ public class DeviceTokenControllerSdk implements MethodGET.MethodGETCallback, Me
         String json = "{\n" +
                 "\t\"fcmToken\":\""+fcmToken+"\",\n" +
                 "\t\"refDevice\":\""+refDevice+"\",\n" +
-                "\t\"preferences\":\""+preferences+"\"\n" +
+                "\t\"preferences\":\""+preferences+"\",\n" +
+                "\t\"status\":\""+ 1 +"\"\n" +
                 "}";
         JSONObject jsonDeviceToken = response.parseJsonObject(json);
         Log.i("Status", "JSON jsonDeviceToken: "+jsonDeviceToken);
@@ -73,12 +74,12 @@ public class DeviceTokenControllerSdk implements MethodGET.MethodGETCallback, Me
         mPOST.execute(URL, jsonDeviceToken.toString());
     }
 
-    public void updateDeviceToken(String fcmToken, String refDevice){
+    public void updateDeviceToken(String refDevice){
         method = "updateDeviceToken";
         String URL = URL_BASE_HOST + ConfigServer.http_api.getPropiedad() +"/"+ ConfigServer.http_device.getPropiedad() +"/"+ ConfigServer.http_token.getPropiedad()+"/"+refDevice;
         Response response = new Response();
         String json = "{\n" +
-                "\t\"fcmToken\":\""+fcmToken+"\"\n" +
+                "\t\"status\":\""+ 0 +"\"\n" +
                 "}";
         JSONObject jsonDeviceToken = response.parseJsonObject(json);
         Log.i("Status", "JSON jsonDeviceToken: "+jsonDeviceToken);
