@@ -296,7 +296,7 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
     public void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr) {
 
 
-        textSpeed.setText(df.format(speedKmHr) + " km/h");
+        textSpeed.setText(df.format(speedKmHr) + " km/hr");
 
         if (appPreferences.getPreferenceBoolean(getApplicationContext(),
                 ConstantSdk.PREFERENCE_NAME_GENERAL,
