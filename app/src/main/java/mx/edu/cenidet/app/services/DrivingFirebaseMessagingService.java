@@ -46,10 +46,6 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
     private ApplicationPreferences appPreferences;
 
 
-    DrivingFirebaseMessagingService(){
-        appPreferences = new ApplicationPreferences();
-    }
-
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.e(TAG, "From: " + remoteMessage.getFrom());
@@ -74,14 +70,6 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
 
 
 
-    private void handleNotification(String title, String message) {
-
-        Intent resultIntent = new Intent(getApplicationContext(), AlertMapDetailActivity.class);
-        showNotificationMessage(getApplicationContext(), title, message, new Date().toString(), resultIntent);
-        //NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
-        //notificationUtils.playNotificationSound();
-
-    }
 
     private void handleDataMessage(JSONObject json) {
         try {
@@ -121,16 +109,6 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
             Log.e(TAG, "Exception: " + e.getMessage());
         }
     }
-
-    /**
-     * Showing notification with text only
-     */
-    private void showNotificationMessage(Context context, String title, String message, String timeStamp, Intent intent) {
-        notificationUtils = new NotificationUtils(context);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        notificationUtils.showNotificationMessage(title, message, timeStamp, intent);
-    }
-
 
     private void showNotification(PendingIntent pendingIntent ,
                                   String messageTitle ,
@@ -179,6 +157,7 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private boolean setCredentialsIfExist(){
+        appPreferences = new ApplicationPreferences();
         return !(appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_TOKEN).equals("") && appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_NAME).equals(""));
     }
 
