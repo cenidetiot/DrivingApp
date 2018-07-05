@@ -119,9 +119,9 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
         if(tvRoadSegment != null){
             if(roadSegment != null){
                 //tvRoadSegment.setText("ID: "+roadSegment.getIdRoadSegment()+"\n"+context.getString(R.string.name)+": "+roadSegment.getName()+"\n"+context.getString(R.string.message_minimum)+": "+roadSegment.getMinimumAllowedSpeed()+"km/h\n"+context.getString(R.string.message_maximum)+": "+roadSegment.getMaximumAllowedSpeed()+"km/h");
-                tvRoadSegment.setText(roadSegment.getName()+"\n"+context.getString(R.string.message_minimum)+": "+roadSegment.getMinimumAllowedSpeed()+"km/h\n"+context.getString(R.string.message_maximum)+": "+roadSegment.getMaximumAllowedSpeed()+"km/h");
+                //tvRoadSegment.setText(roadSegment.getName()+"\n"+context.getString(R.string.message_minimum)+": "+roadSegment.getMinimumAllowedSpeed()+"km/h\n"+context.getString(R.string.message_maximum)+": "+roadSegment.getMaximumAllowedSpeed()+"km/h");
             }else{
-                tvRoadSegment.setText(context.getString(R.string.message_not_road_segment));
+                //tvRoadSegment.setText(context.getString(R.string.message_not_road_segment));
             }
         }
     }
