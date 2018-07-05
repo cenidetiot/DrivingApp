@@ -79,7 +79,7 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
                 String typeUser = applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_USER_TYPE);
                 String tempQuery = zoneId;
                 if (typeUser != null && typeUser !="" && typeUser.equals("mobileUser")){
-                    tempQuery += "?id=Alert:Device_Smartphone_.*";
+                    tempQuery += "?id=Alert:Device_Smartphone_.*&location=false";
                 }
                 alertsControllerSdk.currentAlertByZone(tempQuery);
             }
