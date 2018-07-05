@@ -34,6 +34,8 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
 
     private static String idDevice ;
     private AlertController alertController;
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
+
 
     /*Variables globales de paradas repentinas*/
     private static double gravity = 9.81; // valor en m/s
@@ -45,6 +47,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
     private static double speedReached = 0;
     private static long dateSpeedReached = 0;
     private static boolean isSuddenStop = false;
+
 
     private long count = 0;
     private float last_x, last_y, last_z;
@@ -199,10 +202,10 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
     }
     
     public JSONObject suddenStop(double currentSpeed , long currentDate, double latitude, double longitude) {
+        String suddenDescription = "Sudden Stop Detection";
 
         JSONObject alert = new JSONObject();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
 
         String commonData = currentSpeed + ", " + "x: "+x+", y: "+y+", z: "+z+", Fecha Actual: " + sdf.format(currentDate) + ",";
 
@@ -283,7 +286,8 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
                             severity = "critical";
                         }
                         if (severity != "" && isSuddenStop) {
-                            sendAlert(commonData, severity, "suddenStop", latitude, longitude);
+                            suddenDescription += " " + sdf.format(new Date().getTime());
+                            sendAlert(suddenDescription, severity, "suddenStop", latitude, longitude);
                         }
                         stopped = false;
                         stoppedSeconds = 0;
@@ -295,7 +299,8 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
                     stoppedSeconds++;
                     if (stoppedSeconds > 8 && !suddenAlertSent) { //Critical
                         if (isSuddenStop) {
-                            sendAlert(commonData, "critical", "suddenStop", latitude, longitude);
+                            suddenDescription += " " + sdf.format(new Date().getTime());
+                            sendAlert(suddenDescription, "critical", "suddenStop", latitude, longitude);
                         }
                         suddenAlertSent = true;
                         stopped = false;
@@ -306,10 +311,6 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
 
             }
             writeFile("velocity.csv",commonData + result);
-            Log.d("Sudden", "ejecutando");
-
-
-
             if (finalVelocity < initialVelocity)
                 _isStopping = true;
             if (finalVelocity > initialVelocity)
@@ -338,16 +339,15 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
      * @return la severidad del exceso de velocidad.
      */
     public JSONObject speeding(double minimumSpeed,double maximumSpeed, double speed, double latitude, double longitude){
-        boolean speedingValue;
-        speedingValue = false;
+        String speedDescription = "Unauthorized Speed Detection";
+
+        boolean speedingValue = false;
 
         boolean under = false, over = false;
 
         JSONObject alert = new JSONObject();
 
         if (!(speed > minimumSpeed && speed < maximumSpeed)){
-
-
 
             if (speed < minimumSpeed) {
                 under = true;
@@ -359,8 +359,6 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
             }
 
             isSpeeding = true;
-
-
 
         }else{
             if (isSpeeding) {
@@ -379,7 +377,9 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
                     }
                 }
                 if (severity != "") {
-                    //sendAlert("Speeding", severity, "spedding", latitude, longitude);
+                    speedDescription += " " + sdf.format(new Date().getTime());
+                    sendAlert(speedDescription , severity, "spedding", latitude, longitude);
+
                 }
             }
             isSpeeding = false;
@@ -392,7 +392,8 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
         if (isSpeeding){
             speedigSeconds ++;
             if (speedigSeconds >= 11 && !speedingAlertSent){
-                //sendAlert("Speeding", "critical", "spedding", latitude, longitude);
+                speedDescription += " " + sdf.format(new Date().getTime());
+                sendAlert(speedDescription, "critical", "spedding", latitude, longitude);
                 speedingAlertSent = true;
                 isSpeeding = false;
                 speedigSeconds = 0;

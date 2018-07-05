@@ -67,10 +67,6 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-
-
-
-
     private void handleDataMessage(JSONObject json) {
         try {
 
