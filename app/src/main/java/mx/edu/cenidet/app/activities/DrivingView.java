@@ -282,11 +282,11 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
             boolean isWrong =  wrong.getBoolean("isWrongWay"); // red
 
             if (isWrong){
-                textWrongEvent.setText("Wrong Way Detection");
+                //textWrongEvent.setText("Wrong Way Detection");
                 floatingWrong.setBackgroundTintList(getResources().getColorStateList(R.color.driving_red));
                 anim(floatingWrong);
             }else{
-                textWrongEvent.setText("");
+                //textWrongEvent.setText("");
                 floatingWrong.setBackgroundTintList(getResources().getColorStateList(R.color.driving_green));
 
             }
