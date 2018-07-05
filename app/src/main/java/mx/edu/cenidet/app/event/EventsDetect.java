@@ -378,7 +378,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
                 }
                 if (severity != "") {
                     speedDescription += " " + sdf.format(new Date().getTime());
-                    sendAlert(speedDescription , severity, "spedding", latitude, longitude);
+                    sendAlert(speedDescription , severity, "speeding", latitude, longitude);
 
                 }
             }
@@ -393,7 +393,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
             speedigSeconds ++;
             if (speedigSeconds >= 11 && !speedingAlertSent){
                 speedDescription += " " + sdf.format(new Date().getTime());
-                sendAlert(speedDescription, "critical", "spedding", latitude, longitude);
+                sendAlert(speedDescription, "critical", "speeding", latitude, longitude);
                 speedingAlertSent = true;
                 isSpeeding = false;
                 speedigSeconds = 0;
