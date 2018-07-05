@@ -25,7 +25,7 @@
     <string name="menu_speed">Driving View</string>
     <string name="menu_campus_map">Zone Map</string>
     <string name="menu_alerts">Alerts History</string>
-    <string name="menu_my_campus">Zones</string>
+    <string name="menu_my_campus">Zones List</string>
     <string name="menu_my_location">My location</string>
     <string name="menu_profile">My Profile</string>
     <string name="menu_settings">Settings</string>

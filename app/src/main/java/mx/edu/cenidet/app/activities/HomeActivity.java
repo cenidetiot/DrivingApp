@@ -143,6 +143,7 @@ public class HomeActivity extends AppCompatActivity
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
+        menuItemInNavMenuDrawer();
         setUpTabLayout();
         setUpViewPager(viewPager);
         btnFloatingGUI();
@@ -175,32 +176,25 @@ public class HomeActivity extends AppCompatActivity
                 Fragment fragment = null;
                 switch (item.getItemId()){
                     case R.id.menu_home:
-                        //fragment = new HomeFragment();
                         viewPager.setCurrentItem(0);
                         fragmentTransaction = true;
                         break;
                     case R.id.menu_speed:
-                        //fragment = new SpeedFragment();
-                        //viewPager.setCurrentItem(1);
-                        //fragmentTransaction = true;
                         Intent intentDrivingView = new Intent(getApplicationContext(), DrivingView.class);
                         startActivity(intentDrivingView);
                         break;
                     case R.id.menu_campus:
-                        //fragment = new ZoneFragment();
                         viewPager.setCurrentItem(1);
                         fragmentTransaction = true;
                         break;
                     case R.id.menu_alerts:
-                        //fragment = new AlertsFragment();
                         viewPager.setCurrentItem(2);
                         fragmentTransaction = true;
                         break;
-                    /*case R.id.menu_my_campus:
-                        //fragment = new MyCampusFragment();
+                    case R.id.menu_my_campus:
                         viewPager.setCurrentItem(3);
                         fragmentTransaction = true;
-                        break;*/
+                        break;
                     case R.id.menu_history:
                         drawerLayout.closeDrawers();
                         Intent intent = new Intent(getApplicationContext(), AlertHistoryActivity.class);
@@ -235,7 +229,6 @@ public class HomeActivity extends AppCompatActivity
         tvUserName.setText(appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_NAME));
         navigationView.addHeaderView(view);
 
-
         //Descarga los Road y RoadSegment
         listRoad = sqLiteDrivingApp.getAllRoad();
         if(listRoad.size() > 0){
@@ -267,6 +260,11 @@ public class HomeActivity extends AppCompatActivity
             isDrivingUser();
         }*/
 
+    }
+    private void menuItemInNavMenuDrawer() {
+        if(appPreferences.getPreferenceString(getApplicationContext(),ConstantSdk.PREFERENCE_NAME_GENERAL,ConstantSdk.PREFERENCE_USER_TYPE).equals("mobileUser")) {
+            navigationView.getMenu().findItem(R.id.menu_my_campus).setVisible(false);
+        }
     }
     public void setUpTabLayout(){
         //TabLayout set text title
