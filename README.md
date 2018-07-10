@@ -23,25 +23,28 @@ Minimum SDK Version 16
 
 ###  Configure your services 
 
-**Configure your own Orion**
+**Configure your Orion**
+
 Edit the file : *ngsi/src/main/assets/config.properties*
 
     http.host=http://130.206.113.226 // Change it for your Orion host 
     http.port=1026 // Change it form your Orion port
     http.apiversion=v2 // Change if for your Orion api version
    
-   **Configure your smartsecurity service**
-   Edit the file: *cenidetsdk/src/main/java/mx/edu/cenidet/cenidetsdk/utilities/ConfigServer.java*
+**Configure your smartsecurity service**
+
+Edit the file: *cenidetsdk/src/main/java/mx/edu/cenidet/cenidetsdk/utilities/ConfigServer.java*
 
     // Change it for your Service 
     http_host("https://smartsecurity-webservice.herokuapp.com")
 
-
+Check the Api documentation of Smartsecurity Service [here](https://github.com/smartsdkCenidet/smartsecurity-web-service)
 
 **Configure your Firebase Cloud Messaging project**
+
 If you want to recive our notifications using our algorithms to send the notificatios to the users, you don't need to configure anything.
 
-But if you need to implement your own notifications, check [this guide](#) to configure them.
+But if you need to implement your own notifications, check [this guide](https://github.com/smartsdkCenidet/SmartSecurity-Notifications) to configure them.
 
 
 See all the documentation [here](#).
