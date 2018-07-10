@@ -44,7 +44,9 @@ Check the Api documentation of Smartsecurity Service [here](https://github.com/s
 
 If you want to recive our notifications using our algorithms to send the notificatios to the users, you don't need to configure anything.
 
-But if you need to implement your own notifications, check [this guide](https://github.com/smartsdkCenidet/SmartSecurity-Notifications) to configure them.
+But if you need to implement your own notifications, check [this guide](#) about how to configure them.
+
+Also check the SmartSecurity Notifications [repo](https://github.com/smartsdkCenidet/SmartSecurity-Notifications).
 
 
 See all the documentation [here](#).
