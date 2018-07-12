@@ -234,6 +234,9 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
             RoadSegment roadSegment;
             latitude = (double) location.getLatitude();
             longitude = (double) location.getLongitude();
+
+            latitude = 19.3594612;
+            longitude =-99.2576283;
             speedMS = (double) location.getSpeed();
             speedKmHr = (double) (location.getSpeed() * 3.6);
 
