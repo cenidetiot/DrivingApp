@@ -260,7 +260,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 else{
                     emailSG = etEmailSG.getText().toString();
                     if(login(emailSG, password)){
-                        Toast.makeText(getApplicationContext(), "Login de Guardia de Seguridad", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), "Login de Guardia de Seguridad", Toast.LENGTH_SHORT).show();
                         userController.logInUser(emailSG, password, userType);
                     }
 

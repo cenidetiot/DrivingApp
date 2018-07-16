@@ -30,7 +30,7 @@
     <string name="menu_speed">Vista de Manejo</string>
     <string name="menu_campus_map">Mapa de la Zona</string>
     <string name="menu_alerts">Alertas del día</string>
-    <string name="menu_my_campus">Zonas</string>
+    <string name="menu_my_campus">Lista de Zonas</string>
     <string name="menu_my_location">Mi localización</string>
     <string name="menu_profile">Mi perfil</string>
     <string name="menu_settings">Configuración</string>

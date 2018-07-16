@@ -235,8 +235,8 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
             latitude = (double) location.getLatitude();
             longitude = (double) location.getLongitude();
 
-            latitude = 19.3594612;
-            longitude =-99.2576283;
+            //latitude = 19.3594612;
+            //longitude =-99.2576283;
             speedMS = (double) location.getSpeed();
             speedKmHr = (double) (location.getSpeed() * 3.6);
 
