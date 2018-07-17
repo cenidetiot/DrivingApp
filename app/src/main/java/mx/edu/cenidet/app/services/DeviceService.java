@@ -49,10 +49,6 @@ import www.fiware.org.ngsi.utilities.Constants;
 import www.fiware.org.ngsi.utilities.DevicePropertiesFunctions;
 import www.fiware.org.ngsi.utilities.Functions;
 
-/**
- * Created by Cipriano on 3/3/2018.
- */
-
 public class DeviceService extends Service implements DeviceController.DeviceResourceMethods{
     private Context context;
     private static final String STATUS = "STATUS";

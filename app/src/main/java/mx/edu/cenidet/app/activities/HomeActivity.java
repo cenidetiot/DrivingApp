@@ -201,11 +201,6 @@ public class HomeActivity extends AppCompatActivity
                         Intent intent = new Intent(getApplicationContext(), AlertHistoryActivity.class);
                         startActivity(intent);
                         break;
-                    /*case R.id.menu_profile:
-                        drawerLayout.closeDrawers();
-                        Intent intentMyProfile = new Intent(getApplicationContext(), MyProfileActivity.class);
-                        startActivity(intentMyProfile);
-                        break;*/
                     case R.id.menu_logout:
                         sqLiteDrivingApp.deleteDatabase(MAIN_CONTEXT);
                         appPreferences.removeSharedPreferences(MAIN_CONTEXT, ConstantSdk.PREFERENCE_NAME_GENERAL);

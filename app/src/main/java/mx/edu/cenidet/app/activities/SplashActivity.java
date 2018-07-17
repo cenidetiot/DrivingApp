@@ -191,18 +191,6 @@ public class SplashActivity extends AppCompatActivity implements DeviceTokenCont
                         zone.getDateModified().setValue(object.getString("dateModified"));
                         zone.getDateModified().setValue(object.getString("dateModified"));
                         zone.getStatus().setValue(object.getString("status"));
-                        /*Log.i("Status: ", "ID: "+zone.getIdZone());
-                        Log.i("Status: ", "type: "+zone.getType());
-                        Log.i("Status: ", "refBuildingType: "+zone.getRefBuildingType().getValue());
-                        Log.i("Status: ", "name: "+zone.getName().getValue());
-                        Log.i("Status: ", "address: "+zone.getAddress().getValue());
-                        Log.i("Status: ", "category: "+zone.getCategory().getValue());
-                        Log.i("Status: ", "location: "+zone.getLocation().getValue());
-                        Log.i("Status: ", "centerPoint: "+zone.getCenterPoint().getValue());
-                        Log.i("Status: ", "description: "+zone.getDescription().getValue());
-                        Log.i("Status: ", "Create: "+zone.getDateCreated().getValue());
-                        Log.i("Status: ", "Modified: "+zone.getDateModified().getValue());
-                        Log.i("Status: ", "status: "+zone.getStatus().getValue());*/
 
                         if(sqLiteDrivingApp.createZone(zone) == true){
                             Log.i("Status: ", "Dato insertado correctamente Zone...!");
