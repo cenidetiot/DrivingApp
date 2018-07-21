@@ -102,12 +102,6 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
         floatingSudden.setBackgroundTintList(getResources().getColorStateList(R.color.driving_green));
         floatingWrong.setBackgroundTintList(getResources().getColorStateList(R.color.driving_green));
 
-        //Temporal text of Maximun Minimun
-        textWrongEvent.setText(
-                "Minimum Speed allowed: " + "3.0 km/hr \n" +
-                "Maximun Speed allowed: " + "5.0 km/hr"
-        );
-
         pulsator1 = (PulsatorLayout) findViewById(R.id.pulsator1);
         pulsator1.start();
 
@@ -194,10 +188,14 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
         String speedText = "";
 
         JSONObject speedDetection = events.speeding(
-                3.0,5.0,
-                //roadSegment.getMinimumAllowedSpeed(),
-                //roadSegment.getMaximumAllowedSpeed(),
+                roadSegment.getMinimumAllowedSpeed(),
+                roadSegment.getMaximumAllowedSpeed(),
                 speedMS, latitude, longitude);
+
+        textWrongEvent.setText(
+                "Minimum Speed allowed: " + roadSegment.getMinimumAllowedSpeed() +" km/hr \n" +
+                        "Maximun Speed allowed: " + roadSegment.getMaximumAllowedSpeed() +" km/hr"
+        );
 
         try {
             //its ok  =  green
@@ -310,10 +308,10 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
             sudden(speedMS, latitude, longitude);
 
             try {
+                if (roadSegment != null){
 
                     speeding(speedKmHr, longitude, latitude);
 
-                if (roadSegment != null){
                     String start = roadSegment.getStartPoint();
                     String [] startCoords = start.substring(1, start.length() - 1).split(",");
                     String end = roadSegment.getEndPoint();
@@ -324,7 +322,8 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
                     LatLng endLatLng = new LatLng(
                             (double) Double.parseDouble(endCoords[0]),
                             (double) Double.parseDouble(endCoords[1]));
-                   wrongWay(new LatLng(latitude, longitude), startLatLng, endLatLng);
+                    wrongWay(new LatLng(latitude, longitude), startLatLng, endLatLng);
+
                 }else  {
                     //textSpeedEvent.setText("");
                 }
