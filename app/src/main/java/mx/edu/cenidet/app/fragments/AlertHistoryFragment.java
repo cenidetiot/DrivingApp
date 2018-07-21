@@ -1,10 +1,14 @@
 package mx.edu.cenidet.app.fragments;
 
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +24,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import mx.edu.cenidet.app.activities.AlertHistoryActivity;
+import mx.edu.cenidet.app.activities.AlertMapDetailActivity;
+import mx.edu.cenidet.app.utils.Config;
 import mx.edu.cenidet.cenidetsdk.controllers.AlertsControllerSdk;
 import mx.edu.cenidet.cenidetsdk.httpmethods.Response;
 import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
@@ -45,6 +51,9 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
     private ApplicationPreferences applicationPreferences;
     private String zoneId;
     private DataListener callback;
+
+    private IntentFilter filter;
+
     public AlertHistoryFragment() {
         context =  HomeActivity.MAIN_CONTEXT;
         alertsControllerSdk = new AlertsControllerSdk(context, this);
@@ -64,7 +73,17 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        filter = new IntentFilter(Config.PUSH_NOTIFICATION);
+        LocalBroadcastManager.getInstance(getActivity().getApplicationContext())
+                .registerReceiver(new ResponseReceiver(), filter);
         rootView = inflater.inflate(R.layout.fragment_alert_history, container, false);
+        getAlerts();
+        return rootView;
+    }
+
+    private void getAlerts (){
+        Log.d("ALERT", "loading alerts");
+        listAlerts = new ArrayList<Alert>();
         if(applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_CURRENT_ZONE) != null){
             zoneId = applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_CURRENT_ZONE);
             callback.sendDataZoneId(zoneId);
@@ -79,11 +98,27 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
                 alertsControllerSdk.historyAlertByZone(tempQuery);
             }
         }
-        //zoneId = "Zone_1523325691338";
-        //zoneId = "Zone_1523933778251";
-        //alertsControllerSdk.historyAlertByZone(zoneId);
-        listAlerts = new ArrayList<Alert>();
-        return rootView;
+    }
+
+    private class ResponseReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("ALERT", "Alert in alertFragment");
+            Toast.makeText(getActivity(), "Broadcast received!", Toast.LENGTH_SHORT).show();
+            if (intent != null) {
+                getAlerts();
+                Log.d("ALERT", "Alert in alertFragment");
+                String alert = intent.getStringExtra("subcategory");
+                if ( alert  != null) {
+                    Intent alertIntent = new Intent(context, AlertMapDetailActivity.class);
+                    alertIntent.putExtra("subcategory", intent.getStringExtra("subcategory"));
+                    alertIntent.putExtra("description", intent.getStringExtra("description"));
+                    alertIntent.putExtra("location", intent.getStringExtra("location"));
+                    alertIntent.putExtra("severity", intent.getStringExtra("severity"));
+                }
+
+            }
+        }
     }
 
     public interface DataListener{
@@ -96,7 +131,6 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         listViewAlertsHistory = (ListView) rootView.findViewById(R.id.listViewAlertsHistory);
-        //registerForContextMenu(listViewAlertsHistory);
     }
 
     @Override
@@ -155,4 +189,6 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
 
         }
     }
+
+
 }

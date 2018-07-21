@@ -85,6 +85,8 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
             }
         }
         listAlerts = new ArrayList<Alert>();
+        myAdapterAlerts = new MyAdapterAlerts(context, R.id.listViewAlerts, listAlerts);
+
         return rootView;
     }
 
@@ -132,6 +134,7 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
 
                             if(listAlerts.size() > 0){
                                 myAdapterAlerts = new MyAdapterAlerts(context, R.id.listViewAlerts, listAlerts);
+                                myAdapterAlerts.notifyDataSetChanged();
                                 listViewAlerts.setAdapter(myAdapterAlerts);
                             }
                         }

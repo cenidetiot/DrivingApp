@@ -128,6 +128,7 @@ public class HomeActivity extends AppCompatActivity
         deviceTokenControllerSdk = new DeviceTokenControllerSdk(MAIN_CONTEXT, this);
 
         sqLiteDrivingApp = new SQLiteDrivingApp(this);
+
         filter = new IntentFilter(Config.PUSH_NOTIFICATION);
         LocalBroadcastManager.getInstance(MAIN_CONTEXT).registerReceiver(new ResponseReceiver(), filter);
 
@@ -306,8 +307,16 @@ public class HomeActivity extends AppCompatActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent != null) {
+                if(viewPager.getCurrentItem() == 2){
+                    viewPager.setCurrentItem(0);
+                    viewPager.setCurrentItem(2);
+
+                }
+
+                Log.d("ALERT", "Alert in homeActivity" +  viewPager.getCurrentItem());
                 String alert = intent.getStringExtra("subcategory");
                 if ( alert  != null) {
+
                     Intent alertIntent = new Intent(HomeActivity.this, AlertMapDetailActivity.class);
                     alertIntent.putExtra("subcategory", intent.getStringExtra("subcategory"));
                     alertIntent.putExtra("description", intent.getStringExtra("description"));
