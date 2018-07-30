@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -322,7 +323,7 @@ public class HomeActivity extends AppCompatActivity
                     alertIntent.putExtra("description", intent.getStringExtra("description"));
                     alertIntent.putExtra("location", intent.getStringExtra("location"));
                     alertIntent.putExtra("severity", intent.getStringExtra("severity"));
-                    //startActivity(alertIntent);
+
                 }
 
             }

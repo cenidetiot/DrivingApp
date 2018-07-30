@@ -1,12 +1,15 @@
 package mx.edu.cenidet.app.fragments;
 
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -25,6 +28,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import mx.edu.cenidet.app.activities.DrivingView;
+import mx.edu.cenidet.app.utils.Config;
 import mx.edu.cenidet.cenidetsdk.controllers.AlertsControllerSdk;
 import mx.edu.cenidet.cenidetsdk.httpmethods.Response;
 import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
@@ -50,6 +54,8 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
     private ApplicationPreferences applicationPreferences;
     private FloatingActionButton speedButtonAlerts;
     private String zoneId;
+    private IntentFilter filter;
+
 
     public AlertsFragment() {
         context = HomeActivity.MAIN_CONTEXT;
@@ -71,6 +77,17 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
             }
         });
         //alertsControllerSdk.readAlertsByCampus();
+        getFirstAlerts();
+        filter = new IntentFilter(Config.PUSH_NOTIFICATION);
+        LocalBroadcastManager.getInstance(getActivity().getApplicationContext())
+                .registerReceiver(new ResponseReceiver(), filter);
+        listAlerts = new ArrayList<Alert>();
+        myAdapterAlerts = new MyAdapterAlerts(context, R.id.listViewAlerts, listAlerts);
+
+        return rootView;
+    }
+
+    public void getFirstAlerts() {
         if(applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_CURRENT_ZONE) != null){
             zoneId = applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_CURRENT_ZONE);
             if(zoneId.equals("undetectedZone")){
@@ -84,12 +101,23 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
                 alertsControllerSdk.currentAlertByZone(tempQuery);
             }
         }
-        listAlerts = new ArrayList<Alert>();
-        myAdapterAlerts = new MyAdapterAlerts(context, R.id.listViewAlerts, listAlerts);
-
-        return rootView;
     }
 
+    private class ResponseReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("ALERT", "Alert in alertFragment");
+            Toast.makeText(getActivity(), "Broadcast received!", Toast.LENGTH_SHORT).show();
+            if (intent != null) {
+                Log.d("ALERT", "Alert in alertFragment");
+                String alert = intent.getStringExtra("subcategory");
+                if ( alert  != null) {
+                    getFirstAlerts();
+                }
+
+            }
+        }
+    }
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -100,6 +128,7 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
     @Override
     public void currentAlertByZone(Response response) {
         Log.i("Test: ", "Code Alerts: "+response.getHttpCode());
+        listAlerts.clear();
         switch (response.getHttpCode()){
             case 0:
                 Log.i("STATUS", "Internal Server Error 1...!");

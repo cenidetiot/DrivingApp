@@ -106,7 +106,7 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
             Log.d("ALERT", "Alert in alertFragment");
             Toast.makeText(getActivity(), "Broadcast received!", Toast.LENGTH_SHORT).show();
             if (intent != null) {
-                getAlerts();
+
                 Log.d("ALERT", "Alert in alertFragment");
                 String alert = intent.getStringExtra("subcategory");
                 if ( alert  != null) {
@@ -115,6 +115,7 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
                     alertIntent.putExtra("description", intent.getStringExtra("description"));
                     alertIntent.putExtra("location", intent.getStringExtra("location"));
                     alertIntent.putExtra("severity", intent.getStringExtra("severity"));
+                    getAlerts();
                 }
 
             }
