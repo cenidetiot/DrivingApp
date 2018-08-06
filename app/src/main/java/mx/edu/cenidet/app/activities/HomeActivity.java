@@ -518,7 +518,7 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void sendEvent(String event) {
-        Toast.makeText(this, event, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, event, Toast.LENGTH_SHORT).show();
     }
 
     @Override
