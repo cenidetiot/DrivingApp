@@ -92,8 +92,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     private double latitudeFrom, longitudeFrom, latitudeTo, longitudeTo;
     private double distance;
     private double speedFrom, speedTo;
-    private HashMap<String, Double> hashMapSpeedFromTo;
-    private HashMap<String, Double> hashMapLatLngFromTo;
     private long lastUpdateAcc = 0, lastUpdateGPS = 0;
 
 
@@ -114,17 +112,10 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
     private EventsDetect events ; 
     
-    //Medir distancias
-    float[] distanceArray;
-
     public void onCreate() {
         super.onCreate();
         context = HomeActivity.MAIN_CONTEXT;
-        hashMapSpeedFromTo = new HashMap<String, Double>();
-        hashMapLatLngFromTo = new HashMap<String, Double>();
-        distanceArray = new float[2];
         deviceSensor = new DeviceSensor();
-        //Modelo de datos Device, DeviceModel.
         deviceProperties = new DevicePropertiesFunctions();
         deviceUpdateModel = new DeviceUpdateModel();
         appPreferences = new ApplicationPreferences();
@@ -133,8 +124,15 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         sqLiteController = new SQLiteController(context);
         device = new Device();
 
-        if (appPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_ID) != null){
-            owner = appPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_ID);
+        if (appPreferences.getPreferenceString(
+            context, 
+            ConstantSdk.PREFERENCE_NAME_GENERAL, 
+            ConstantSdk.PREFERENCE_KEY_USER_ID
+            ) != null){
+            owner = appPreferences.getPreferenceString(
+                context, 
+                ConstantSdk.PREFERENCE_NAME_GENERAL, 
+                ConstantSdk.PREFERENCE_KEY_USER_ID);
         }else{
             owner = "undefined";
         }
@@ -150,12 +148,15 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
+        if (
+            !(ActivityCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+             && ActivityCompat.checkSelfPermission(
+                 this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        ) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, locationListenerGPS);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListenerNetwork);
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, locationListenerGPS);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListenerNetwork);
-        
         
         return START_NOT_STICKY;
     }
@@ -179,24 +180,19 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         }
     };
 
-
     private final LocationListener locationListenerNetwork = new LocationListener() {
-
         @Override
         public void onLocationChanged(Location location) {
-                eventDetecion(location);
+            eventDetecion(location);
         }
-
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
 
         }
-
         @Override
         public void onProviderEnabled(String provider) {
 
         }
-
         @Override
         public void onProviderDisabled(String provider) {
 
@@ -220,22 +216,12 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
     private void eventDetecion(Location location){
 
-        Alert suddenStopAlert = null;
-        String StopingStatus = "";
-
-
-
         if (location != null) {
-            
             RoadSegment roadSegment;
             latitude = (double) location.getLatitude();
             longitude = (double) location.getLongitude();
-
-            //latitude = 19.3594612;
-            //longitude =-99.2576283;
             speedMS = (double) location.getSpeed();
             speedKmHr = (double) (location.getSpeed() * 3.6);
-
             //Envía el Modelo de datos Device
             if(countSendDevice == 0){
                 sendContext(latitude, longitude);
@@ -243,47 +229,14 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
                 sendContext(latitude, longitude);
                 countSendDevice = 0;
             }
-
             countSendDevice++;
-
             Intent intent = new Intent(Constants.SERVICE_CHANGE_LOCATION_DEVICE)
                 .putExtra(Constants.SERVICE_RESULT_LATITUDE, latitude)
                 .putExtra(Constants.SERVICE_RESULT_LONGITUDE, longitude)
                 .putExtra(Constants.SERVICE_RESULT_SPEED_MS, speedMS)
                 .putExtra(Constants.SERVICE_RESULT_SPEED_KMHR, speedKmHr);
-            
-            roadSegment = EventsFuntions.detectedRoadSegment(context, latitude, longitude);
-
-            if(roadSegment != null){
-
-                String[] laneUsages, locationRoadSegment;
-                Log.d("ROAD SEGMENT LOCATION", roadSegment.getLocation());
-                laneUsages = roadSegment.getLaneUsage().split(",");
-                locationRoadSegment = roadSegment.getLocation().substring(1, roadSegment.getLocation().length()-1).split(",");
-
-                for (String item:locationRoadSegment) {
-                    Log.d("ROAD SEGMENT ITEM", item);
-                }
-                if(laneUsages.length == 1) {
-                    String[] startStrings, endStrings;
-                    startStrings =  roadSegment.getStartPoint().split(",");
-                    endStrings =  roadSegment.getEndPoint().split(",");
-
-                    LatLng startPoint = new LatLng(
-                        Double.parseDouble(startStrings[0].substring(1,startStrings[0].length())),
-                        Double.parseDouble(startStrings[1].substring(0,startStrings[1].length()-1)));
-
-                    LatLng endPoint = new LatLng(
-                        Double.parseDouble(endStrings[0].substring(1, endStrings[0].length())),
-                        Double.parseDouble(endStrings[1].substring(0,endStrings[1].length()-1)));
-
-
-                }
-            }
-            intent.putExtra(Constants.SERVICE_RESULT_STOPING, StopingStatus);
-            intent.putExtra(Constants.ROAD_SEGMENT, roadSegment);
             LocalBroadcastManager.getInstance(DeviceService.this).sendBroadcast(intent);
-            Log.d("SERVIC", " -- " +speedMS);
+
         } else {
             Log.i(STATUS, "Error obtener valores gps o network...!");
         }

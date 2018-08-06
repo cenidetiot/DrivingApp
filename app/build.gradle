@@ -6,8 +6,8 @@ android {
         applicationId "mx.edu.cenidet.app"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 2
-        versionName "Demo Tec de Monterrey"
+        versionCode 3
+        versionName "V 1.1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 

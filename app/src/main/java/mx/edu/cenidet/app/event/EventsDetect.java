@@ -51,7 +51,6 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
 
     private long count = 0;
     private float last_x, last_y, last_z;
-    private ArrayList<Double> xs, ys, zs;
     private  boolean going = false;
 
     /*Variables Globales de contra sentido */
@@ -71,9 +70,6 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
     public  EventsDetect () {
         context = HomeActivity.MAIN_CONTEXT;
         alertController = new AlertController(this);
-        xs = new ArrayList<Double>();
-        ys = new ArrayList<Double>();
-        zs = new ArrayList<Double>();
         //this.idDevice = new DevicePropertiesFunctions().getAlertId(context);
 
     }
@@ -125,9 +121,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
 
 
             if (!(startToCurrentDistance >= startToLastDistance && endToLastDistance >= endToCurrentDistance)) {
-
                     isWrongWay = true;
-
             } else {
 
                 if (isWrongWay) {
@@ -191,21 +185,26 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
         Functions.saveToFile(fileName, text);
     } 
 
-    public boolean saveAxis (double x, double y, double z ) {
-        /*xs.add(x);
-        ys.add(y);
-        zs.add(z);*/
+    public void saveAxis (double x, double y, double z ) {
+
         this.x = x;
         this.y = y;
         this.z = z;
-        return going;
+        return;
+    }
+
+    public boolean moving (){
+        boolean isMoving = true;
+        if (this.z < 9.6 || this.z >= 9.95){
+            isMoving = false;
+        }
+        return isMoving;
     }
     
     public JSONObject suddenStop(double currentSpeed , long currentDate, double latitude, double longitude) {
         String suddenDescription = "Sudden Stop Detection";
 
         JSONObject alert = new JSONObject();
-
 
         String commonData = currentSpeed + ", " + "x: "+x+", y: "+y+", z: "+z+", Fecha Actual: " + sdf.format(currentDate) + ",";
 

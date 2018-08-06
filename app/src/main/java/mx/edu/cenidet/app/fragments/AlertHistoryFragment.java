@@ -88,7 +88,7 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
             zoneId = applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_CURRENT_ZONE);
             callback.sendDataZoneId(zoneId);
             if(zoneId.equals("undetectedZone")){
-                Toast.makeText(context, R.string.message_undetected_zone, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, R.string.message_undetected_zone, Toast.LENGTH_SHORT).show();
             }else {
                 String typeUser = applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_USER_TYPE);
                 String tempQuery = zoneId;

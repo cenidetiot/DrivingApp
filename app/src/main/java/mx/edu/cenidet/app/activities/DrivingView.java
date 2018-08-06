@@ -125,8 +125,6 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
                     speedMS = intent.getDoubleExtra(Constants.SERVICE_RESULT_SPEED_MS, 0);
                     speedKmHr = intent.getDoubleExtra(Constants.SERVICE_RESULT_SPEED_KMHR, 0);
                     roadSegment = (RoadSegment) intent.getExtras().get(Constants.ROAD_SEGMENT);
-                    //Toast.makeText(getApplicationContext(), "Velocidad" + speedMS, Toast.LENGTH_SHORT).show();
-                    Log.d("DRIVINGVIEW", " "+ speedMS);
                     sendLocationSpeed(latitude,longitude,speedMS,speedKmHr);
                     break;
             }
@@ -349,15 +347,7 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
             long curTime = System.currentTimeMillis();
             if((curTime-lastUpdateAcc)>= 1000){
                 lastUpdateAcc = curTime;
-                last_x = x;
-                last_y = y;
-                last_z = z;
-                String going = "Detenido";
-                if (last_z < 9.6 || last_z >= 9.95){
-                    going = "Moviendose";
-                }
-                //textAcelerometer.setText(last_x + " : " + last_y + " : " + last_z + "\n"+ going);
-                events.saveAxis(last_x,last_y,last_z);
+                events.saveAxis(x,y,z);
             }
 
         }

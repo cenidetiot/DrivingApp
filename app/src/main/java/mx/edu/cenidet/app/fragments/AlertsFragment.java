@@ -91,7 +91,7 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
         if(applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_CURRENT_ZONE) != null){
             zoneId = applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_CURRENT_ZONE);
             if(zoneId.equals("undetectedZone")){
-                Toast.makeText(context, R.string.message_undetected_zone, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, R.string.message_undetected_zone, Toast.LENGTH_SHORT).show();
             }else {
                 String typeUser = applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_USER_TYPE);
                 String tempQuery = zoneId;
