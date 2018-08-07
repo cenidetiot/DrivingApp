@@ -56,14 +56,21 @@ recorrido = [
 print("POR el buen camino")
 for item in recorrido :
     lastPoint = wrongWay(item, lastPoint, startPoint, endPoint)
-    time.sleep(1)
+    #time.sleep(1)
 
 print("POR el mal camino")
 lastPoint = None
 for item in reversed(recorrido) :
     lastPoint = wrongWay(item, lastPoint, startPoint, endPoint)
-    time.sleep(1)
+    #time.sleep(1)
 
 
 
+print(distance([18.87977056670934,-99.22156157903373], [18.87974596,-99.22163431]) + distance([18.87975205,-99.22163026], [18.87974596,-99.22163431]))
+print(distance([18.87975205,-99.22163026], [18.87974596,-99.22163431]) + distance([18.87971432413906,-99.22165067866445], [18.87974596,-99.22163431]))
+
+
+
+#(18.87977056670934,-99.22156157903373), lat/lng: (18.87975205,-99.22163026)
+#08-06 16:16:10.810 25507-25507/mx.edu.cenidet.app D/SEGMENTO: in1 lat/lng: (18.87975205,-99.22163026), lat/lng: (18.87971432413906,-99.22165067866445)
 

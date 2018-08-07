@@ -229,10 +229,12 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
                 sendContext(latitude, longitude);
                 countSendDevice = 0;
             }
+            roadSegment = EventsFuntions.detectedRoadSegment(context, latitude, longitude);
             countSendDevice++;
             Intent intent = new Intent(Constants.SERVICE_CHANGE_LOCATION_DEVICE)
                 .putExtra(Constants.SERVICE_RESULT_LATITUDE, latitude)
                 .putExtra(Constants.SERVICE_RESULT_LONGITUDE, longitude)
+                    .putExtra(Constants.ROAD_SEGMENT, roadSegment)
                 .putExtra(Constants.SERVICE_RESULT_SPEED_MS, speedMS)
                 .putExtra(Constants.SERVICE_RESULT_SPEED_KMHR, speedKmHr);
             LocalBroadcastManager.getInstance(DeviceService.this).sendBroadcast(intent);

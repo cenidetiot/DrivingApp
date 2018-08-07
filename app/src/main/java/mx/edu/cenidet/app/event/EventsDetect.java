@@ -88,11 +88,21 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
         alert.getValidFrom().setValue(Functions.getActualDate());
         alert.getValidTo().setValue(Functions.getActualDate());
         try {
-            alertController.createEntity(context, alert.getId(), alert);
+            //alertController.createEntity(context, alert.getId(), alert);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return  alert;
+    }
+
+    public boolean inRoadSegment (){//polyline, point, width) {
+        /*width = width / 2
+        isOnRoad = False
+        for i in range(len(polyline)):
+        if inSegment(polyline[i][0], polyline[i][1], point, width):
+        isOnRoad = True
+        return isOnRoad*/
+        return true;
     }
 
     public JSONObject wrongWay(LatLng currentPoint, LatLng startPoint, LatLng endPoint, long currentDate){

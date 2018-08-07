@@ -30,11 +30,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.PolyUtil;
+import com.google.maps.android.SphericalUtil;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import mx.edu.cenidet.app.R;
 import mx.edu.cenidet.app.event.EventsDetect;
@@ -294,8 +299,8 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
         }catch (Exception e ){ }
     }
 
-    public void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr) {
 
+    public void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr) {
 
         textSpeed.setText(df.format(speedKmHr) + " km/hr");
 
@@ -310,20 +315,54 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
 
                     speeding(speedKmHr, longitude, latitude);
 
-                    String start = roadSegment.getStartPoint();
-                    String [] startCoords = start.substring(1, start.length() - 1).split(",");
-                    String end = roadSegment.getEndPoint();
-                    String [] endCoords = end.substring(1, end.length() - 1).split(",");
-                    LatLng startLatLng = new LatLng(
-                            (double) Double.parseDouble(startCoords[0]),
-                            (double) Double.parseDouble(startCoords[1]));
-                    LatLng endLatLng = new LatLng(
-                            (double) Double.parseDouble(endCoords[0]),
-                            (double) Double.parseDouble(endCoords[1]));
-                    wrongWay(new LatLng(latitude, longitude), startLatLng, endLatLng);
+
+                    String originalString, clearString;
+                    String[] subString;
+                    List<LatLng> polyline = new ArrayList<>();
+                    LatLng myPoint = new LatLng(latitude, longitude);
+
+                    JSONArray arrayLocation = new JSONArray(roadSegment.getLocation());
+                    for (int j=0; j<arrayLocation.length(); j++){
+                        originalString = arrayLocation.get(j).toString();
+                        clearString = originalString.substring(originalString.indexOf("[") + 1, originalString.indexOf("]"));
+                        subString =  clearString.split(",");
+                        latitude = Double.parseDouble(subString[0]);
+                        longitude = Double.parseDouble(subString[1]);
+                        polyline.add(new LatLng(latitude, longitude));
+                    }
+
+                    Double distances = 0.0;
+                    List<LatLng> nearLine = new ArrayList<>();
+                    int nearIndex = -1;
+
+                    for (int j=0; j < polyline.size() - 1; j++){
+
+                        List<LatLng> tempPolyline = new ArrayList<>();
+                        tempPolyline.add(polyline.get(j));
+                        tempPolyline.add(polyline.get(j + 1));
+
+                        if(PolyUtil.isLocationOnPath(myPoint, tempPolyline, false, roadSegment.getWidth())) {
+                            LatLng tempStart = tempPolyline.get(0);
+                            LatLng tempEnd = tempPolyline.get(1);
+
+                            Double tempdistance = SphericalUtil.computeDistanceBetween(tempStart, myPoint);
+                            tempdistance += SphericalUtil.computeDistanceBetween(tempEnd, myPoint);
+                            if (distances > tempdistance  || nearIndex == -1) {
+                                distances = tempdistance;
+                                nearLine = tempPolyline;
+                                nearIndex = j;
+                            }
+                            Log.d("SEGMENTO", "D1: "+ distances + " D2: " + tempdistance);
+
+                        }
+
+                    }
+
+                    Log.d("SEGMENTO", "in" + nearIndex+  " " + nearLine.get(0).toString() +", "+ nearLine.get(1).toString() );
+                    wrongWay(myPoint,nearLine.get(0),nearLine.get(1));
 
                 }else  {
-                    //textSpeedEvent.setText("");
+                    Log.d("SEGMENTO" , "Fuera de segmento");
                 }
 
             } catch (Exception e){
