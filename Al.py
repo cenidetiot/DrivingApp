@@ -18,6 +18,28 @@ def distance(start, end):
     )
     return distance 
 
+def inSegment (start, end, point, width):
+    area  = (distance(start, end) * width) / 2
+    a = distance (start, point)
+    b = distance (point, end)
+    c = distance (start, end)
+    s = (( a + b + c ) / 2)
+    ap = math.sqrt(
+        (s * (s - a ) ) * ( ( s - b ) * ( s - c ) )
+    )
+    if (ap < area) : 
+        return True 
+    else: 
+        return False
+
+def inRoadSegment (polyline, point, width) :
+    width = width / 2
+    isOnRoad = False
+    for i in range(len(polyline)):
+        if inSegment(polyline[i][0], polyline[i][1], point, width):
+            isOnRoad = True
+    return isOnRoad
+
 def wrongWay(currentPoint,lastPoint,startPoint, endPoint):
     if (lastPoint == None):
         lastPoint = currentPoint

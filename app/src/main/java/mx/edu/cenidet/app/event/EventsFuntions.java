@@ -159,27 +159,15 @@ public class EventsFuntions {
                     //listRoadByIdParking = sqLiteDrivingApp.getRoadByResponsible(offStreetParking.getIdOffStreetParking());
                     Log.i("STATUS: ","SI SE ENCUENTRA EN UN PARKING------------------------------------------------");
                     roadSegment = EventsFuntions.getRoadSegmentParking(currentLatitude, currentLongitude, offStreetParking, sqLiteDrivingApp);
-                    if(roadSegment != null){
-                        return roadSegment;
-                    }else{
-                        return roadSegment;
-                    }
+                    return roadSegment;
                 }else {//Si no se encuentra dentro de un parking.
                     roadSegment = EventsFuntions.getRoadSegmentZone(currentLatitude, currentLongitude, currentZone, sqLiteDrivingApp);
-                    if(roadSegment != null){
-                        return roadSegment;
-                    }else{
-                        return roadSegment;
-                    }
+                    return roadSegment;
                 }//FIN Si no se encuentra dentro de un parking.
             }else{//si no se encuentra ningun parking asignado a la zona.
                 Log.i("STATUS: ","ESTA ZONA NO CUENTA CON PARKING----------------------------------------------");
                 roadSegment = EventsFuntions.getRoadSegmentZone(currentLatitude, currentLongitude, currentZone, sqLiteDrivingApp);
-                if(roadSegment != null){
-                    return roadSegment;
-                }else{
-                    return roadSegment;
-                }
+                return roadSegment;
             }
 
         }

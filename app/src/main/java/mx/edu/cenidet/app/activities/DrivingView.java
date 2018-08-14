@@ -299,7 +299,7 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
         }catch (Exception e ){ }
     }
 
-
+    
     public void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr) {
 
         textSpeed.setText(df.format(speedKmHr) + " km/hr");
@@ -315,12 +315,11 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
 
                     speeding(speedKmHr, longitude, latitude);
 
-
                     String originalString, clearString;
                     String[] subString;
                     List<LatLng> polyline = new ArrayList<>();
                     LatLng myPoint = new LatLng(latitude, longitude);
-
+                    Log.d("SEGMENTO", roadSegment.getLocation());
                     JSONArray arrayLocation = new JSONArray(roadSegment.getLocation());
                     for (int j=0; j<arrayLocation.length(); j++){
                         originalString = arrayLocation.get(j).toString();
@@ -358,7 +357,6 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
 
                     }
 
-                    Log.d("SEGMENTO", "in" + nearIndex+  " " + nearLine.get(0).toString() +", "+ nearLine.get(1).toString() );
                     wrongWay(myPoint,nearLine.get(0),nearLine.get(1));
 
                 }else  {
