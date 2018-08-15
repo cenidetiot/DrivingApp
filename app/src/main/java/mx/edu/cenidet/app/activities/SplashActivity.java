@@ -180,7 +180,7 @@ public class SplashActivity extends AppCompatActivity implements DeviceTokenCont
                         JSONObject object = jsonArray.getJSONObject(i);
                         zone.setIdZone(object.getString("idZone"));
                         zone.setType(object.getString("type"));
-                        zone.getName().setValue(object.getString("name"));
+                        zone.getName().setValue(object.getString("owner"));
                         zone.getAddress().setValue(object.getString("address"));
                         zone.getCategory().setValue(""+object.getString("category"));
                         zone.getLocation().setValue(""+object.getJSONArray("location"));
