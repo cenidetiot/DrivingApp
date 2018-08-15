@@ -37,7 +37,6 @@ import mx.edu.cenidet.app.event.EventsFuntions;
 import www.fiware.org.ngsi.controller.AlertController;
 import www.fiware.org.ngsi.controller.DeviceController;
 import www.fiware.org.ngsi.controller.SQLiteController;
-import www.fiware.org.ngsi.datamodel.entity.Alert;
 import www.fiware.org.ngsi.datamodel.entity.Device;
 import www.fiware.org.ngsi.datamodel.entity.DeviceSensor;
 import www.fiware.org.ngsi.datamodel.entity.RoadSegment;

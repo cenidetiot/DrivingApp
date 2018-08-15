@@ -22,7 +22,6 @@ import org.json.JSONObject;
 import java.util.Date;
 import java.util.Random;
 
-import mx.edu.cenidet.app.activities.AlertMapDetailActivity;
 import mx.edu.cenidet.app.activities.MainActivity;
 import mx.edu.cenidet.app.utils.Config;
 import mx.edu.cenidet.app.utils.NotificationUtils;

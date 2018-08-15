@@ -32,17 +32,6 @@ public class SQLiteDrivingApp extends SQLiteOpenHelper {
         String TBL_PARKING = "tbl_parking";
     }
 
-    //Campos de la tabla tbl_campus:
-    /*public static final String TBL_CAMPUS_ID = "id";
-    public static final String TBL_CAMPUS_TYPE = "type";
-    public static final String TBL_CAMPUS_NAME = "name";
-    public static final String TBL_CAMPUS_ADDRESS = "address";
-    public static final String TBL_CAMPUS_LOCATION = "location";
-    public static final String TBL_CAMPUS_POINTMAP = "pointMap";
-    public static final String TBL_CAMPUS_DATECREATED = "dateCreated";
-    public static final String TBL_CAMPUS_DATEMODIFIED = "dateModified";
-    public static final String TBL_CAMPUS_STATUS = "status";*/
-
     //Campos de la tabla tbl_zone
     public static final String TBL_ZONE_ID = "idZone";
     public static final String TBL_ZONE_TYPE = "type";
@@ -147,7 +136,6 @@ public class SQLiteDrivingApp extends SQLiteOpenHelper {
 
             values.put(TBL_ZONE_ID, zone.getIdZone());
             values.put(TBL_ZONE_TYPE, zone.getType());
-            values.put(TBL_ZONE_REFBUILDINGTYPE, zone.getRefBuildingType().getValue());
             values.put(TBL_ZONE_NAME, zone.getName().getValue());
             values.put(TBL_ZONE_ADDRESS, zone.getAddress().getValue());
             values.put(TBL_ZONE_CATEGORY, zone.getCategory().getValue());
@@ -187,16 +175,15 @@ public class SQLiteDrivingApp extends SQLiteOpenHelper {
                 Zone zone = new Zone();
                 zone.setIdZone(cursor.getString(0));
                 zone.setType(cursor.getString(1));
-                zone.getRefBuildingType().setValue(cursor.getString(2));
-                zone.getName().setValue(cursor.getString(3));
-                zone.getAddress().setValue(cursor.getString(4));
-                zone.getCategory().setValue(cursor.getString(5));
-                zone.getLocation().setValue(cursor.getString(6));
-                zone.getCenterPoint().setValue(cursor.getString(7));
-                zone.getDescription().setValue(cursor.getString(8));
-                zone.getDateCreated().setValue(cursor.getString(9));
-                zone.getDateModified().setValue(cursor.getString(10));
-                zone.getStatus().setValue(cursor.getString(11));
+                zone.getName().setValue(cursor.getString(2));
+                zone.getAddress().setValue(cursor.getString(3));
+                zone.getCategory().setValue(cursor.getString(4));
+                zone.getLocation().setValue(cursor.getString(5));
+                zone.getCenterPoint().setValue(cursor.getString(6));
+                zone.getDescription().setValue(cursor.getString(7));
+                zone.getDateCreated().setValue(cursor.getString(8));
+                zone.getDateModified().setValue(cursor.getString(9));
+                zone.getStatus().setValue(cursor.getString(10));
                 // Adding to list
                 list.add(zone);
             } while (cursor.moveToNext());
@@ -215,7 +202,6 @@ public class SQLiteDrivingApp extends SQLiteOpenHelper {
         String[] projection = {
                 TBL_ZONE_ID,
                 TBL_ZONE_TYPE,
-                TBL_ZONE_REFBUILDINGTYPE,
                 TBL_ZONE_NAME,
                 TBL_ZONE_ADDRESS,
                 TBL_ZONE_CATEGORY,
@@ -242,16 +228,15 @@ public class SQLiteDrivingApp extends SQLiteOpenHelper {
             if(cursor.moveToFirst()){
                 zone.setIdZone(cursor.getString(0));
                 zone.setType(cursor.getString(1));
-                zone.getRefBuildingType().setValue(cursor.getString(2));
-                zone.getName().setValue(cursor.getString(3));
-                zone.getAddress().setValue(cursor.getString(4));
-                zone.getCategory().setValue(cursor.getString(5));
-                zone.getLocation().setValue(cursor.getString(6));
-                zone.getCenterPoint().setValue(cursor.getString(7));
-                zone.getDescription().setValue(cursor.getString(8));
-                zone.getDateCreated().setValue(cursor.getString(9));
-                zone.getDateModified().setValue(cursor.getString(10));
-                zone.getStatus().setValue(cursor.getString(11));
+                zone.getName().setValue(cursor.getString(2));
+                zone.getAddress().setValue(cursor.getString(3));
+                zone.getCategory().setValue(cursor.getString(4));
+                zone.getLocation().setValue(cursor.getString(5));
+                zone.getCenterPoint().setValue(cursor.getString(6));
+                zone.getDescription().setValue(cursor.getString(7));
+                zone.getDateCreated().setValue(cursor.getString(8));
+                zone.getDateModified().setValue(cursor.getString(9));
+                zone.getStatus().setValue(cursor.getString(10));
             }else {
                 zone = null;
             }

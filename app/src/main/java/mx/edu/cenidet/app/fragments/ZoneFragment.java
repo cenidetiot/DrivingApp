@@ -99,10 +99,7 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
         mapView = (MapView) rootView.findViewById(R.id.mapZone);
-
         if (mapView != null) {
             mapView.onCreate(null);
             mapView.onResume();

@@ -491,7 +491,6 @@ public class LoginActivity extends AppCompatActivity implements
                         JSONObject object = jsonArray.getJSONObject(i);
                         zone.setIdZone(object.getString("idZone"));
                         zone.setType(object.getString("type"));
-                        zone.getRefBuildingType().setValue(object.getString("refBuildingType"));
                         zone.getName().setValue(object.getString("name"));
                         zone.getAddress().setValue(object.getString("address"));
                         zone.getCategory().setValue(""+object.getString("category"));

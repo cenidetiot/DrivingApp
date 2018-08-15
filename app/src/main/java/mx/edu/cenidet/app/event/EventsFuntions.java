@@ -60,7 +60,6 @@ public class EventsFuntions {
                 zone = new Zone();
                 zone.setIdZone(listZone.get(i).getIdZone());
                 zone.setType(listZone.get(i).getType());
-                zone.setRefBuildingType(listZone.get(i).getRefBuildingType());
                 zone.setName(listZone.get(i).getName());
                 zone.setAddress(listZone.get(i).getAddress());
                 zone.setCategory(listZone.get(i).getCategory());
