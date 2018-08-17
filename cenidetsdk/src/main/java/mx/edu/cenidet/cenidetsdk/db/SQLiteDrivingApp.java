@@ -82,7 +82,7 @@ public class SQLiteDrivingApp extends SQLiteOpenHelper {
 
     //Sentencia SQL para crear la tabla tbl_campus
     //String sqlCreateTblCampus = "CREATE TABLE "+ Tables.TBL_CAMPUS +" ("+ TBL_CAMPUS_ID + " VARCHAR(200) PRIMARY KEY NOT NULL, "+ TBL_CAMPUS_TYPE +" VARCHAR(120) NOT NULL, "+ TBL_CAMPUS_NAME +" TEXT NOT NULL, "+ TBL_CAMPUS_ADDRESS +" TEXT NOT NULL, "+ TBL_CAMPUS_LOCATION + " TEXT NOT NULL, "+ TBL_CAMPUS_POINTMAP +" TEXT NOT NULL, "+ TBL_CAMPUS_DATECREATED + " TEXT, "+ TBL_CAMPUS_DATEMODIFIED +" TEXT, " + TBL_CAMPUS_STATUS+ " VARCHAR(2))";
-    String sqlCreateTblZone = "CREATE TABLE "+ Tables.TBL_ZONE +" ("+ TBL_ZONE_ID + " VARCHAR(200) PRIMARY KEY NOT NULL, "+ TBL_ZONE_TYPE +" VARCHAR(120) NOT NULL, "+ TBL_ZONE_REFBUILDINGTYPE +" TEXT, "+ TBL_ZONE_NAME +" TEXT NOT NULL, "+ TBL_ZONE_ADDRESS + " TEXT NOT NULL, "+ TBL_ZONE_CATEGORY +" TEXT NOT NULL, "+ TBL_ZONE_LOCATION + " TEXT NOT NULL, "+ TBL_ZONE_CENTERPOINT +" TEXT NOT NULL, "+TBL_ZONE_DESCRIPTION+" TEXT, "+TBL_ZONE_DATECREATED+" TEXT, "+TBL_ZONE_DATEMODIFIED+" TEXT, "+ TBL_ZONE_STATUS+ " VARCHAR(2))";
+    String sqlCreateTblZone = "CREATE TABLE "+ Tables.TBL_ZONE +" ("+ TBL_ZONE_ID + " VARCHAR(200) PRIMARY KEY NOT NULL, "+ TBL_ZONE_TYPE +" VARCHAR(120) NOT NULL, "+ TBL_ZONE_NAME +" TEXT NOT NULL, "+ TBL_ZONE_ADDRESS + " TEXT NOT NULL, "+ TBL_ZONE_CATEGORY +" TEXT NOT NULL, "+ TBL_ZONE_LOCATION + " TEXT NOT NULL, "+ TBL_ZONE_CENTERPOINT +" TEXT NOT NULL, "+TBL_ZONE_DESCRIPTION+" TEXT, "+TBL_ZONE_DATECREATED+" TEXT, "+TBL_ZONE_DATEMODIFIED+" TEXT, "+ TBL_ZONE_STATUS+ " VARCHAR(2))";
     String sqlCreateTblRoad = "CREATE TABLE "+ Tables.TBL_ROAD +" ("+ TBL_ROAD_ID + " VARCHAR(200) PRIMARY KEY NOT NULL, "+ TBL_ROAD_TYPE +" VARCHAR(120) NOT NULL, "+ TBL_ROAD_NAME+" TEXT, "+ TBL_ROAD_DESCRIPTION +" TEXT, "+ TBL_ROAD_RESPONSIBLE + " TEXT NOT NULL, "+ TBL_ROAD_STATUS+ " VARCHAR(2))";
     String sqlCreateTblRoadSegment = "CREATE TABLE "+ Tables.TBL_ROAD_SEGMENT +" ("+ TBL_ROAD_SEGMENT_ID + " VARCHAR(200) PRIMARY KEY NOT NULL, "+ TBL_ROAD_SEGMENT_TYPE +" VARCHAR(120) NOT NULL, "+ TBL_ROAD_SEGMENT_NAME +" TEXT, "+ TBL_ROAD_SEGMENT_LOCATION +" TEXT NOT NULL, "+ TBL_ROAD_SEGMENT_REFROAD + " TEXT NOT NULL, "+ TBL_ROAD_SEGMENT_STARTPOINT +" TEXT NOT NULL, "+ TBL_ROAD_SEGMENT_ENDPOINT + " TEXT NOT NULL, "+ TBL_ROAD_SEGMENT_TOTALLANENUMBER +" INTEGER NOT NULL, "+TBL_ROAD_SEGMENT_MAXIMUMALLOWEBSPEED+" INTEGER NOT NULL, "+TBL_ROAD_SEGMENT_MINIMUMALLOWEDSPEED+" INTEGER NOT NULL, "+TBL_ROAD_SEGMENT_LANEUSAGE+" TEXT NOT NULL, "+TBL_ROAD_SEGMENT_WIDTH+" INTEGER NOT NULL, "+ TBL_ROAD_SEGMENT_STATUS+ " VARCHAR(2))";
     String sqlCreateTblParking = "CREATE TABLE "+ Tables.TBL_PARKING +" ("+ TBL_PARKING_ID + " VARCHAR(200) PRIMARY KEY NOT NULL, "+ TBL_PARKING_TYPE +" VARCHAR(120) NOT NULL, "+ TBL_PARKING_NAME+" TEXT, "+ TBL_PARKING_CATEGORY +" TEXT, "+ TBL_PARKING_LOCATION + " TEXT NOT NULL, "+ TBL_PARKING_DESCRIPTION +" TEXT, "+TBL_PARKING_AREASERVED+" TEXT NOT NULL, "+ TBL_PARKING_STATUS+ " VARCHAR(2))";
@@ -226,6 +226,18 @@ public class SQLiteDrivingApp extends SQLiteOpenHelper {
 
         if(cursor != null) {
             if(cursor.moveToFirst()){
+                Log.d("ZONES", 0 + " "+ cursor.getString(0));
+                Log.d("ZONES", 1 + " "+ cursor.getString(1));
+                Log.d("ZONES", 2 + " "+ cursor.getString(2));
+                Log.d("ZONES", 3 + " "+ cursor.getString(3));
+                Log.d("ZONES", 4 + " "+ cursor.getString(4));
+                Log.d("ZONES", 5 + " "+ cursor.getString(5));
+                Log.d("ZONES", 6 + " "+ cursor.getString(6));
+                Log.d("ZONES", 7 + " "+ cursor.getString(7));
+                Log.d("ZONES", 8 + " "+ cursor.getString(8));
+                Log.d("ZONES", 9 + " "+ cursor.getString(9));
+                Log.d("ZONES", 10 + " "+ cursor.getString(10));
+
                 zone.setIdZone(cursor.getString(0));
                 zone.setType(cursor.getString(1));
                 zone.getName().setValue(cursor.getString(2));

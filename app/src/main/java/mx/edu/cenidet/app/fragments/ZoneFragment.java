@@ -145,6 +145,7 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
 
     public void drawZones(){
         ArrayList<Zone> Zones = sqLiteDrivingApp.getAllZone();
+
         for (Zone zone : Zones){
             drawZone(zone);
         }

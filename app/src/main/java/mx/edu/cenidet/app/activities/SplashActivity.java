@@ -66,9 +66,7 @@ public class SplashActivity extends AppCompatActivity implements DeviceTokenCont
             deviceTokenControllerSdk.createDeviceToken(fcmToken, new DevicePropertiesFunctions().getDeviceId(context), preference);
         }
 
-        if(listZone.size()== 0){
-            zoneControllerSdk.readAllZone();
-        }
+
 
         if(isEnableGPS()){
             mIntent = new Intent(this, HomeActivity.class);
@@ -170,6 +168,7 @@ public class SplashActivity extends AppCompatActivity implements DeviceTokenCont
         switch (response.getHttpCode()){
             case 200:
                 Zone zone;
+                Log.d("ZONES", response.getBodyString());
                 JSONArray jsonArray = response.parseJsonArray(response.getBodyString());
                 //Log.i("Status: ", "----------");
                 //Log.i("Status: ", "BODY Array: "+jsonArray);

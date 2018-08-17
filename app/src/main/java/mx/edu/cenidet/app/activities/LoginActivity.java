@@ -481,6 +481,7 @@ public class LoginActivity extends AppCompatActivity implements
         switch (response.getHttpCode()){
             case 200:
                 Zone zone;
+                Log.d("ZONES", response.getBodyString());
                 JSONArray jsonArray = response.parseJsonArray(response.getBodyString());
                 //Log.i("Status: ", "----------");
                 //Log.i("Status: ", "BODY Array: "+jsonArray);
@@ -491,7 +492,7 @@ public class LoginActivity extends AppCompatActivity implements
                         JSONObject object = jsonArray.getJSONObject(i);
                         zone.setIdZone(object.getString("idZone"));
                         zone.setType(object.getString("type"));
-                        zone.getName().setValue(object.getString("name"));
+                        zone.getName().setValue(object.getString("owner"));
                         zone.getAddress().setValue(object.getString("address"));
                         zone.getCategory().setValue(""+object.getString("category"));
                         zone.getLocation().setValue(""+object.getJSONArray("location"));
@@ -503,9 +504,9 @@ public class LoginActivity extends AppCompatActivity implements
                         zone.getStatus().setValue(object.getString("status"));
 
                         if(sqLiteDrivingApp.createZone(zone) == true){
-                            Log.i("Status: ", "Dato insertado correctamente Zone...!");
+                            Log.i("ZONES", "Dato insertado correctamente Zone...!" + zone.getIdZone());
                         }else{
-                            Log.i("Status: ", "Error al insertar Zone...!");
+                            Log.i("ZONES", "Error al insertar Zone...!" + zone.getIdZone());
                         }
                         Log.i("--------: ", "--------------------------------------");
                     } catch (JSONException e) {
