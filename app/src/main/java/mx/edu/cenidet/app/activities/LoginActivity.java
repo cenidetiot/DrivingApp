@@ -38,20 +38,16 @@ import java.util.List;
 import java.util.Map;
 
 import mx.edu.cenidet.cenidetsdk.controllers.UserController;
-import mx.edu.cenidet.cenidetsdk.controllers.ZoneControllerSdk;
-import mx.edu.cenidet.cenidetsdk.db.SQLiteDrivingApp;
 import mx.edu.cenidet.cenidetsdk.httpmethods.Response;
 import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
 import mx.edu.cenidet.cenidetsdk.utilities.FunctionSdk;
 import mx.edu.cenidet.app.R;
-import www.fiware.org.ngsi.datamodel.entity.Zone;
 import www.fiware.org.ngsi.utilities.ApplicationPreferences;
 
 public class LoginActivity extends AppCompatActivity implements
         View.OnClickListener,
         GoogleApiClient.OnConnectionFailedListener,
-        UserController.UsersServiceMethods,
-        ZoneControllerSdk.ZoneServiceMethods{
+        UserController.UsersServiceMethods{
 
     final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
     private static final int RESOLVE_HINT = 12;
@@ -70,9 +66,6 @@ public class LoginActivity extends AppCompatActivity implements
     private GoogleApiClient mGoogleApiClient;
     private String phone;
     private String userType;
-    private ZoneControllerSdk zoneControllerSdk;
-    private SQLiteDrivingApp sqLiteDrivingApp;
-    private ArrayList<Zone> listZone;
 
 
 
@@ -140,12 +133,6 @@ public class LoginActivity extends AppCompatActivity implements
                 return;
             }
 
-        }
-        sqLiteDrivingApp = new SQLiteDrivingApp(this);
-        zoneControllerSdk = new ZoneControllerSdk(context, this);
-        listZone = sqLiteDrivingApp.getAllZone();
-        if(listZone.size()== 0){
-            zoneControllerSdk.readAllZone();
         }
 
     }
@@ -476,45 +463,5 @@ public class LoginActivity extends AppCompatActivity implements
 
     }
 
-    @Override
-    public void readAllZone(Response response) {
-        switch (response.getHttpCode()){
-            case 200:
-                Zone zone;
-                Log.d("ZONES", response.getBodyString());
-                JSONArray jsonArray = response.parseJsonArray(response.getBodyString());
-                //Log.i("Status: ", "----------");
-                //Log.i("Status: ", "BODY Array: "+jsonArray);
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    try {
-                        Log.i("Status: ", "Body "+i+" :"+jsonArray.getJSONObject(i));
-                        zone = new Zone();
-                        JSONObject object = jsonArray.getJSONObject(i);
-                        zone.setIdZone(object.getString("idZone"));
-                        zone.setType(object.getString("type"));
-                        zone.getName().setValue(object.getString("owner"));
-                        zone.getAddress().setValue(object.getString("address"));
-                        zone.getCategory().setValue(""+object.getString("category"));
-                        zone.getLocation().setValue(""+object.getJSONArray("location"));
-                        zone.getCenterPoint().setValue(""+object.getJSONArray("centerPoint"));
-                        zone.getDescription().setValue(object.getString("description"));
-                        zone.getDateCreated().setValue(object.getString("dateCreated"));
-                        zone.getDateModified().setValue(object.getString("dateModified"));
-                        zone.getDateModified().setValue(object.getString("dateModified"));
-                        zone.getStatus().setValue(object.getString("status"));
 
-                        if(sqLiteDrivingApp.createZone(zone) == true){
-                            Log.i("ZONES", "Dato insertado correctamente Zone...!" + zone.getIdZone());
-                        }else{
-                            Log.i("ZONES", "Error al insertar Zone...!" + zone.getIdZone());
-                        }
-                        Log.i("--------: ", "--------------------------------------");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-                break;
-        }
-    }
 }

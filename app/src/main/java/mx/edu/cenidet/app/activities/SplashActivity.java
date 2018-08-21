@@ -27,7 +27,8 @@ import www.fiware.org.ngsi.datamodel.entity.Zone;
 import www.fiware.org.ngsi.utilities.ApplicationPreferences;
 import www.fiware.org.ngsi.utilities.DevicePropertiesFunctions;
 
-public class SplashActivity extends AppCompatActivity implements DeviceTokenControllerSdk.DeviceTokenServiceMethods, ZoneControllerSdk.ZoneServiceMethods {
+public class SplashActivity extends AppCompatActivity implements
+        DeviceTokenControllerSdk.DeviceTokenServiceMethods {
     private Intent mIntent;
     private SQLiteDrivingApp sqLiteDrivingApp;
     private ArrayList<Zone> listZone;
@@ -42,10 +43,6 @@ public class SplashActivity extends AppCompatActivity implements DeviceTokenCont
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
-        sqLiteDrivingApp = new SQLiteDrivingApp(this);
-        zoneControllerSdk = new ZoneControllerSdk(context, this);
-        listZone = sqLiteDrivingApp.getAllZone();
-
         //objeto que utilizaremos para llamar a los metodos de la gestion del token de firebase
         appPreferences = new ApplicationPreferences();
         deviceTokenControllerSdk = new DeviceTokenControllerSdk(context, this);
@@ -161,47 +158,5 @@ public class SplashActivity extends AppCompatActivity implements DeviceTokenCont
 
     }
 
-    @Override
-    public void readAllZone(Response response) {
-        Log.i("Status: ", "CodeAllZone: "+response.getHttpCode());
-        Log.i("Status: ", "BODYAllZone: "+response.getBodyString());
-        switch (response.getHttpCode()){
-            case 200:
-                Zone zone;
-                Log.d("ZONES", response.getBodyString());
-                JSONArray jsonArray = response.parseJsonArray(response.getBodyString());
-                //Log.i("Status: ", "----------");
-                //Log.i("Status: ", "BODY Array: "+jsonArray);
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    try {
-                        Log.i("Status: ", "Body "+i+" :"+jsonArray.getJSONObject(i));
-                        zone = new Zone();
-                        JSONObject object = jsonArray.getJSONObject(i);
-                        zone.setIdZone(object.getString("idZone"));
-                        zone.setType(object.getString("type"));
-                        zone.getName().setValue(object.getString("owner"));
-                        zone.getAddress().setValue(object.getString("address"));
-                        zone.getCategory().setValue(""+object.getString("category"));
-                        zone.getLocation().setValue(""+object.getJSONArray("location"));
-                        zone.getCenterPoint().setValue(""+object.getJSONArray("centerPoint"));
-                        zone.getDescription().setValue(object.getString("description"));
-                        zone.getDateCreated().setValue(object.getString("dateCreated"));
-                        zone.getDateModified().setValue(object.getString("dateModified"));
-                        zone.getDateModified().setValue(object.getString("dateModified"));
-                        zone.getStatus().setValue(object.getString("status"));
 
-                        if(sqLiteDrivingApp.createZone(zone) == true){
-                            Log.i("Status: ", "Dato insertado correctamente Zone...!");
-                        }else{
-                            Log.i("Status: ", "Error al insertar Zone...!");
-                        }
-                        Log.i("--------: ", "--------------------------------------");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-                break;
-        }
-    }
 }

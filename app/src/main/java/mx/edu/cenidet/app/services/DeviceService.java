@@ -24,6 +24,11 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import mx.edu.cenidet.cenidetsdk.db.SQLiteDrivingApp;
 import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
 import  mx.edu.cenidet.app.event.EventsDetect;
 
@@ -34,6 +39,7 @@ import java.util.List;
 
 import mx.edu.cenidet.app.activities.HomeActivity;
 import mx.edu.cenidet.app.event.EventsFuntions;
+import mx.edu.cenidet.cenidetsdk.controllers.ZoneControllerSdk;
 import www.fiware.org.ngsi.controller.AlertController;
 import www.fiware.org.ngsi.controller.DeviceController;
 import www.fiware.org.ngsi.controller.SQLiteController;
@@ -47,8 +53,11 @@ import www.fiware.org.ngsi.utilities.ApplicationPreferences;
 import www.fiware.org.ngsi.utilities.Constants;
 import www.fiware.org.ngsi.utilities.DevicePropertiesFunctions;
 import www.fiware.org.ngsi.utilities.Functions;
+import www.fiware.org.ngsi.datamodel.entity.Zone;
 
-public class DeviceService extends Service implements DeviceController.DeviceResourceMethods{
+
+public class DeviceService extends Service implements DeviceController.DeviceResourceMethods ,
+        ZoneControllerSdk.ZoneServiceMethods{
     private Context context;
     private static final String STATUS = "STATUS";
     //private double longitudeGPS, latitudeGPS;
@@ -94,22 +103,11 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     private long lastUpdateAcc = 0, lastUpdateGPS = 0;
 
 
+    private ZoneControllerSdk zoneControllerSdk;
+    private SQLiteDrivingApp sqLiteDrivingApp;
+    private ArrayList<Zone> listZone;
 
-    /** variables de control y configuración**/
-    private boolean isDrivingUser=true; // Variable para determinar si una persona va manejando
-    private boolean isMonitoring=false; // Variable para determinar si se deben monitorear los eventos relacionados con la velocidad
-    private boolean isInArea=true; //Variable para saber si una persona se encuentra dentro de un area
-    private boolean isInParking=true; //Variable para verificar si la persona se encuentra en un area que tiene calles
-    private boolean isUnauthorizedSpeed=false;
-
-    private double minimumSpeedToAsk=4.5; // Valor minimo de velocidad al que se preguntara si una persona va manejando.
-    private double minimumSpeedForAutomaticCalculation=7.5; // Valor minimo de la velocidad al que se asumira que la persona va manejando
-    private double timeStampLastReadingGPS=0.0; //Marca de tiempo que permite identificar el tiempo de la ultima lectura realizada, el valor esta en milisegundos.
-    private double timeUpdateAlert=5; // Tiempo en segundos para actualizar una alerta
-    private double timeMinInferiorSpeed=180; //Tiempo minimo en segundos para determinarlo como una velocidad por debajo del limite minimo establecido
-    private double timeStampLastMinSpeedReading=-1.0; //Marca de tiempo que permite identificar el tiempo de la ultima lectura realizada, el valor esta en milisegundos.
-
-    private EventsDetect events ; 
+    private EventsDetect events ;
     
     public void onCreate() {
         super.onCreate();
@@ -134,6 +132,13 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
                 ConstantSdk.PREFERENCE_KEY_USER_ID);
         }else{
             owner = "undefined";
+        }
+
+        sqLiteDrivingApp = new SQLiteDrivingApp(this);
+        zoneControllerSdk = new ZoneControllerSdk(context, this);
+        listZone = sqLiteDrivingApp.getAllZone();
+        if(listZone.size()== 0){
+            zoneControllerSdk.readAllZone();
         }
 
     }
@@ -353,4 +358,43 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     @Override
     public void onGetEntities(Response response) {}
 
+    @Override
+    public void readAllZone(mx.edu.cenidet.cenidetsdk.httpmethods.Response response) {
+        switch (response.getHttpCode()){
+            case 200:
+                Zone zone;
+                Log.d("ZONES", response.getBodyString());
+                JSONArray jsonArray = response.parseJsonArray(response.getBodyString());
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    try {
+                        Log.i("Status: ", "Body "+i+" :"+jsonArray.getJSONObject(i));
+                        zone = new Zone();
+                        JSONObject object = jsonArray.getJSONObject(i);
+                        zone.setIdZone(object.getString("idZone"));
+                        zone.setType(object.getString("type"));
+                        zone.getName().setValue(object.getString("owner"));
+                        zone.getAddress().setValue(object.getString("address"));
+                        zone.getCategory().setValue(""+object.getString("category"));
+                        zone.getLocation().setValue(""+object.getJSONArray("location"));
+                        zone.getCenterPoint().setValue(""+object.getJSONArray("centerPoint"));
+                        zone.getDescription().setValue(object.getString("description"));
+                        zone.getDateCreated().setValue(object.getString("dateCreated"));
+                        zone.getDateModified().setValue(object.getString("dateModified"));
+                        zone.getDateModified().setValue(object.getString("dateModified"));
+                        zone.getStatus().setValue(object.getString("status"));
+
+                        if(sqLiteDrivingApp.createZone(zone) == true){
+                            Log.i("ZONES", "Dato insertado correctamente Zone...!" + zone.getIdZone());
+                        }else{
+                            Log.i("ZONES", "Error al insertar Zone...!" + zone.getIdZone());
+                        }
+                        Log.i("--------: ", "--------------------------------------");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                break;
+        }
+    }
 }
