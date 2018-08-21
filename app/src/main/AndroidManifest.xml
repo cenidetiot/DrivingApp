@@ -25,7 +25,6 @@
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -33,11 +32,21 @@
         <activity
             android:name=".activities.SplashActivity"
             android:theme="@style/SplashScreen" />
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
-
+        <activity android:name=".activities.AlertMapDetailActivity" />
+        <activity android:name=".activities.MapDetailActivity" />
+        <activity android:name=".activities.AlertHistoryActivity" />
+        <activity
+            android:name=".activities.SendManualAlertsActivity"
+            android:configChanges="screenSize|orientation"
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".activities.CreateAccountActivity" />
+        <activity android:name=".activities.MyProfileActivity" />
+        <activity android:name=".activities.LoginActivity" />
+        <activity android:name=".activities.WebViewSmartSecurity" />
+        <activity
+            android:name=".activities.DrivingView"
+            android:label="@string/title_activity_driving_view"
+            android:theme="@style/AppTheme" />
         <service android:name=".services.DeviceService" />
         <service android:name=".services.DrivingFirebaseMessagingService">
             <intent-filter>
@@ -50,29 +59,16 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".activities.AlertMapDetailActivity" />
-        <activity android:name=".activities.MapDetailActivity" />
-        <activity android:name=".activities.AlertHistoryActivity" />
-        <activity
-            android:name=".activities.SendManualAlertsActivity"
-            android:configChanges="screenSize|orientation"
-            android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".activities.CreateAccountActivity" />
-        <activity android:name=".activities.MyProfileActivity" />
-        <activity android:name=".activities.LoginActivity" />
-        <activity android:name=".activities.WebViewSmartSecurity" />
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_car" />
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
 
-        <activity
-            android:name=".activities.DrivingView"
-            android:label="@string/title_activity_driving_view"
-            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
