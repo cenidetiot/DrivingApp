@@ -55,12 +55,16 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
     private FloatingActionButton speedButtonAlerts;
     private String zoneId;
     private IntentFilter filter;
+    private boolean _hasLoadedOnce = false;
+    private View header;
+
 
 
     public AlertsFragment() {
         context = HomeActivity.MAIN_CONTEXT;
         alertsControllerSdk = new AlertsControllerSdk(context, this);
         applicationPreferences = new ApplicationPreferences();
+
     }
 
 
@@ -76,18 +80,27 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
                 startActivity(drivingView);
             }
         });
-        //alertsControllerSdk.readAlertsByCampus();
-        getFirstAlerts();
         filter = new IntentFilter(Config.PUSH_NOTIFICATION);
         LocalBroadcastManager.getInstance(getActivity().getApplicationContext())
                 .registerReceiver(new ResponseReceiver(), filter);
         listAlerts = new ArrayList<Alert>();
         myAdapterAlerts = new MyAdapterAlerts(context, R.id.listViewAlerts, listAlerts);
+        header  = getLayoutInflater().inflate(R.layout.empty_alerts_list, listViewAlerts, false);
 
         return rootView;
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        Log.d("ALERTSVISIBLES", "" + isVisibleToUser);
+        if (isVisibleToUser){
+           getFirstAlerts();
+        }
+    }
+
     public void getFirstAlerts() {
+        Log.d("LOADINGALERTS", "LOADINGALERTS");
         if(applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_CURRENT_ZONE) != null){
             zoneId = applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_CURRENT_ZONE);
             if(zoneId.equals("undetectedZone")){
@@ -107,9 +120,7 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d("ALERT", "Alert in alertFragment");
-            Toast.makeText(getActivity(), "Broadcast received!", Toast.LENGTH_SHORT).show();
             if (intent != null) {
-                Log.d("ALERT", "Alert in alertFragment");
                 String alert = intent.getStringExtra("subcategory");
                 if ( alert  != null) {
                     getFirstAlerts();
@@ -140,6 +151,7 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
                     JSONArray jsonArray = response.parseJsonArray(response.getBodyString());
                     if(jsonArray.length() == 0 || jsonArray == null){
                         Toast.makeText(context, R.string.message_no_alerts_show, Toast.LENGTH_SHORT).show();
+                        listViewAlerts.addHeaderView(header);
                     }else{
                         for (int i = 0; i < jsonArray.length(); i++) {
                             try {
@@ -160,14 +172,13 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
                             }catch (JSONException e){
                                 e.printStackTrace();
                             }
-
-                            if(listAlerts.size() > 0){
-                                myAdapterAlerts = new MyAdapterAlerts(context, R.id.listViewAlerts, listAlerts);
-                                myAdapterAlerts.notifyDataSetChanged();
-                                listViewAlerts.setAdapter(myAdapterAlerts);
-                            }
+                            listViewAlerts.removeHeaderView(header);
                         }
                     }
+
+                myAdapterAlerts = new MyAdapterAlerts(context, R.id.listViewAlerts, listAlerts);
+                myAdapterAlerts.notifyDataSetChanged();
+                listViewAlerts.setAdapter(myAdapterAlerts);
                 break;
             case 500:
                 Log.i("STATUS", "Internal Server Error 2...!");
@@ -189,7 +200,6 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
         MenuInflater menuInflater = getActivity().getMenuInflater();
 
         info =  (AdapterView.AdapterContextMenuInfo) menuInfo;
-        //menu.setHeaderTitle(listAlerts.get(info.position).getId());
         menu.setHeaderTitle(listAlerts.get(info.position).getCategory().getValue());
         menuInflater.inflate(R.menu.alert_map_menu, menu);
     }

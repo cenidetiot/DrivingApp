@@ -107,6 +107,8 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
         }
     }
 
+
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
@@ -116,8 +118,7 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
         gMap.setMyLocationEnabled(true);
         //Ocultar el boton
         gMap.getUiSettings().setMyLocationButtonEnabled(false);
-        drawZones();
-        drawParking(currentZone);
+
     }
 
 
@@ -226,9 +227,7 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
             }
         }
     }
-    /*public void drawRoadSegmentByZone(String responsible){
-        ArrayList<Road> listRoad
-    }*/
+
     public void drawRoadSegmentByParking(String refRoad){
         ArrayList<RoadSegment> getAllRoadSegmentByRefRoad = sqLiteDrivingApp.getAllRoadSegmentByRefRoad(refRoad);
         if(getAllRoadSegmentByRefRoad.size() > 0){
@@ -257,9 +256,6 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                Log.i("ID", "--------"+iteratorRoadSegment.getIdRoadSegment());
-                Log.i("NAME: ", "--------"+iteratorRoadSegment.getName());
-                Log.i("LOCATION : ", "--------"+iteratorRoadSegment.getLocation());
             }
         }
     }
@@ -271,6 +267,9 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
 
     @Override
     public void detectZone(Zone zone, boolean statusLocation) {
+        if (statusLocation){
+            Log.d("DETECEDZONE", zone.getIdZone());
+        }
     }
 
     @Override
@@ -280,7 +279,6 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
 
     @Override
     public void sendDataAccelerometer(double ax, double ay, double az) {
-        //Log.i("STATUS 3: ","ax: "+ax+" ay: "+ay+" az: "+az);
     }
 
     @Override

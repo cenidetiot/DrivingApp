@@ -10,7 +10,6 @@ public class Constants {
 
     //CONSTANTES PARA LAS CONFIGURACIONES DE LAS PREFERENCIAS DEL DISPOSITIVO...
     public static final String PREFERENCE_NAME_GENERAL = "preference_name_general";
-
     public static final String PREFERENCE_OFFLINE_MODE_KEY = "offline_mode";
     public static final String PREFERENCE_STATUS_OFFLINE_MODE  = "status_offline_mode";
     public static final String PREFERENCE_MOBILE_DATA_KEY = "mobile_data";
@@ -31,6 +30,7 @@ public class Constants {
     public static final String SERVICE_RESULT_STOPING = "stoping";
     public static final String SERVICE_RUNNING_DEVICE = "service_running_device";
     public static final String SERVICE_RESULT_DEVICE = "service_result_device";
+    public static final String SERVICE_RESULT_LOAD_ZONES = "service_result_load_zones";
     public static final String DEVICE_LATITUDE = "device_latitude";
     public static final String DEVICE_LONGITUDE = "device_longitude";
     public static final String SERVICE_RUNNING_DEVICEMODEL= "service_running_devicemodel";
