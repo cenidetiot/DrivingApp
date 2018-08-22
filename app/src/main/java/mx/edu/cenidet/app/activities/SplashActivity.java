@@ -27,8 +27,10 @@ import www.fiware.org.ngsi.datamodel.entity.Zone;
 import www.fiware.org.ngsi.utilities.ApplicationPreferences;
 import www.fiware.org.ngsi.utilities.DevicePropertiesFunctions;
 
+
 public class SplashActivity extends AppCompatActivity implements
-        DeviceTokenControllerSdk.DeviceTokenServiceMethods {
+        DeviceTokenControllerSdk.DeviceTokenServiceMethods,
+        ZoneControllerSdk.ZoneServiceMethods {
     private Intent mIntent;
     private SQLiteDrivingApp sqLiteDrivingApp;
     private ArrayList<Zone> listZone;
@@ -43,78 +45,52 @@ public class SplashActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
-        //objeto que utilizaremos para llamar a los metodos de la gestion del token de firebase
-        appPreferences = new ApplicationPreferences();
-        deviceTokenControllerSdk = new DeviceTokenControllerSdk(context, this);
-        fcmToken = appPreferences.getPreferenceString(
-                getApplicationContext(),
-                ConstantSdk.STATIC_PREFERENCES,
-                ConstantSdk.PREFERENCE_KEY_FCMTOKEN
-        );
-        Log.d("Alertas", "Token in SPLASH" + fcmToken);
+        sendDeviceToken();
 
-        if (!fcmToken.equals("") || fcmToken != null){
-
-            String userType = appPreferences.getPreferenceString(getApplicationContext(),ConstantSdk.PREFERENCE_NAME_GENERAL,ConstantSdk.PREFERENCE_USER_TYPE);
-            String preference = "All";
-            if (userType.equals("mobileUser")){
-                preference = "traffic";
-            }
-            deviceTokenControllerSdk.createDeviceToken(fcmToken, new DevicePropertiesFunctions().getDeviceId(context), preference);
+        sqLiteDrivingApp = new SQLiteDrivingApp(this);
+        zoneControllerSdk = new ZoneControllerSdk(context, this);
+        listZone = sqLiteDrivingApp.getAllZone();
+        if(listZone.size()== 0){
+            Log.d("LOADZONES", "NEEDTOLOADZONES");
+            zoneControllerSdk.readAllZone();
+        }else{
+            checkGPS();
         }
-
-
-
-        if(isEnableGPS()){
-            mIntent = new Intent(this, HomeActivity.class);
-            startActivity(mIntent);
-            Log.i("Status ", "Activo gps");
-            this.finish();
-        }else {
-            showGPSDisabledAlert();
-            Log.i("Status ", "Inactivo gps");
-        }
-
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if(isEnableGPS()){
-            //Inicia el servicio del GPS
-            mIntent = new Intent(this, HomeActivity.class);
-            startActivity(mIntent);
-            Log.i("Status ", "Activo gps");
-            this.finish();
-        }else {
-            Log.i("Status ", "Inactivo gps");
-        }
+        //checkGPS();
     }
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i("onResume splash", "-----------------------------------------------------------------------------");
     }
     @Override
     protected void onPause() {
         super.onPause();
-        Log.i("onPause splash", "-----------------------------------------------------------------------------");
     }
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        Log.i("onPostResume splash", "-----------------------------------------------------------------------------");
     }
 
-    private boolean isEnableGPS(){
+    private void checkGPS(){
+        Log.d("LOADZONES", "CHEKING GPS");
+
         LocationManager manager = (LocationManager) getSystemService(this.LOCATION_SERVICE);
-        if (manager.isProviderEnabled( LocationManager.GPS_PROVIDER )) {
-            return true;
-        }else{
-            return false;
+        if(manager.isProviderEnabled( LocationManager.GPS_PROVIDER )){
+            mIntent = new Intent(this, HomeActivity.class);
+            startActivity(mIntent);
+            Log.i("Status ", "Activo gps");
+            this.finish();
+        }else {
+            showGPSDisabledAlert();
         }
+        return;
     }
 
     private void showGPSDisabledAlert(){
@@ -130,6 +106,24 @@ public class SplashActivity extends AppCompatActivity implements
                         });
         AlertDialog alert = alertDialogBuilder.create();
         alert.show();
+    }
+
+    public void sendDeviceToken(){
+        appPreferences = new ApplicationPreferences();
+        deviceTokenControllerSdk = new DeviceTokenControllerSdk(context, this);
+        fcmToken = appPreferences.getPreferenceString(
+                getApplicationContext(),
+                ConstantSdk.STATIC_PREFERENCES,
+                ConstantSdk.PREFERENCE_KEY_FCMTOKEN
+        );
+        if (!fcmToken.equals("") || fcmToken != null){
+            String userType = appPreferences.getPreferenceString(getApplicationContext(),ConstantSdk.PREFERENCE_NAME_GENERAL,ConstantSdk.PREFERENCE_USER_TYPE);
+            String preference = "All";
+            if (userType.equals("mobileUser")){
+                preference = "traffic";
+            }
+            deviceTokenControllerSdk.createDeviceToken(fcmToken, new DevicePropertiesFunctions().getDeviceId(context), preference);
+        }
     }
 
     @Override
@@ -159,4 +153,44 @@ public class SplashActivity extends AppCompatActivity implements
     }
 
 
+    @Override
+    public void readAllZone(mx.edu.cenidet.cenidetsdk.httpmethods.Response response) {
+        Log.d("LOADZONES", "LOADING ZONES");
+        switch (response.getHttpCode()){
+            case 200:
+                Zone zone;
+                Log.d("ZONES", response.getBodyString());
+                JSONArray jsonArray = response.parseJsonArray(response.getBodyString());
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    try {
+                        Log.i("Status: ", "Body "+i+" :"+jsonArray.getJSONObject(i));
+                        zone = new Zone();
+                        JSONObject object = jsonArray.getJSONObject(i);
+                        zone.setIdZone(object.getString("idZone"));
+                        zone.setType(object.getString("type"));
+                        zone.getName().setValue(object.getString("owner"));
+                        zone.getAddress().setValue(object.getString("address"));
+                        zone.getCategory().setValue(""+object.getString("category"));
+                        zone.getLocation().setValue(""+object.getJSONArray("location"));
+                        zone.getCenterPoint().setValue(""+object.getJSONArray("centerPoint"));
+                        zone.getDescription().setValue(object.getString("description"));
+                        zone.getDateCreated().setValue(object.getString("dateCreated"));
+                        zone.getDateModified().setValue(object.getString("dateModified"));
+                        zone.getDateModified().setValue(object.getString("dateModified"));
+                        zone.getStatus().setValue(object.getString("status"));
+
+                        if(sqLiteDrivingApp.createZone(zone) == true){
+                            Log.i("ZONES", "Dato insertado correctamente Zone...!" + zone.getIdZone());
+                        }else{
+                            Log.i("ZONES", "Error al insertar Zone...!" + zone.getIdZone());
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Log.d("LOADZONES", "ZONES ARE READY");
+                checkGPS();
+                break;
+        }
+    }
 }

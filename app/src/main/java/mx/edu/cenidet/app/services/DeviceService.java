@@ -56,8 +56,7 @@ import www.fiware.org.ngsi.utilities.Functions;
 import www.fiware.org.ngsi.datamodel.entity.Zone;
 
 
-public class DeviceService extends Service implements DeviceController.DeviceResourceMethods ,
-        ZoneControllerSdk.ZoneServiceMethods{
+public class DeviceService extends Service implements DeviceController.DeviceResourceMethods {
     private Context context;
     private static final String STATUS = "STATUS";
     //private double longitudeGPS, latitudeGPS;
@@ -103,11 +102,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     private long lastUpdateAcc = 0, lastUpdateGPS = 0;
 
 
-    private ZoneControllerSdk zoneControllerSdk;
-    private SQLiteDrivingApp sqLiteDrivingApp;
-    private ArrayList<Zone> listZone;
 
-    private EventsDetect events ;
     
     public void onCreate() {
         super.onCreate();
@@ -134,12 +129,7 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
             owner = "undefined";
         }
 
-        sqLiteDrivingApp = new SQLiteDrivingApp(this);
-        zoneControllerSdk = new ZoneControllerSdk(context, this);
-        listZone = sqLiteDrivingApp.getAllZone();
-        if(listZone.size()== 0){
-            zoneControllerSdk.readAllZone();
-        }
+
 
     }
 
@@ -358,43 +348,5 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     @Override
     public void onGetEntities(Response response) {}
 
-    @Override
-    public void readAllZone(mx.edu.cenidet.cenidetsdk.httpmethods.Response response) {
-        switch (response.getHttpCode()){
-            case 200:
-                Zone zone;
-                Log.d("ZONES", response.getBodyString());
-                JSONArray jsonArray = response.parseJsonArray(response.getBodyString());
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    try {
-                        Log.i("Status: ", "Body "+i+" :"+jsonArray.getJSONObject(i));
-                        zone = new Zone();
-                        JSONObject object = jsonArray.getJSONObject(i);
-                        zone.setIdZone(object.getString("idZone"));
-                        zone.setType(object.getString("type"));
-                        zone.getName().setValue(object.getString("owner"));
-                        zone.getAddress().setValue(object.getString("address"));
-                        zone.getCategory().setValue(""+object.getString("category"));
-                        zone.getLocation().setValue(""+object.getJSONArray("location"));
-                        zone.getCenterPoint().setValue(""+object.getJSONArray("centerPoint"));
-                        zone.getDescription().setValue(object.getString("description"));
-                        zone.getDateCreated().setValue(object.getString("dateCreated"));
-                        zone.getDateModified().setValue(object.getString("dateModified"));
-                        zone.getDateModified().setValue(object.getString("dateModified"));
-                        zone.getStatus().setValue(object.getString("status"));
 
-                        if(sqLiteDrivingApp.createZone(zone) == true){
-                            Log.i("ZONES", "Dato insertado correctamente Zone...!" + zone.getIdZone());
-                        }else{
-                            Log.i("ZONES", "Error al insertar Zone...!" + zone.getIdZone());
-                        }
-                        Log.i("--------: ", "--------------------------------------");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-                break;
-        }
-    }
 }

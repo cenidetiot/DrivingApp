@@ -29,9 +29,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.HomeActivity" />
-        <activity
-            android:name=".activities.SplashActivity"
-            android:theme="@style/SplashScreen" />
+        <activity android:name=".activities.SplashActivity"/>
         <activity android:name=".activities.AlertMapDetailActivity" />
         <activity android:name=".activities.MapDetailActivity" />
         <activity android:name=".activities.AlertHistoryActivity" />
