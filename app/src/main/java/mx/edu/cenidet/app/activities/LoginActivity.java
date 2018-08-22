@@ -95,7 +95,7 @@ public class LoginActivity extends AppCompatActivity implements
                 .build();
         bindUI();
         userController = new UserController(getApplicationContext(), this);
-       // setCredentialsIfExist();
+
 
         //Comprobando la version de Android...
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -243,6 +243,7 @@ public class LoginActivity extends AppCompatActivity implements
     private void goToHome(){
         Intent intent = new Intent(LoginActivity.this, SplashActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.putExtra("fromLogin", "YES");
         startActivity(intent);
     }
     private boolean setCredentialsIfExist(){

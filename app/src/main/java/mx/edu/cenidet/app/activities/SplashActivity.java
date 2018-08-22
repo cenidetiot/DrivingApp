@@ -50,15 +50,25 @@ public class SplashActivity extends AppCompatActivity implements
         progressBar=(ProgressBar)findViewById(R.id.progressBar);
         progressBar.setIndeterminate(true);
         context = this;
-        sendDeviceToken();
-        loadZones();
+        appPreferences = new ApplicationPreferences();
 
+        if (setCredentialsIfExist()){
+            String alert = getIntent().getStringExtra("alert");
+            if ( alert  != null || getIntent().getStringExtra("subcategory") != null) {
+                checkAlert();
+            }
+        }else{
+            Intent redirectUser = new Intent(this, MainActivity.class);
+            startActivity(redirectUser);
+            this.finish();
+        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        //checkGPS();
+        loadZones();
+        sendDeviceToken();
     }
     @Override
     protected void onResume() {
@@ -72,6 +82,46 @@ public class SplashActivity extends AppCompatActivity implements
     @Override
     protected void onPostResume() {
         super.onPostResume();
+    }
+
+    private boolean checkAlert () {
+        boolean result = false;
+        Log.d("CHEKINGALERT","CHEKINGALERT");
+        Intent redirectUser = new Intent(this, HomeActivity.class);
+        startActivity(redirectUser);
+        this.finish();
+        String alert = getIntent().getStringExtra("alert");
+        if ( alert  != null || getIntent().getStringExtra("subcategory") != null) {
+            Log.d("CHEKINGALERT","EXISTALERT");
+
+            try {
+                if(alert  != null){
+                    JSONObject jsonObject = new JSONObject(alert);
+                    Intent alertIntent = new Intent(this, AlertMapDetailActivity.class);
+                    alertIntent.putExtra("subcategory", jsonObject.getString("subCategory"));
+                    alertIntent.putExtra("description", jsonObject.getString("description"));
+                    alertIntent.putExtra("location", jsonObject.getString("location"));
+                    alertIntent.putExtra("severity", jsonObject.getString("severity"));
+                    Log.d("CHEKINGALERT" , "ALERTA CON APP CERRADA");
+                    startActivity(alertIntent);
+                }
+
+                if(getIntent().getStringExtra("subcategory") != null){
+                    Intent alertIntent = new Intent(this, AlertMapDetailActivity.class);
+                    alertIntent.putExtra("subcategory", getIntent().getStringExtra("subcategory"));
+                    alertIntent.putExtra("description", getIntent().getStringExtra("description"));
+                    alertIntent.putExtra("location", getIntent().getStringExtra("location"));
+                    alertIntent.putExtra("severity", getIntent().getStringExtra("severity"));
+                    startActivity(alertIntent);
+                    Log.d("CHEKINGALERT" , "ALERTA CON APP ABIERTA");
+
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            result = true;
+        }
+        return result;
     }
 
     private void checkGPS(){
@@ -93,8 +143,7 @@ public class SplashActivity extends AppCompatActivity implements
         sqLiteDrivingApp = new SQLiteDrivingApp(this);
         zoneControllerSdk = new ZoneControllerSdk(context, this);
         listZone = sqLiteDrivingApp.getAllZone();
-        if(listZone.size()== 0){
-            Log.d("LOADZONES", "NEEDTOLOADZONES");
+        if(listZone.size() <= 0){
             zoneControllerSdk.readAllZone();
         }else{
             checkGPS();
@@ -201,5 +250,7 @@ public class SplashActivity extends AppCompatActivity implements
                 break;
         }
     }
-    
+    private boolean setCredentialsIfExist(){
+        return !(appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_TOKEN).equals("") && appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_NAME).equals(""));
+    }
 }

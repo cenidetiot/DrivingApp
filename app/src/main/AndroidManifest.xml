@@ -22,14 +22,14 @@
         android:supportsRtl="true"
         android:screenOrientation="portrait"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.MainActivity">
+        <activity android:name=".activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".activities.HomeActivity" />
-        <activity android:name=".activities.SplashActivity"/>
+        <activity android:name=".activities.MainActivity"/>
         <activity android:name=".activities.AlertMapDetailActivity" />
         <activity android:name=".activities.MapDetailActivity" />
         <activity android:name=".activities.AlertHistoryActivity" />

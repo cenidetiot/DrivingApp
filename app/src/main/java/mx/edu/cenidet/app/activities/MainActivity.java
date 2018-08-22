@@ -23,49 +23,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         appPreferences = new ApplicationPreferences();
-
-        if(setCredentialsIfExist()){
-
-            Intent redirectUser = new Intent(this, SplashActivity.class);
-            startActivity(redirectUser);
-            this.finish();
-
-            String alert = getIntent().getStringExtra("alert");
-            if ( alert  != null || getIntent().getStringExtra("subcategory") != null) {
-                try {
-                    if(alert  != null){
-                        JSONObject jsonObject = new JSONObject(alert);
-                        Intent alertIntent = new Intent(MainActivity.this, AlertMapDetailActivity.class);
-                        alertIntent.putExtra("subcategory", jsonObject.getString("subCategory"));
-                        alertIntent.putExtra("description", jsonObject.getString("description"));
-                        alertIntent.putExtra("location", jsonObject.getString("location"));
-                        alertIntent.putExtra("severity", jsonObject.getString("severity"));
-                        startActivity(alertIntent);
-                    }
-
-                    if(getIntent().getStringExtra("subcategory") != null){
-                        Intent alertIntent = new Intent(MainActivity.this, AlertMapDetailActivity.class);
-                        alertIntent.putExtra("subcategory", getIntent().getStringExtra("subcategory"));
-                        alertIntent.putExtra("description", getIntent().getStringExtra("description"));
-                        alertIntent.putExtra("location", getIntent().getStringExtra("location"));
-                        alertIntent.putExtra("severity", getIntent().getStringExtra("severity"));
-                        startActivity(alertIntent);
-                        Log.d("MENSAJE" , "ALERTA CON APP ABIERTA");
-
-                    }
-
-                    //this.finish();
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-                Log.d("DATA", "Contiene data");
-            }
-
-        }
-
-        //PREFERENCES OF THE APPLICATIONS, TO SAVE THE CONSTANTS
-        appPreferences = new ApplicationPreferences();
-
         //Instance buttons of activities
         btnMobileUser = (Button) findViewById(R.id.btnMobileUser);
         btnSecurityGuard = (Button) findViewById(R.id.btnSecurityGuard);
