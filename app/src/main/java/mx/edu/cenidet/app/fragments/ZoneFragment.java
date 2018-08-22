@@ -61,7 +61,7 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
     private SendDataService sendDataService;
     private int count = 1;
     private ApplicationPreferences applicationPreferences;
-    String currentZone;
+    private Zone currentZone;
 
     //Pintar todos los Campus
     //private ArrayList<Zone> listZone;
@@ -71,13 +71,13 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
     private ArrayList<OffStreetParking> listOffStreetParking;
     private JSONArray arrayLocationParking;
     private FloatingActionButton speedButtonZone;
+    private boolean areDrawn = false;
 
     public ZoneFragment() {
         context = HomeActivity.MAIN_CONTEXT;
         sendDataService = new SendDataService(this);
         sqLiteDrivingApp = new SQLiteDrivingApp(context);
         applicationPreferences = new ApplicationPreferences();
-        currentZone = applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_CURRENT_ZONE);
     }
 
 
@@ -107,6 +107,13 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
         }
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser){
+            zoomToLocation(latitude, longitude);
+        }
+    }
 
 
     @Override
@@ -116,9 +123,7 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
             return;
         }
         gMap.setMyLocationEnabled(true);
-        //Ocultar el boton
         gMap.getUiSettings().setMyLocationButtonEnabled(false);
-
     }
 
 
@@ -146,7 +151,6 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
 
     public void drawZones(){
         ArrayList<Zone> Zones = sqLiteDrivingApp.getAllZone();
-
         for (Zone zone : Zones){
             drawZone(zone);
         }
@@ -157,7 +161,6 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
      * @param zone el identificador de la zona.
      */
     public void drawZone(Zone zone){
-
             JSONArray arrayLocation;
             String originalString, clearString;
             double latitude, longitude;
@@ -186,7 +189,6 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
      * @param zoneId el identificador de la zona.
      */
     public void drawParking(String zoneId){
-        if(!currentZone.equals("undetectedZone")) {
             listOffStreetParking = sqLiteDrivingApp.getAllOffStreetParkingByAreaServed(zoneId);
             if (listOffStreetParking.size() > 0) {
                 String originalStringParking, clearStringParking;
@@ -225,7 +227,7 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
                     drawRoadSegmentByParking(listOffStreetParking.get(i).getIdOffStreetParking());
                 }
             }
-        }
+
     }
 
     public void drawRoadSegmentByParking(String refRoad){
@@ -268,7 +270,9 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
     @Override
     public void detectZone(Zone zone, boolean statusLocation) {
         if (statusLocation){
+            drawZone(zone);
             Log.d("DETECEDZONE", zone.getIdZone());
+            drawParking(zone.getIdZone());
         }
     }
 
