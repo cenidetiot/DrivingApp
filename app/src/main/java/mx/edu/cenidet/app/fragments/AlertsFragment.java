@@ -93,19 +93,15 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        Log.d("ALERTSVISIBLES", "" + isVisibleToUser);
         if (isVisibleToUser){
            getFirstAlerts();
         }
     }
 
     public void getFirstAlerts() {
-        Log.d("LOADINGALERTS", "LOADINGALERTS");
         if(applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_CURRENT_ZONE) != null){
             zoneId = applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_CURRENT_ZONE);
-            if(zoneId.equals("undetectedZone")){
-                //Toast.makeText(context, R.string.message_undetected_zone, Toast.LENGTH_SHORT).show();
-            }else {
+            if(!zoneId.equals("undetectedZone")) {
                 String typeUser = applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_USER_TYPE);
                 String tempQuery = zoneId;
                 if (typeUser != null && typeUser !="" && typeUser.equals("mobileUser")){
@@ -119,13 +115,11 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
     private class ResponseReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("ALERT", "Alert in alertFragment");
             if (intent != null) {
                 String alert = intent.getStringExtra("subcategory");
                 if ( alert  != null) {
                     getFirstAlerts();
                 }
-
             }
         }
     }
@@ -138,16 +132,15 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
 
     @Override
     public void currentAlertByZone(Response response) {
-        Log.i("Test: ", "Code Alerts: "+response.getHttpCode());
+
         listAlerts.clear();
+        listViewAlerts.removeHeaderView(header);
         switch (response.getHttpCode()){
             case 0:
                 Log.i("STATUS", "Internal Server Error 1...!");
                 break;
             case 200:
-                Log.i("Test: ", "Body: "+response.getBodyString());
                 Alert alert;
-                    Log.i("Test: ", "Obtiene Datos...!: "+response.getBodyString());
                     JSONArray jsonArray = response.parseJsonArray(response.getBodyString());
                     if(jsonArray.length() == 0 || jsonArray == null){
                         Toast.makeText(context, R.string.message_no_alerts_show, Toast.LENGTH_SHORT).show();
@@ -172,7 +165,7 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
                             }catch (JSONException e){
                                 e.printStackTrace();
                             }
-                            listViewAlerts.removeHeaderView(header);
+
                         }
                     }
 
