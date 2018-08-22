@@ -12,7 +12,6 @@ import www.fiware.org.ngsi.utilities.ApplicationPreferences;
 import android.content.Intent;
 import android.view.View;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
@@ -34,7 +33,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String alert = getIntent().getStringExtra("alert");
             if ( alert  != null || getIntent().getStringExtra("subcategory") != null) {
                 try {
-
                     if(alert  != null){
                         JSONObject jsonObject = new JSONObject(alert);
                         Intent alertIntent = new Intent(MainActivity.this, AlertMapDetailActivity.class);

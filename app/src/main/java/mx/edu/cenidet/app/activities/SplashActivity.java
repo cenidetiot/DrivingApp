@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -41,21 +42,16 @@ public class SplashActivity extends AppCompatActivity implements
     private String fcmToken;
     private Context context;
     private ApplicationPreferences appPreferences;
+    private ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash);
+        progressBar=(ProgressBar)findViewById(R.id.progressBar);
+        progressBar.setIndeterminate(true);
         context = this;
         sendDeviceToken();
-
-        sqLiteDrivingApp = new SQLiteDrivingApp(this);
-        zoneControllerSdk = new ZoneControllerSdk(context, this);
-        listZone = sqLiteDrivingApp.getAllZone();
-        if(listZone.size()== 0){
-            Log.d("LOADZONES", "NEEDTOLOADZONES");
-            zoneControllerSdk.readAllZone();
-        }else{
-            checkGPS();
-        }
+        loadZones();
 
     }
 
@@ -93,6 +89,18 @@ public class SplashActivity extends AppCompatActivity implements
         return;
     }
 
+    private void loadZones(){
+        sqLiteDrivingApp = new SQLiteDrivingApp(this);
+        zoneControllerSdk = new ZoneControllerSdk(context, this);
+        listZone = sqLiteDrivingApp.getAllZone();
+        if(listZone.size()== 0){
+            Log.d("LOADZONES", "NEEDTOLOADZONES");
+            zoneControllerSdk.readAllZone();
+        }else{
+            checkGPS();
+        }
+        return;
+    }
     private void showGPSDisabledAlert(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setMessage(R.string.message_alert_gps)
@@ -193,4 +201,5 @@ public class SplashActivity extends AppCompatActivity implements
                 break;
         }
     }
+    
 }
