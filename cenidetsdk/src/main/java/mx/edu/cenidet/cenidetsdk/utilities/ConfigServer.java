@@ -14,7 +14,7 @@ public enum  ConfigServer {
     http_readtimeout("50000"),
 
     //    //#Host
-    http_host("https://smartsecurity-webservice.herokuapp.com"),
+    http_host("https://smartsecurity-devservice.herokuapp.com"),
     http_host_node("https://smartsdk-web-service.herokuapp.com/api/"),
     http_host_login("http://207.249.127.96:5000/v3/auth/"),
     http_host_mongo("https://driving-monitor-service.herokuapp.com/api/"),

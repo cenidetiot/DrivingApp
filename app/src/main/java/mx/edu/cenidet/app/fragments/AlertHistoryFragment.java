@@ -25,6 +25,7 @@ import java.util.ArrayList;
 
 import mx.edu.cenidet.app.activities.AlertHistoryActivity;
 import mx.edu.cenidet.app.activities.AlertMapDetailActivity;
+import mx.edu.cenidet.app.activities.DrivingView;
 import mx.edu.cenidet.app.utils.Config;
 import mx.edu.cenidet.cenidetsdk.controllers.AlertsControllerSdk;
 import mx.edu.cenidet.cenidetsdk.httpmethods.Response;
@@ -34,6 +35,7 @@ import mx.edu.cenidet.app.activities.HomeActivity;
 import mx.edu.cenidet.app.adapters.MyAdapterAlerts;
 import www.fiware.org.ngsi.datamodel.entity.Alert;
 import www.fiware.org.ngsi.utilities.ApplicationPreferences;
+import www.fiware.org.ngsi.utilities.Constants;
 
 
 /**
@@ -53,6 +55,7 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
     private DataListener callback;
 
     private IntentFilter filter;
+    private ResponseReceiver receiver;
 
     public AlertHistoryFragment() {
         context =  HomeActivity.MAIN_CONTEXT;
@@ -74,11 +77,17 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         filter = new IntentFilter(Config.PUSH_NOTIFICATION);
-        LocalBroadcastManager.getInstance(getActivity().getApplicationContext())
-                .registerReceiver(new ResponseReceiver(), filter);
+        receiver = new ResponseReceiver();
+        LocalBroadcastManager.getInstance(context).registerReceiver(receiver, filter);
         rootView = inflater.inflate(R.layout.fragment_alert_history, container, false);
         getAlerts();
         return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(receiver);
     }
 
     private void getAlerts (){
@@ -104,7 +113,6 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d("ALERT", "Alert in alertFragment");
-            Toast.makeText(getActivity(), "Broadcast received!", Toast.LENGTH_SHORT).show();
             if (intent != null) {
 
                 Log.d("ALERT", "Alert in alertFragment");
