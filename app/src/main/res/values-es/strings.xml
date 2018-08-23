@@ -101,9 +101,9 @@
     <string name="message_severity_medium_slide">Medio</string>
     <string name="message_severity_high_slide">Alto</string>
     <string name="message_severity_critical_slide">Crítico</string>
-
     <string name="message_edit_text_slide">Descripción</string>
     <string name="message_button_send_slide">Enviar Alerta</string>
-
     <string name="message_no_accept_terms">Debes aceptar los términos y condiciones del servicio.</string>
+
+    <string name="title_activity_zone_detail">Detalles de zona</string>
 </resources>
