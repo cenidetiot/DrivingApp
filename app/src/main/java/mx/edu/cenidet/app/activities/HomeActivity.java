@@ -100,8 +100,6 @@ public class HomeActivity extends AppCompatActivity
     private ArrayList<RoadSegment> listRoadSegment;
     private ArrayList<OffStreetParking> listOffStreetParking;
 
-    private IntentFilter filter;
-
     //TABLAYOUT ANF FRAGMENTS VARIABLES
     private boolean fragmentTransaction = false;
     private TabLayout tabLayout;
@@ -130,8 +128,6 @@ public class HomeActivity extends AppCompatActivity
 
         sqLiteDrivingApp = new SQLiteDrivingApp(this);
 
-        filter = new IntentFilter(Config.PUSH_NOTIFICATION);
-        LocalBroadcastManager.getInstance(MAIN_CONTEXT).registerReceiver(new ResponseReceiver(), filter);
 
         //Inicializa los datos de conexión
         try {
@@ -232,22 +228,16 @@ public class HomeActivity extends AppCompatActivity
 
         //Descarga los Road y RoadSegment
         listRoad = sqLiteDrivingApp.getAllRoad();
-        if(listRoad.size() > 0){
-            Log.i("Datos en los ROADS", "-----------------------------------------------------------------------------");
-        }else{
+        if(listRoad.size() <= 0){
             roadControllerSdk.getAllRoad();
         }
         //roadControllerSdk.getByResponsibleRoad("Zone_1523999247187");
         listRoadSegment = sqLiteDrivingApp.getAllRoadSegment();
-        if(listRoadSegment.size() > 0){
-            Log.i("Datos en los ", "ROAD_SEGMENT-----------------------------------------------------------------------------");
-        }else{
+        if(listRoadSegment.size() <= 0){
             roadSegmentControllerSdk.getAllRoadSegment();
         }
         listOffStreetParking = sqLiteDrivingApp.getAllOffStreetParking();
-        if (listOffStreetParking.size() > 0){
-            Log.i("Datos en los ", "PARKING-----------------------------------------------------------------------------");
-        }else {
+        if (listOffStreetParking.size() <= 0){
             offStreetParkingControllerSdk.getAllOffStreetParking();
         }
 
@@ -256,10 +246,7 @@ public class HomeActivity extends AppCompatActivity
         startService(deviceService);
         Log.i("onCreate", "-----------------------------------------------------------------------------");
 
-        // SHOW ALERT DIALOG ASKING IF THE USER IS DRIVING
-        /*if(appPreferences.getPreferenceBoolean(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_USER_IS_DRIVING)!= true){
-            isDrivingUser();
-        }*/
+
 
     }
     private void menuItemInNavMenuDrawer() {
@@ -304,48 +291,20 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
-    private class ResponseReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null) {
-                if(viewPager.getCurrentItem() == 2){
-                    viewPager.setCurrentItem(0);
-                    viewPager.setCurrentItem(2);
 
-                }
-
-                Log.d("ALERT", "Alert in homeActivity" +  viewPager.getCurrentItem());
-                String alert = intent.getStringExtra("subcategory");
-                if ( alert  != null) {
-
-                    Intent alertIntent = new Intent(HomeActivity.this, AlertMapDetailActivity.class);
-                    alertIntent.putExtra("subcategory", intent.getStringExtra("subcategory"));
-                    alertIntent.putExtra("description", intent.getStringExtra("description"));
-                    alertIntent.putExtra("location", intent.getStringExtra("location"));
-                    alertIntent.putExtra("severity", intent.getStringExtra("severity"));
-
-                }
-
-            }
-        }
-    }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Log.i("onStart", "-----------------------------------------------------------------------------");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i("onResume", "-----------------------------------------------------------------------------");
     }
     @Override
     protected void onPause() {
-        super.onPause();
-        Log.i("onPause", "-----------------------------------------------------------------------------");
-    }
+        super.onPause();}
 
     private boolean setCredentialsIfExist(){
         return !(appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_TOKEN).equals("") && appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_NAME).equals(""));
