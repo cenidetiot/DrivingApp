@@ -55,6 +55,7 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
     private FloatingActionButton speedButtonAlerts;
     private String zoneId;
     private IntentFilter filter;
+    private ResponseReceiver receiver;
     private boolean _hasLoadedOnce = false;
     private View header;
 
@@ -81,8 +82,8 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
             }
         });
         filter = new IntentFilter(Config.PUSH_NOTIFICATION);
-        LocalBroadcastManager.getInstance(getActivity().getApplicationContext())
-                .registerReceiver(new ResponseReceiver(), filter);
+        receiver = new ResponseReceiver();
+        LocalBroadcastManager.getInstance(context).registerReceiver(receiver, filter);
         listAlerts = new ArrayList<Alert>();
         myAdapterAlerts = new MyAdapterAlerts(context, R.id.listViewAlerts, listAlerts);
         header  = getLayoutInflater().inflate(R.layout.empty_alerts_list, listViewAlerts, false);
@@ -96,6 +97,12 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
         if (isVisibleToUser){
            getFirstAlerts();
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(receiver);
     }
 
     public void getFirstAlerts() {
