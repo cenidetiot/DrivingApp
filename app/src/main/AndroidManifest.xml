@@ -37,9 +37,9 @@
             android:name=".activities.SendManualAlertsActivity"
             android:configChanges="screenSize|orientation"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".activities.CreateAccountActivity" />
+        <activity android:name=".activities.CreateAccountActivity" android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".activities.MyProfileActivity" />
-        <activity android:name=".activities.LoginActivity" />
+        <activity android:name=".activities.LoginActivity" android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity android:name=".activities.WebViewSmartSecurity" />
         <activity
             android:name=".activities.DrivingView"

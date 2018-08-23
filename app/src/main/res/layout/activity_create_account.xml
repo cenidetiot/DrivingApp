@@ -106,14 +106,18 @@
                 android:hint="@string/confirm_password"
                 android:inputType="textPassword" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="8dp"
-                android:gravity="center"
-                android:text="Al hacer clic en 'Crear cuenta', aceptas las Condiciones y confirmas que leíste nuestra Política de datos. Recibirás notificaciones por la aplicación, que puedes configurar en cualquier momento."
+
+            <CheckBox
+                android:id="@+id/checkBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_weight="1"
+                android:text="@string/terms"
                 android:textColor="@color/white70"
-                android:textSize="@dimen/caption" />
+                android:textSize="@dimen/caption"
+                android:theme="@style/MyCheckbox"/>
 
             <Button
                 android:id="@+id/btnCreateAccount"

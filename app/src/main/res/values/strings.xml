@@ -16,10 +16,10 @@
     <string name="cancel">Cancel</string>
     <string name="confirm_password">Confirm password</string>
     <string name="remember_user">Remember user</string>
-    <string name="message_btn_create_account">Create Account</string>
+    <string name="message_btn_create_account">Create account</string>
     <string name="message_title_create_account">Create an account</string>
     <string name="message_btn_sign_up">Sign up</string>
-    <string name="terms">clicking on Create account, you accept the Terms of Service and confirm that you have read our Privacy Policy.</string>
+    <string name="terms">I agree to the Terms and Conditions and I have read the Privacy Policy of DrivingApp.</string>
 
 
     <!--Drawer and Tabs-->
@@ -42,10 +42,10 @@
     <string name="message_valid_password">Password is not valid, please try again.</string>
     <string name="message_user_not_found">Incorrect data, try again.</string>
     <string name="message_login_not_found">Failed to login.</string>
-    <string name="message_undetected_zone">You are not in any zone...!</string>
-    <string name="message_no_alerts_show">This area has no alerts to show...!</string>
-    <string name="message_successful_sending">Successful sending...!</string>
-    <string name="message_failed_send">Failed to send...!</string>
+    <string name="message_undetected_zone">You are not in any zone.</string>
+    <string name="message_no_alerts_show">This area has no alerts to show.</string>
+    <string name="message_successful_sending">Successful sending.</string>
+    <string name="message_failed_send">Failed to send.</string>
     <string name="message_empty_fields">Empty fields</string>
     <string name="message_passwords_incorrect">The passwords are incorrect, try again.</string>
     <string name="message_account_generated">Account generated successfully.</string>
@@ -74,8 +74,8 @@
     <!--Message HomeFragment-->
     <string name="message_name_campus">Name Campus</string>
     <string name="message_address_campus">Address</string>
-    <string name="message_any_campus">You are not in any campus..!</string>
-    <string name="message_not_road_segment">You are not in a road segment...!</string>
+    <string name="message_any_campus">You are not in any campus.</string>
+    <string name="message_not_road_segment">You are not in a road segment.</string>
     <string name="message_maximum">Maximum</string>
     <string name="message_minimum">Minimum</string>
 
@@ -118,5 +118,6 @@
         completions."
     </string>
     <string name="title_activity_driving_view">DrivingView</string>
+    <string name="message_no_accept_terms">You must to accept the terms and conditions.</string>
 
 </resources>

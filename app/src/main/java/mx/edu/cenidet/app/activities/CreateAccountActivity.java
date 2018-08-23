@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -32,6 +33,7 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
     private static final int RESOLVE_HINT = 12;
     private GoogleApiClient mGoogleApiClient;
     private EditText etFirstName, etLastName, etPhone, etEmail, etPassword, etConfirmPassword;
+    private CheckBox ckTerms;
     private  UserController userController;
     private ApplicationPreferences appPreferences;
     private String phone;
@@ -42,25 +44,22 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
         setContentView(R.layout.activity_create_account);
         setToolbar();
         appPreferences = new ApplicationPreferences();
-        bindEditText();
+        bindUI();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
                 .addApi(Auth.CREDENTIALS_API)
                 .build();
         userController = new UserController(getApplicationContext(), this);
-        Log.i("onCreate", "--------------------------------------------------");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i("onResume", "--------------------------------------------------");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.i("onPause", "--------------------------------------------------");
     }
 
     private void setToolbar(){
@@ -79,19 +78,19 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
 
     private boolean createAccount(User user, String confirmPassword){
         boolean band = false;
+
         if(isEmptyText(user, confirmPassword)){
             Toast.makeText(getApplicationContext(), R.string.message_empty_fields, Toast.LENGTH_SHORT).show();
-            band = false;
         }else if(!isValidEmail(user.getEmail())){
             Toast.makeText(getApplicationContext(), R.string.message_valid_email, Toast.LENGTH_SHORT).show();
-            band = false;
-        }else if(isValidPassword(user.getPassword(), confirmPassword)){
-            band = true;
-        }else{
+        }else if(!isValidPassword(user.getPassword(), confirmPassword)){
             Toast.makeText(getApplicationContext(), R.string.message_passwords_incorrect, Toast.LENGTH_SHORT).show();
-            band = false;
+        }else if (!ckTerms.isChecked()) {
+            Toast.makeText(getApplicationContext(), R.string.message_no_accept_terms, Toast.LENGTH_SHORT).show();
         }
-
+        else{
+            band = true;
+        }
         return band;
     }
     private boolean isValidEmail(String email){
@@ -114,7 +113,7 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
         }
     }
 
-    private void bindEditText() {
+    private void bindUI() {
         etFirstName = (EditText) findViewById(R.id.etFirstName);
         etLastName = (EditText) findViewById(R.id.etLastName);
         etPhone = (EditText) findViewById(R.id.etPhoneCreate);
@@ -122,6 +121,7 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPassword = (EditText) findViewById(R.id.etPassword);
         etConfirmPassword = (EditText) findViewById(R.id.etConfirmPassword);
+        ckTerms = (CheckBox) findViewById(R.id.checkBox);
     }
 
     // Construct a request for phone numbers and show the picker
@@ -160,9 +160,6 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
     public void onClickEvent(View v) {
         switch (v.getId()) {
             case R.id.btnCreateAccount:
-                //CODIGO PARA CREAR CUENTA
-                //CODIGO PARA CREAR CUENTA
-                //CODIGO PARA CREAR CUENTA
                 User user = new User();
                 user.setFirstName(etFirstName.getText().toString());
                 user.setLastName(etLastName.getText().toString());

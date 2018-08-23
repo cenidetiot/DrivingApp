@@ -22,7 +22,7 @@
     <string name="message_btn_sign_up">Regístrate</string>
     <string name= "alert_location"> Localización de la Alerta</string>
     <string name="send_alert">Enviar Alerta</string>
-    <string name="terms">Al hacer clic en Crear cuenta, aceptas las Condiciones del Servicio y confirmas que leíste nuestra Política de Privacidad. </string>
+    <string name="terms">Acepto los Términos y Condiciones del servicio y he leído la Política de privacidad de DrivingApp.</string>
 
 
     <!--Drawer and Tabs-->
@@ -104,4 +104,6 @@
 
     <string name="message_edit_text_slide">Descripción</string>
     <string name="message_button_send_slide">Enviar Alerta</string>
+
+    <string name="message_no_accept_terms">Debes aceptar los términos y condiciones del servicio.</string>
 </resources>
