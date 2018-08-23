@@ -57,6 +57,8 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
     private IntentFilter filter;
     private ResponseReceiver receiver;
 
+    private View header;
+
     public AlertHistoryFragment() {
         context =  HomeActivity.MAIN_CONTEXT;
         alertsControllerSdk = new AlertsControllerSdk(context, this);
@@ -80,6 +82,7 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
         receiver = new ResponseReceiver();
         LocalBroadcastManager.getInstance(context).registerReceiver(receiver, filter);
         rootView = inflater.inflate(R.layout.fragment_alert_history, container, false);
+        header  = getLayoutInflater().inflate(R.layout.empty_alerts_list, listViewAlertsHistory, false);
         getAlerts();
         return rootView;
     }
@@ -150,7 +153,8 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
     @Override
     public void historyAlertByZone(Response response) {
         Log.i("Test: ", "Code Alerts: "+response.getHttpCode()+" 1-------------------------------------");
-        //callback.sendData("Code: "+response.getHttpCode()+" 2-------------------------------------");
+        listAlerts.clear();
+        listViewAlertsHistory.removeHeaderView(header);
         switch (response.getHttpCode()) {
             case 200:
                 Log.i("Test: ", "Body----------: " + response.getBodyString());
@@ -159,6 +163,7 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
                 JSONArray jsonArray = response.parseJsonArray(response.getBodyString());
                 if (jsonArray.length() == 0 || jsonArray == null) {
                     Toast.makeText(context, R.string.message_no_alerts_show, Toast.LENGTH_SHORT).show();
+                    listViewAlertsHistory.addHeaderView(header);
                 } else {
                     for (int i = 0; i < jsonArray.length(); i++) {
                         try {
@@ -180,17 +185,15 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
-                        if (listAlerts.size() > 0) {
-                            //callback.sendData(listAlerts);
-                            myAdapterAlerts = new MyAdapterAlerts(context, R.id.listViewAlertsHistory, listAlerts);
-                            listViewAlertsHistory.setAdapter(myAdapterAlerts);
-                        }
+                        
                     }
                     if(listAlerts.size() > 0){
                         callback.sendDataListAlerts(listAlerts);
                     }
                 }
+                myAdapterAlerts = new MyAdapterAlerts(context, R.id.listViewAlerts, listAlerts);
+                myAdapterAlerts.notifyDataSetChanged();
+                listViewAlertsHistory.setAdapter(myAdapterAlerts);
                 break;
             case 503:
                 Log.i("STATUS", "Cuando la clave de la zona no es correcta...!");
