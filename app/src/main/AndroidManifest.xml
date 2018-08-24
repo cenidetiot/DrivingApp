@@ -42,7 +42,8 @@
             android:theme="@style/Theme.AppCompat.Dialog.Alert" />
         <activity android:name=".activities.MyProfileActivity" />
         <activity android:name=".activities.LoginActivity" android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity android:name=".activities.WebViewSmartSecurity" />
+        <activity android:name=".activities.WebViewSmartSecurity"
+            android:label="@string/viva_register"/>
         <activity
             android:name=".activities.DrivingView"
             android:theme="@style/AppTheme" />

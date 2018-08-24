@@ -107,4 +107,5 @@
 
     <string name="title_activity_zone_detail">Detalles de zona</string>
     <string name="terms_title">Terminos y condiciones</string>
+    <string name="viva_register">Aplicación ViVA</string>
 </resources>
