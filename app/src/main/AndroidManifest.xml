@@ -38,8 +38,7 @@
             android:configChanges="screenSize|orientation"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".activities.CreateAccountActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@style/Theme.AppCompat.Dialog.Alert" />
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".activities.MyProfileActivity" />
         <activity android:name=".activities.LoginActivity" android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity android:name=".activities.WebViewSmartSecurity"

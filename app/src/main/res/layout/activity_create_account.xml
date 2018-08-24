@@ -114,10 +114,13 @@
                 android:layout_marginBottom="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_weight="1"
+                android:onClick="onClickEvent"
                 android:text="@string/terms"
                 android:textColor="@color/white70"
                 android:textSize="@dimen/caption"
-                android:theme="@style/MyCheckbox"/>
+                android:theme="@style/MyCheckbox">
+
+            </CheckBox>
 
             <Button
                 android:id="@+id/btnCreateAccount"

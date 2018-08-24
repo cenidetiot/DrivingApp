@@ -28,7 +28,6 @@ public class TermsAndConditions extends AppCompatActivity {
         webview.getSettings().setSupportMultipleWindows(true);
         webview.setWebViewClient(new WebViewClient());
         webview.setWebChromeClient(new WebChromeClient());
-        //webview.loadUrl("https://viva-smartsdk.duckdns.org/user/register");
         webview.loadUrl("https://drivingapp-29059.firebaseapp.com/");
 
     }

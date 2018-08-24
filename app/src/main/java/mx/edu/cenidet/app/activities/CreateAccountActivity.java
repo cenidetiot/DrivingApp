@@ -50,6 +50,7 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
                 .addApi(Auth.CREDENTIALS_API)
                 .build();
         userController = new UserController(getApplicationContext(), this);
+
     }
 
     @Override
@@ -174,6 +175,11 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
                 break;
             case R.id.btnPhone:
                 requestHint();
+                break;
+
+            case R.id.checkBox:
+                Intent intentTerms = new Intent(CreateAccountActivity.this, TermsAndConditions.class);
+                startActivity(intentTerms);
                 break;
             default:
                 //DEFAULT
