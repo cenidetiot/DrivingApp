@@ -13,7 +13,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -66,6 +68,10 @@ public class LoginActivity extends AppCompatActivity implements
     private GoogleApiClient mGoogleApiClient;
     private String phone;
     private String userType;
+    private boolean emptyEmail = true;
+    private boolean emptyPhone = true;
+    private boolean emptyPassword = true;
+    private boolean emailIsValid = false;
 
 
 
@@ -158,8 +164,63 @@ public class LoginActivity extends AppCompatActivity implements
         btnPhone = (ImageButton) findViewById (R.id.btnPhone);
         btnLogin = (Button) findViewById (R.id.btnLogin);
         btnLogin.setOnClickListener(this);
+        btnLogin.setEnabled(false);
         btnSignUp = (Button) findViewById(R.id.btnSignUp);
         btnSignUp.setOnClickListener(this);
+
+        etEmailSG.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                isValidEmail(s.toString());
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length() != 0)
+                    emptyEmail = false;
+                else
+                    emptyEmail = true;
+
+                checkEmptyText();
+            }
+        });
+
+        etPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {}
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length() != 0)
+                    emptyPhone = false;
+                else
+                    emptyPhone = true;
+
+                checkEmptyText();
+            }
+        });
+
+        etLoginPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+
+
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length() != 0)
+                    emptyPassword = false;
+                else
+                    emptyPassword = true;
+                checkEmptyText();
+            }
+        });
 
         if(userType.equals("mobileUser")){
             etEmailSG.setVisibility(View.INVISIBLE);
@@ -173,9 +234,8 @@ public class LoginActivity extends AppCompatActivity implements
         }
     }
 
-    // Construct a request for phone numbers and show the picker
+
     private void requestHint() {
-        //CredentialsClient mCredentialsClient = Credentials.getClient(this);
         HintRequest hintRequest = new HintRequest.Builder()
                 .setPhoneNumberIdentifierSupported(true)
                 .build();
@@ -187,7 +247,23 @@ public class LoginActivity extends AppCompatActivity implements
         }
     }
 
-    // Obtain the phone number from the result
+    public  void  checkEmptyText(){
+        boolean accountIsOk = false;
+        if(userType.equals("mobileUser")){
+            if (emptyPhone == false)
+                accountIsOk = true;
+        }else {
+            if (emptyEmail == false && emailIsValid)
+                accountIsOk = true;
+        }
+        if (emptyPassword == false && accountIsOk )
+            btnLogin.setEnabled(true);
+        else
+            btnLogin.setEnabled(false);
+
+    }
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -206,38 +282,24 @@ public class LoginActivity extends AppCompatActivity implements
                 if (resultCode == RESULT_OK) {
                     Bundle extras = data.getExtras();
                     Credential credential = data.getParcelableExtra(Credential.EXTRA_KEY);
-                    etPhone.setText(credential.getId()); //Will need to process phone number string
-                    //credential.getProfilePictureUri()
+                    etPhone.setText(credential.getId());
                 }
             }
         }
     }
 
-    private boolean login(String email, String password){
-        if(userType.equals("mobileUser")) {
-        }
-        else{
-            if(!isValidEmail(email)){
-                Toast.makeText(getApplicationContext(), R.string.message_valid_email, Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        }
-        if(!isValidPassword(password)){
-            Toast.makeText(getApplicationContext(), R.string.message_valid_password, Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        else{
-            return true;
-        }
-    }
 
     private boolean isValidEmail(String email){
-        return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
+        boolean valid = !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
+        if (valid == false) {
+            etEmailSG.setError(getResources().getString(R.string.error_invalid_email));
+            emailIsValid = false;
+        }else {
+            emailIsValid = true;
+        }
+        return valid;
     }
 
-    private boolean isValidPassword(String password){
-        return !TextUtils.isEmpty(password);
-    }
 
 
     private void goToHome(){
@@ -246,6 +308,7 @@ public class LoginActivity extends AppCompatActivity implements
         intent.putExtra("fromLogin", "YES");
         startActivity(intent);
     }
+
     private boolean setCredentialsIfExist(){
         return !(appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_TOKEN).equals("") && appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_NAME).equals(""));
     }
@@ -255,22 +318,14 @@ public class LoginActivity extends AppCompatActivity implements
         String password = etLoginPassword.getText().toString();
         switch(v.getId()){
             case R.id.btnLogin:
-                //
+
                 if(userType.equals("mobileUser")){
                     phone = etPhone.getText().toString();
                     String subPhone = phone.substring(1, phone.length());
-                    if(login(subPhone, password)){
-                        userController.logInUser(subPhone, password, userType);
-                    }
-                }
-                // ON THE OTHER SIDE, IF THE USER IS A SECURITY GUARD USER SO..
-                else{
+                    userController.logInUser(subPhone, password, userType);
+                } else{
                     emailSG = etEmailSG.getText().toString();
-                    if(login(emailSG, password)){
-                        //Toast.makeText(getApplicationContext(), "Login de Guardia de Seguridad", Toast.LENGTH_SHORT).show();
-                        userController.logInUser(emailSG, password, userType);
-                    }
-
+                    userController.logInUser(emailSG, password, userType);
                 }
                 break;
             case R.id.btnSignUp:

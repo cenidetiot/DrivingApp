@@ -185,7 +185,7 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        
+
                     }
                     if(listAlerts.size() > 0){
                         callback.sendDataListAlerts(listAlerts);
