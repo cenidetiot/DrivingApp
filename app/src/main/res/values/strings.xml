@@ -120,5 +120,5 @@
     <string name="title_activity_driving_view">DrivingView</string>
     <string name="title_activity_zone_detail">Zone detail</string>
     <string name="message_no_accept_terms">You must to accept the terms and conditions.</string>
-
+    <string name="terms_title">Terms and conditions</string>
 </resources>

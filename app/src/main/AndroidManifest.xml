@@ -37,14 +37,20 @@
             android:name=".activities.SendManualAlertsActivity"
             android:configChanges="screenSize|orientation"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".activities.CreateAccountActivity" android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".activities.CreateAccountActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:theme="@style/Theme.AppCompat.Dialog.Alert" />
         <activity android:name=".activities.MyProfileActivity" />
         <activity android:name=".activities.LoginActivity" android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity android:name=".activities.WebViewSmartSecurity" />
         <activity
             android:name=".activities.DrivingView"
-            android:label="@string/title_activity_driving_view"
             android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activities.TermsAndConditions"
+            android:theme="@style/Theme.AppCompat.Dialog.Alert"
+            android:label="@string/terms_title"/>
+
         <service android:name=".services.DeviceService" />
         <service android:name=".services.DrivingFirebaseMessagingService">
             <intent-filter>

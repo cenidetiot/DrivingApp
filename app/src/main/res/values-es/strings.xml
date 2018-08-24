@@ -106,4 +106,5 @@
     <string name="message_no_accept_terms">Debes aceptar los términos y condiciones del servicio.</string>
 
     <string name="title_activity_zone_detail">Detalles de zona</string>
+    <string name="terms_title">Terminos y condiciones</string>
 </resources>
