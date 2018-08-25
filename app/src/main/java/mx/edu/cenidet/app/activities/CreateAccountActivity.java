@@ -178,8 +178,10 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
                 break;
 
             case R.id.checkBox:
-                Intent intentTerms = new Intent(CreateAccountActivity.this, TermsAndConditions.class);
-                startActivity(intentTerms);
+                if (ckTerms.isChecked() == true) {
+                    Intent intentTerms = new Intent(CreateAccountActivity.this, TermsAndConditions.class);
+                    startActivity(intentTerms);
+                }
                 break;
             default:
                 //DEFAULT

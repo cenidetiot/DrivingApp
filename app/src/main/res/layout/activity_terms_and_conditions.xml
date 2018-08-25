@@ -10,10 +10,11 @@
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
         android:clickable="true"
         app:backgroundTint="@color/common_google_signin_btn_text_dark_default"
+        app:borderWidth="0dp"
         app:srcCompat="@android:drawable/ic_delete"
         tools:layout_editor_absoluteX="334dp"
         tools:layout_editor_absoluteY="12dp" />
