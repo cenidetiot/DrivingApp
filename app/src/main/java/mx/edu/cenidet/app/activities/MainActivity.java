@@ -1,6 +1,7 @@
 package mx.edu.cenidet.app.activities;
 
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +12,7 @@ import www.fiware.org.ngsi.utilities.ApplicationPreferences;
 
 import android.content.Intent;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import org.json.JSONObject;
 
@@ -28,9 +30,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnSecurityGuard = (Button) findViewById(R.id.btnSecurityGuard);
         btnSecurityGuard.setOnClickListener(this);
         btnMobileUser.setOnClickListener(this);
+        RelativeLayout lat = (RelativeLayout) findViewById(R.id.toLayout);
+        lat.setBackgroundColor(getColorWithAlpha(Color.parseColor("#2c3e50"), 0.7f));
+    }
 
-
-
+    public static int getColorWithAlpha(int color, float ratio) {
+        int newColor = 0;
+        int alpha = Math.round(Color.alpha(color) * ratio);
+        int r = Color.red(color);
+        int g = Color.green(color);
+        int b = Color.blue(color);
+        newColor = Color.argb(alpha, r, g, b);
+        return newColor;
     }
      @Override
     public void onClick(View v) {
