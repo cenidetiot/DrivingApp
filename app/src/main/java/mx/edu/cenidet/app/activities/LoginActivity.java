@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -22,6 +23,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -45,6 +47,8 @@ import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
 import mx.edu.cenidet.cenidetsdk.utilities.FunctionSdk;
 import mx.edu.cenidet.app.R;
 import www.fiware.org.ngsi.utilities.ApplicationPreferences;
+
+import static mx.edu.cenidet.app.activities.MainActivity.getColorWithAlpha;
 
 public class LoginActivity extends AppCompatActivity implements
         View.OnClickListener,
@@ -80,6 +84,9 @@ public class LoginActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_login);
+        RelativeLayout lat = (RelativeLayout) findViewById(R.id.toLayout);
+        lat.setBackgroundColor(getColorWithAlpha(Color.parseColor("#2c3e50"), 0.7f));
+
         LOGIN_CONTEXT = LoginActivity.this;
         context = LOGIN_CONTEXT;
 
@@ -157,6 +164,7 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
     private void bindUI(){
+
         etEmailSG = (EditText) findViewById (R.id.etEmailSG);
         etPhone = (EditText) findViewById(R.id.etPhone);
         etPhone.setEnabled(false);
