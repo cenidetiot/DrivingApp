@@ -4,134 +4,141 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundDefault"
+    android:background="@drawable/drive1"
     tools:context="mx.edu.cenidet.app.activities.CreateAccountActivity">
 
-    <include
-        android:id="@+id/toolbar2"
-        layout="@layout/toolbar2"
-        android:title="@string/emptyTitleToolbar" />
-
-    <ScrollView
+    <RelativeLayout
+        android:id="@+id/toLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="50dp">
+        android:layout_alignParentTop="true">
 
-        <LinearLayout
+        <include
+            android:id="@+id/toolbar2"
+            layout="@layout/toolbar2"
+            android:title="@string/emptyTitleToolbar" />
+
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="15dp">
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="50dp">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:gravity="center_horizontal"
-                android:text="@string/message_title_create_account"
-                android:textColor="@color/white"
-                android:textSize="@dimen/display_1"
-                android:textStyle="bold" />
+                android:orientation="vertical"
+                android:padding="15dp">
 
-            <EditText
-                android:id="@+id/etFirstName"
-                style="@style/EditTextStyleOne"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:hint="@string/name"
-                android:inputType="textPersonName" />
-
-            <EditText
-                android:id="@+id/etLastName"
-                style="@style/EditTextStyleOne"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:hint="@string/last_name"
-                android:inputType="textPersonName" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:gravity="center_horizontal"
+                    android:text="@string/message_title_create_account"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/display_1"
+                    android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/etPhoneCreate"
+                    android:id="@+id/etFirstName"
                     style="@style/EditTextStyleOne"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_toLeftOf="@+id/btnPhone"
-                    android:layout_toStartOf="@+id/btnPhone"
-                    android:hint="@string/phone"
-                    android:inputType="phone" />
+                    android:layout_marginBottom="8dp"
+                    android:hint="@string/name"
+                    android:inputType="textPersonName" />
 
-                <ImageButton
-                    android:id="@+id/btnPhone"
+                <EditText
+                    android:id="@+id/etLastName"
+                    style="@style/EditTextStyleOne"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:hint="@string/last_name"
+                    android:inputType="textPersonName" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp">
+
+                    <EditText
+                        android:id="@+id/etPhoneCreate"
+                        style="@style/EditTextStyleOne"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_toLeftOf="@+id/btnPhone"
+                        android:layout_toStartOf="@+id/btnPhone"
+                        android:hint="@string/phone"
+                        android:inputType="phone" />
+
+                    <ImageButton
+                        android:id="@+id/btnPhone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:onClick="onClickEvent"
+                        android:src="@android:drawable/ic_menu_call" />
+                </RelativeLayout>
+
+                <EditText
+                    android:id="@+id/etEmail"
+                    style="@style/EditTextStyleOne"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:hint="@string/email"
+                    android:inputType="textEmailAddress" />
+
+                <EditText
+                    android:id="@+id/etPassword"
+                    style="@style/EditTextStyleOne"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:hint="@string/password"
+                    android:inputType="textPassword" />
+
+                <EditText
+                    android:id="@+id/etConfirmPassword"
+                    style="@style/EditTextStyleOne"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:hint="@string/confirm_password"
+                    android:inputType="textPassword" />
+
+
+                <CheckBox
+                    android:id="@+id/checkBox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_weight="1"
                     android:onClick="onClickEvent"
-                    android:src="@android:drawable/ic_menu_call" />
-            </RelativeLayout>
+                    android:text="@string/terms"
+                    android:textColor="@color/white70"
+                    android:textSize="@dimen/caption"
+                    android:theme="@style/MyCheckbox">
 
-            <EditText
-                android:id="@+id/etEmail"
-                style="@style/EditTextStyleOne"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:hint="@string/email"
-                android:inputType="textEmailAddress" />
+                </CheckBox>
 
-            <EditText
-                android:id="@+id/etPassword"
-                style="@style/EditTextStyleOne"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:hint="@string/password"
-                android:inputType="textPassword" />
+                <Button
+                    android:id="@+id/btnCreateAccount"
+                    style="@style/ButtonStyleOne"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:onClick="onClickEvent"
+                    android:text="@string/message_btn_create_account" />
 
-            <EditText
-                android:id="@+id/etConfirmPassword"
-                style="@style/EditTextStyleOne"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:hint="@string/confirm_password"
-                android:inputType="textPassword" />
-
-
-            <CheckBox
-                android:id="@+id/checkBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_weight="1"
-                android:onClick="onClickEvent"
-                android:text="@string/terms"
-                android:textColor="@color/white70"
-                android:textSize="@dimen/caption"
-                android:theme="@style/MyCheckbox">
-
-            </CheckBox>
-
-            <Button
-                android:id="@+id/btnCreateAccount"
-                style="@style/ButtonStyleOne"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:onClick="onClickEvent"
-                android:text="@string/message_btn_create_account" />
-
-        </LinearLayout>
-    </ScrollView>
+            </LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
 
 </RelativeLayout>

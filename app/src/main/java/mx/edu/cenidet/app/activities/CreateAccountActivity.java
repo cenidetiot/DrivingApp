@@ -3,6 +3,7 @@ package mx.edu.cenidet.app.activities;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import mx.edu.cenidet.cenidetsdk.controllers.UserController;
@@ -29,6 +31,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.auth.api.Auth;
 
+import static mx.edu.cenidet.app.activities.MainActivity.getColorWithAlpha;
+
 public class CreateAccountActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, UserController.UsersServiceMethods {
     private static final int RESOLVE_HINT = 12;
     private GoogleApiClient mGoogleApiClient;
@@ -43,6 +47,9 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
         setToolbar();
+        RelativeLayout lat = (RelativeLayout) findViewById(R.id.toLayout);
+        lat.setBackgroundColor(getColorWithAlpha(Color.parseColor("#2c3e50"), 0.7f));
+
         appPreferences = new ApplicationPreferences();
         bindUI();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
