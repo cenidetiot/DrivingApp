@@ -168,7 +168,6 @@ public class EventsFuntions {
             }
 
         }
-
         return roadSegment;
     }
 
@@ -185,7 +184,8 @@ public class EventsFuntions {
         ArrayList<Road> listRoadByResponsible = sqLiteDrivingApp.getRoadByResponsible(offStreetParking.getIdOffStreetParking()); //obtiene la lista de los road por el responsable.
         ArrayList<RoadSegment> listRoadSegmentByRefRoad;//obtendra la lista de los roadSegment de acuerdo a los Road.
         LatLng point = new LatLng(currentLatitude,currentLongitude);
-        if(listRoadByResponsible.size() > 0){
+        Log.d("ROADS", "" +listRoadByResponsible.size());
+        if( listRoadByResponsible.size() > 0){
             JSONArray arrayLocation;
             String originalString, clearString;
             double latitude, longitude;
@@ -194,6 +194,7 @@ public class EventsFuntions {
                 //Obtiene los Road segment correspondiente a un determinado Road.
                 listRoadSegmentByRefRoad = sqLiteDrivingApp.getAllRoadSegmentByRefRoad(listRoadByResponsible.get(i).getIdRoad());
                 //listRoadSegmentByRefRoad = sqLiteDrivingApp.getAllRoadSegmentByRefRoad(offStreetParking.getIdOffStreetParking());
+                Log.d("ROADSEGMENT", ""+ listRoadSegmentByRefRoad.size());
                 if (listRoadSegmentByRefRoad.size() > 0) {
                     for (RoadSegment iteratorRoadSegment : listRoadSegmentByRefRoad) {
                         polyline = new ArrayList<>();
@@ -211,7 +212,6 @@ public class EventsFuntions {
                         roadSegment.setLaneUsage(iteratorRoadSegment.getLaneUsage());
                         roadSegment.setWidth(iteratorRoadSegment.getWidth());
                         roadSegment.setStatus(iteratorRoadSegment.getStatus());
-                        //Log.i("STATUS: ","LOCATION: "+iteratorRoadSegment.getLocation());
                         try {
                             arrayLocation = new JSONArray(roadSegment.getLocation());
                             for (int j = 0; j < arrayLocation.length(); j++) {
@@ -236,7 +236,9 @@ public class EventsFuntions {
             }
 
         }
-        Log.i("STATUS: ","DENTRO DEL PARKING Y EN NINGUN ROAD SEGMENT----------------------------------------------");
+
+
+
         return auxRoadSegment;
     }
 
