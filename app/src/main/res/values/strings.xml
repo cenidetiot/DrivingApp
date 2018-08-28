@@ -122,4 +122,9 @@
     <string name="message_no_accept_terms">You must to accept the terms and conditions.</string>
     <string name="terms_title">Terms and conditions</string>
     <string name="viva_register">ViVA application</string>
+
+    <string name="validation_phone_error">Please complete the phone number</string>
+    <string name= "validation_empty_required_field">This field can not be empty</string>
+    <string name= "validation_dont_match_passwords">The password does not match</string>
+
 </resources>

@@ -108,4 +108,9 @@
     <string name="title_activity_zone_detail">Detalles de zona</string>
     <string name="terms_title">Terminos y condiciones</string>
     <string name="viva_register">Aplicación ViVA</string>
+
+    <string name="error_invalid_email">Este email no es valido</string>
+    <string name="validation_phone_error">Por favor completa el numero telefónico</string>
+    <string name= "validation_empty_required_field">Este campo no puede estar vacio</string>
+    <string name= "validation_dont_match_passwords">Las contraseñas no coinciden</string>
 </resources>
