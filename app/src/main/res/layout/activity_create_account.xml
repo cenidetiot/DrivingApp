@@ -48,7 +48,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:hint="@string/name"
-                    android:inputType="textPersonName" />
+                    android:inputType="textCapSentences"/>
 
                 <EditText
                     android:id="@+id/etLastName"
@@ -57,7 +57,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:hint="@string/last_name"
-                    android:inputType="textPersonName" />
+                    android:inputType="textCapSentences"
+                     />
 
                 <RelativeLayout
                     android:layout_width="match_parent"

@@ -8,9 +8,12 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -41,6 +44,9 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
     private  UserController userController;
     private ApplicationPreferences appPreferences;
     private String phone;
+    private boolean emptyPhone = true;
+
+    private boolean etPhoneTouched = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +108,11 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
         return band;
     }
     private boolean isValidEmail(String email){
-        return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
+        boolean valid = !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
+        if (valid == false) {
+            etEmail.setError(getResources().getString(R.string.error_invalid_email));
+        }
+        return valid;
     }
 
     private boolean isValidPassword(String password, String confirmPassword){
@@ -125,11 +135,140 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
         etFirstName = (EditText) findViewById(R.id.etFirstName);
         etLastName = (EditText) findViewById(R.id.etLastName);
         etPhone = (EditText) findViewById(R.id.etPhoneCreate);
-        etPhone.setEnabled(false);
+        //etPhone.setEnabled(false);
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPassword = (EditText) findViewById(R.id.etPassword);
         etConfirmPassword = (EditText) findViewById(R.id.etConfirmPassword);
         ckTerms = (CheckBox) findViewById(R.id.checkBox);
+
+        etPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().length() < 13)
+                    etPhone.setError(getResources().getString(R.string.validation_phone_error));
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length() == 0)
+                    requestHint();
+            }
+        });
+        etEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                isValidEmail(s.toString());
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
+
+
+        etConfirmPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!isValidPassword(s.toString(), etPassword.getText().toString())){
+                    etConfirmPassword.setError(getResources().getString(R.string.validation_dont_match_passwords));
+                }
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
+        etPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!isValidPassword(s.toString(), etConfirmPassword.getText().toString())){
+                    etConfirmPassword.setError(getResources().getString(R.string.validation_dont_match_passwords));
+                }else{
+                    etConfirmPassword.setError(null);
+                }
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
+        etPhone.setOnTouchListener(new View.OnTouchListener(){
+            public boolean onTouch(View v, MotionEvent event){
+                if (etPhoneTouched == false) {
+                    requestHint();
+                }
+                return false;
+            }
+        });
+
+        etFirstName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus){
+                    if(etFirstName.getText().toString().length() <= 0)
+                        etFirstName.setError(getResources().getString(R.string.validation_empty_required_field));
+                }
+            }
+        });
+
+        etLastName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus){
+                    if(etLastName.getText().toString().length() <= 0)
+                        etLastName.setError(getResources().getString(R.string.validation_empty_required_field));
+                }
+            }
+        });
+
+        etEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus){
+                    if(etEmail.getText().toString().length() <= 0)
+                        etEmail.setError(getResources().getString(R.string.validation_empty_required_field));
+                }
+            }
+        });
+
+        etPhone.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    if(etPhone.getText().toString().length() <= 0)
+                        requestHint();
+                }
+            }
+        });
+
+        etPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    if(etPassword.getText().toString().length() <= 0)
+                        etPassword.setError(getResources().getString(R.string.validation_empty_required_field));
+                }
+            }
+        });
+        etConfirmPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus){
+                    if(etConfirmPassword.getText().toString().length() <= 0)
+                        etConfirmPassword.setError(getResources().getString(R.string.validation_empty_required_field));
+                }
+            }
+        });
+
+
+
+
+
     }
 
     // Construct a request for phone numbers and show the picker
@@ -143,6 +282,7 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
         } catch (IntentSender.SendIntentException e) {
             e.printStackTrace();
         }
+        etPhoneTouched =  true;
     }
 
     // Obtain the phone number from the result
