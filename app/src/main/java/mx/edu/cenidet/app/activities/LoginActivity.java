@@ -19,6 +19,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,7 +29,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.credentials.Credential;
+import com.google.android.gms.auth.api.credentials.CredentialPickerConfig;
 import com.google.android.gms.auth.api.credentials.HintRequest;
+import com.google.android.gms.auth.api.credentials.IdentityProviders;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
@@ -76,6 +79,8 @@ public class LoginActivity extends AppCompatActivity implements
     private boolean emptyPhone = true;
     private boolean emptyPassword = true;
     private boolean emailIsValid = false;
+
+    private boolean etPhoneTouched = false;
 
 
 
@@ -167,7 +172,7 @@ public class LoginActivity extends AppCompatActivity implements
 
         etEmailSG = (EditText) findViewById (R.id.etEmailSG);
         etPhone = (EditText) findViewById(R.id.etPhone);
-        etPhone.setEnabled(false);
+        //etPhone.setEnabled(false);
         etLoginPassword = (EditText) findViewById(R.id.etLoginPassword);
         btnPhone = (ImageButton) findViewById (R.id.btnPhone);
         btnLogin = (Button) findViewById (R.id.btnLogin);
@@ -196,7 +201,10 @@ public class LoginActivity extends AppCompatActivity implements
 
         etPhone.addTextChangedListener(new TextWatcher() {
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+                if (s.toString().length() < 13)
+                    etPhone.setError(getResources().getString(R.string.error_invalid_email));
+            }
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
@@ -230,6 +238,16 @@ public class LoginActivity extends AppCompatActivity implements
             }
         });
 
+        etPhone.setOnTouchListener(new View.OnTouchListener(){
+            public boolean onTouch(View v, MotionEvent event){
+                if (etPhoneTouched == false) {
+                    requestHint();
+                    etPhoneTouched =  true;
+                }
+                return false;
+            }
+        });
+
         if(userType.equals("mobileUser")){
             etEmailSG.setVisibility(View.INVISIBLE);
             etPhone.setVisibility(View.VISIBLE);
@@ -245,7 +263,10 @@ public class LoginActivity extends AppCompatActivity implements
 
     private void requestHint() {
         HintRequest hintRequest = new HintRequest.Builder()
+                .setHintPickerConfig(new CredentialPickerConfig.Builder().setShowCancelButton(true).build())
                 .setPhoneNumberIdentifierSupported(true)
+                //.setEmailAddressIdentifierSupported(true)
+                //.setAccountTypes(IdentityProviders.GOOGLE)
                 .build();
         PendingIntent intent = Auth.CredentialsApi.getHintPickerIntent(mGoogleApiClient, hintRequest);
         try {
@@ -348,8 +369,12 @@ public class LoginActivity extends AppCompatActivity implements
                     startActivity(webViewSmartSecurity);
                 }
                 break;
-            case R.id.btnPhone:
+            case R.id.btnPhone :
                 requestHint();
+                break;
+
+            case R.id.etPhone:
+
                 break;
         }
     }
