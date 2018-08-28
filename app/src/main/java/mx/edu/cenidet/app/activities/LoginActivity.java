@@ -203,7 +203,7 @@ public class LoginActivity extends AppCompatActivity implements
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.toString().length() < 13)
-                    etPhone.setError(getResources().getString(R.string.error_invalid_email));
+                    etPhone.setError(getResources().getString(R.string.validation_phone_error));
             }
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
