@@ -70,6 +70,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"
                         android:onClick="onClick"
+                        android:background="@color/transparent"
                         android:src="@android:drawable/ic_menu_call" />
 
                     <EditText
