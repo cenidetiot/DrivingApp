@@ -242,7 +242,7 @@ public class LoginActivity extends AppCompatActivity implements
             public boolean onTouch(View v, MotionEvent event){
                 if (etPhoneTouched == false) {
                     requestHint();
-                    etPhoneTouched =  true;
+
                 }
                 return false;
             }
@@ -274,6 +274,7 @@ public class LoginActivity extends AppCompatActivity implements
         } catch (IntentSender.SendIntentException e) {
             e.printStackTrace();
         }
+        etPhoneTouched =  true;
     }
 
     public  void  checkEmptyText(){
