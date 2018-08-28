@@ -190,6 +190,7 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
                 }else{
                     etConfirmPassword.setError(null);
                 }
+
             }
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
@@ -249,7 +250,7 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
         etPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
+                if(!hasFocus){
                     if(etPassword.getText().toString().length() <= 0)
                         etPassword.setError(getResources().getString(R.string.validation_empty_required_field));
                 }
