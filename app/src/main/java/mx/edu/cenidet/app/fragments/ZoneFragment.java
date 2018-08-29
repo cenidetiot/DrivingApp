@@ -182,6 +182,7 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
                     listLocation.add(new LatLng(latitude,longitude));
                 }
                 gMap.addPolygon(new PolygonOptions()
+                        .fillColor(getColorWithAlpha(Color.parseColor("#2ecc71"), 0.1f))
                         .addAll(listLocation).strokeColor(Color.parseColor("#2ecc71")));
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -222,7 +223,7 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
                             gMap.addPolygon(
                                     new PolygonOptions().
                                             addAll(listLocationParking)
-                                            //.fillColor(getColorWithAlpha(Color.parseColor("#3498db"), 0.1f))
+                                            .fillColor(getColorWithAlpha(Color.parseColor("#3498db"), 0.1f))
                                             .strokeColor(Color.parseColor("#3498db")))                             ;
 
                         }
@@ -262,7 +263,7 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
                             if (gMap != null) {
                                 gMap.addPolyline(new PolylineOptions()
                                         .addAll(listLocationRoadSegment)
-                                        //.width(8)
+                                        .width(8)
                                         .color(Color.RED));
                             }
                         } catch (JSONException e) {
@@ -281,28 +282,23 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
 
     @Override
     public void detectZone(Zone zone, boolean statusLocation) {
-        if (currentZone != null){
-            if (zone != null){
-                if (currentZone.getIdZone().equals(zone.getIdZone())){
+        if (statusLocation){
+            if (currentZone != null){
+
+                if (!currentZone.getIdZone().equals(zone.getIdZone())){
                     drawZone(zone);
-                    Log.d("DETECEDZONE", zone.getIdZone());
                     drawParking(zone.getIdZone());
-                    drawRoadSegmentByParking(zone.getIdZone());
-                    mapDrawn = true;
+                    //drawRoadSegmentByParking(zone.getIdZone());
                 }
-            }
-        }else {
-            if (zone != null){
+
+            }else {
                 drawZone(zone);
-                Log.d("DETECEDZONE", zone.getIdZone());
                 drawParking(zone.getIdZone());
-                drawRoadSegmentByParking(zone.getIdZone());
-                mapDrawn = true;
+                //drawRoadSegmentByParking(zone.getIdZone());
+
             }
+            currentZone = zone;
         }
-
-
-        currentZone = zone;
 
     }
 
