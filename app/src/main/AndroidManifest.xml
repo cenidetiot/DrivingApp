@@ -22,34 +22,48 @@
         android:supportsRtl="true"
         android:screenOrientation="portrait"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.SplashActivity">
+        <activity android:name=".activities.SplashActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.HomeActivity" />
-        <activity android:name=".activities.MainActivity"/>
-        <activity android:name=".activities.AlertMapDetailActivity" />
-        <activity android:name=".activities.MapDetailActivity" />
-        <activity android:name=".activities.AlertHistoryActivity" />
+        <activity android:name=".activities.HomeActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.AlertMapDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.MapDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.AlertHistoryActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activities.SendManualAlertsActivity"
             android:configChanges="screenSize|orientation"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".activities.CreateAccountActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".activities.MyProfileActivity" />
-        <activity android:name=".activities.LoginActivity" android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity android:name=".activities.MyProfileActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.LoginActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:screenOrientation="portrait"/>
         <activity android:name=".activities.WebViewSmartSecurity"
-            android:label="@string/viva_register"/>
+            android:label="@string/viva_register"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.DrivingView"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.TermsAndConditions"
             android:theme="@style/Theme.AppCompat.Dialog.Alert"
-            android:label="@string/terms_title"/>
+            android:label="@string/terms_title"
+            android:screenOrientation="portrait"/>
 
         <service android:name=".services.DeviceService" />
         <service android:name=".services.DrivingFirebaseMessagingService">
