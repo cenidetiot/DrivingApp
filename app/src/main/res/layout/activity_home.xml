@@ -41,7 +41,7 @@
         fab:menu_labels_ellipsize="end"
         fab:menu_labels_singleLine="true"
         fab:menu_icon="@drawable/ic_my_alerts"
-        fab:menu_backgroundColor="#ccffffff">
+        fab:menu_backgroundColor="@color/transparent">
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/btnFloatingUnknown"
