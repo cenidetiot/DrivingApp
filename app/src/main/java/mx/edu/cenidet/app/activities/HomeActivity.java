@@ -158,16 +158,12 @@ public class HomeActivity extends AppCompatActivity
                         Intent intentDrivingView = new Intent(getApplicationContext(), DrivingView.class);
                         startActivity(intentDrivingView);
                         break;
-                    case R.id.menu_campus:
+                    case R.id.menu_alerts:
                         viewPager.setCurrentItem(1);
                         fragmentTransaction = true;
                         break;
-                    case R.id.menu_alerts:
-                        viewPager.setCurrentItem(2);
-                        fragmentTransaction = true;
-                        break;
                     case R.id.menu_my_campus:
-                        viewPager.setCurrentItem(3);
+                        viewPager.setCurrentItem(2);
                         fragmentTransaction = true;
                         break;
                     case R.id.menu_history:
