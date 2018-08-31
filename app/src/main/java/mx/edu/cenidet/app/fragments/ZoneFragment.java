@@ -116,7 +116,7 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser){
-            zoomToLocation(latitude, longitude);
+            //zoomToLocation(latitude, longitude);
         }
     }
 

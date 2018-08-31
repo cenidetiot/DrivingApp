@@ -76,10 +76,6 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
             }
         });
 
-        //contactPhoto = (ImageView) rootView.findViewById(R.id.contactPhoto);
-        /*if (contactPhoto != null)
-            contactPhoto.setImageBitmap(retrieveContactPhoto(context));*/
-
         return rootView;
     }
 
@@ -99,7 +95,6 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
     @Override
     public void detectZone(Zone zone, boolean statusLocation) {
         if (statusLocation == true) {
-            //Log.i("STATUS: ","Campus Name: "+campus.getName()+" statusLocation: "+statusLocation);
             if (imagenViewDetailCampus != null && tvDetailCampus != null) {
                 imagenViewDetailCampus.setImageResource(R.mipmap.ic_inside_foreground);
                 tvDetailCampus.setText(zone.getName().getValue() + "\n" + zone.getAddress().getValue());
