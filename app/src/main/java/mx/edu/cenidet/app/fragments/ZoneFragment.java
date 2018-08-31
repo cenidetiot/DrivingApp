@@ -39,10 +39,14 @@ import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
 import mx.edu.cenidet.app.R;
 import mx.edu.cenidet.app.activities.HomeActivity;
 import mx.edu.cenidet.app.services.SendDataService;
+import www.fiware.org.ngsi.datamodel.datatypes.LocationGeoJsonObject;
 import www.fiware.org.ngsi.datamodel.entity.OffStreetParking;
+import www.fiware.org.ngsi.datamodel.entity.Road;
 import www.fiware.org.ngsi.datamodel.entity.RoadSegment;
 import www.fiware.org.ngsi.datamodel.entity.Zone;
 import www.fiware.org.ngsi.utilities.ApplicationPreferences;
+
+import static mx.edu.cenidet.app.activities.MainActivity.getColorWithAlpha;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,7 +65,7 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
     private SendDataService sendDataService;
     private int count = 1;
     private ApplicationPreferences applicationPreferences;
-    String currentZone;
+    private Zone currentZone = null;
 
     //Pintar todos los Campus
     //private ArrayList<Zone> listZone;
@@ -71,13 +75,14 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
     private ArrayList<OffStreetParking> listOffStreetParking;
     private JSONArray arrayLocationParking;
     private FloatingActionButton speedButtonZone;
+    private boolean areDrawn = false;
+    private boolean mapDrawn = false;
 
     public ZoneFragment() {
         context = HomeActivity.MAIN_CONTEXT;
         sendDataService = new SendDataService(this);
         sqLiteDrivingApp = new SQLiteDrivingApp(context);
         applicationPreferences = new ApplicationPreferences();
-        currentZone = applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_CURRENT_ZONE);
     }
 
 
@@ -99,10 +104,7 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
         mapView = (MapView) rootView.findViewById(R.id.mapZone);
-
         if (mapView != null) {
             mapView.onCreate(null);
             mapView.onResume();
@@ -111,16 +113,22 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser){
+            zoomToLocation(latitude, longitude);
+        }
+    }
+
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         gMap.setMyLocationEnabled(true);
-        //Ocultar el boton
         gMap.getUiSettings().setMyLocationButtonEnabled(false);
-        drawZones();
-        drawParking(currentZone);
     }
 
 
@@ -158,7 +166,6 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
      * @param zone el identificador de la zona.
      */
     public void drawZone(Zone zone){
-
             JSONArray arrayLocation;
             String originalString, clearString;
             double latitude, longitude;
@@ -175,6 +182,7 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
                     listLocation.add(new LatLng(latitude,longitude));
                 }
                 gMap.addPolygon(new PolygonOptions()
+                        .fillColor(getColorWithAlpha(Color.parseColor("#2ecc71"), 0.1f))
                         .addAll(listLocation).strokeColor(Color.parseColor("#2ecc71")));
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -187,7 +195,6 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
      * @param zoneId el identificador de la zona.
      */
     public void drawParking(String zoneId){
-        if(!currentZone.equals("undetectedZone")) {
             listOffStreetParking = sqLiteDrivingApp.getAllOffStreetParkingByAreaServed(zoneId);
             if (listOffStreetParking.size() > 0) {
                 String originalStringParking, clearStringParking;
@@ -216,9 +223,11 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
                             gMap.addPolygon(
                                     new PolygonOptions().
                                             addAll(listLocationParking)
-                                            .strokeColor(Color.parseColor("#3498db")));
+                                            .fillColor(getColorWithAlpha(Color.parseColor("#3498db"), 0.1f))
+                                            .strokeColor(Color.parseColor("#3498db")))                             ;
+
                         }
-                        createMarkerParking(centerLatLngParking.latitude, centerLatLngParking.longitude, listOffStreetParking.get(i).getName());
+                        //createMarkerParking(centerLatLngParking.latitude, centerLatLngParking.longitude, listOffStreetParking.get(i).getName());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -226,42 +235,42 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
                     drawRoadSegmentByParking(listOffStreetParking.get(i).getIdOffStreetParking());
                 }
             }
-        }
+
     }
-    /*public void drawRoadSegmentByZone(String responsible){
-        ArrayList<Road> listRoad
-    }*/
-    public void drawRoadSegmentByParking(String refRoad){
-        ArrayList<RoadSegment> getAllRoadSegmentByRefRoad = sqLiteDrivingApp.getAllRoadSegmentByRefRoad(refRoad);
-        if(getAllRoadSegmentByRefRoad.size() > 0){
-            String originalStringParking, clearStringParking;
-            double latitude, longitude;
-            String[] subStringParking;
-            JSONArray arrayLocationRoadSegment;
-            for (RoadSegment iteratorRoadSegment:getAllRoadSegmentByRefRoad){
-                ArrayList<LatLng> listLocationRoadSegment = new ArrayList<>();
-                try {
-                    arrayLocationRoadSegment = new JSONArray(iteratorRoadSegment.getLocation());
-                    for (int j = 0; j < arrayLocationRoadSegment.length(); j++) {
-                        originalStringParking = arrayLocationRoadSegment.get(j).toString();
-                        clearStringParking = originalStringParking.substring(originalStringParking.indexOf("[") + 1, originalStringParking.indexOf("]"));
-                        subStringParking = clearStringParking.split(",");
-                        latitude = Double.parseDouble(subStringParking[0]);
-                        longitude = Double.parseDouble(subStringParking[1]);
-                        listLocationRoadSegment.add(new LatLng(latitude, longitude));
+
+    public void drawRoadSegmentByParking(String responsible){
+        ArrayList<Road> listRoadByResponsible = sqLiteDrivingApp.getRoadByResponsible(responsible); //obtiene la lista de los road por el responsable.
+        if( listRoadByResponsible.size() > 0) {
+            for(int i=0; i<listRoadByResponsible.size(); i++) {
+                ArrayList<RoadSegment> getAllRoadSegmentByRefRoad = sqLiteDrivingApp.getAllRoadSegmentByRefRoad(listRoadByResponsible.get(i).getIdRoad());
+                if (getAllRoadSegmentByRefRoad.size() > 0) {
+                    String originalStringParking, clearStringParking;
+                    double latitude, longitude;
+                    String[] subStringParking;
+                    JSONArray arrayLocationRoadSegment;
+                    for (RoadSegment iteratorRoadSegment : getAllRoadSegmentByRefRoad) {
+                        ArrayList<LatLng> listLocationRoadSegment = new ArrayList<>();
+                        try {
+                            arrayLocationRoadSegment = new JSONArray(iteratorRoadSegment.getLocation());
+                            for (int j = 0; j < arrayLocationRoadSegment.length(); j++) {
+                                originalStringParking = arrayLocationRoadSegment.get(j).toString();
+                                clearStringParking = originalStringParking.substring(originalStringParking.indexOf("[") + 1, originalStringParking.indexOf("]"));
+                                subStringParking = clearStringParking.split(",");
+                                latitude = Double.parseDouble(subStringParking[0]);
+                                longitude = Double.parseDouble(subStringParking[1]);
+                                listLocationRoadSegment.add(new LatLng(latitude, longitude));
+                            }
+                            if (gMap != null) {
+                                gMap.addPolyline(new PolylineOptions()
+                                        .addAll(listLocationRoadSegment)
+                                        .width(8)
+                                        .color(Color.RED));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
-                    if (gMap != null) {
-                        gMap.addPolyline(new PolylineOptions()
-                                .addAll(listLocationRoadSegment)
-                                .width(5)
-                                .color(Color.RED));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
-                Log.i("ID", "--------"+iteratorRoadSegment.getIdRoadSegment());
-                Log.i("NAME: ", "--------"+iteratorRoadSegment.getName());
-                Log.i("LOCATION : ", "--------"+iteratorRoadSegment.getLocation());
             }
         }
     }
@@ -273,16 +282,37 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
 
     @Override
     public void detectZone(Zone zone, boolean statusLocation) {
+        if (statusLocation){
+            if (currentZone != null){
+
+                if (!currentZone.getIdZone().equals(zone.getIdZone())){
+                    drawZone(zone);
+                    drawParking(zone.getIdZone());
+                    //drawRoadSegmentByParking(zone.getIdZone());
+                }
+
+            }else {
+                drawZone(zone);
+                drawParking(zone.getIdZone());
+                //drawRoadSegmentByParking(zone.getIdZone());
+
+            }
+            currentZone = zone;
+        }
+
     }
 
     @Override
     public void detectRoadSegment(double latitude, double longitude, RoadSegment roadSegment) {
-
+        if (roadSegment != null){
+            Log.d("ROADSTEST", roadSegment.getName());
+        }else {
+            Log.d("ROADSTEST", "Sin roadSegmetn");
+        }
     }
 
     @Override
     public void sendDataAccelerometer(double ax, double ay, double az) {
-        //Log.i("STATUS 3: ","ax: "+ax+" ay: "+ay+" az: "+az);
     }
 
     @Override

@@ -7,24 +7,31 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.credentials.Credential;
+import com.google.android.gms.auth.api.credentials.CredentialPickerConfig;
 import com.google.android.gms.auth.api.credentials.HintRequest;
+import com.google.android.gms.auth.api.credentials.IdentityProviders;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
@@ -38,20 +45,18 @@ import java.util.List;
 import java.util.Map;
 
 import mx.edu.cenidet.cenidetsdk.controllers.UserController;
-import mx.edu.cenidet.cenidetsdk.controllers.ZoneControllerSdk;
-import mx.edu.cenidet.cenidetsdk.db.SQLiteDrivingApp;
 import mx.edu.cenidet.cenidetsdk.httpmethods.Response;
 import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
 import mx.edu.cenidet.cenidetsdk.utilities.FunctionSdk;
 import mx.edu.cenidet.app.R;
-import www.fiware.org.ngsi.datamodel.entity.Zone;
 import www.fiware.org.ngsi.utilities.ApplicationPreferences;
+
+import static mx.edu.cenidet.app.activities.MainActivity.getColorWithAlpha;
 
 public class LoginActivity extends AppCompatActivity implements
         View.OnClickListener,
         GoogleApiClient.OnConnectionFailedListener,
-        UserController.UsersServiceMethods,
-        ZoneControllerSdk.ZoneServiceMethods{
+        UserController.UsersServiceMethods{
 
     final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
     private static final int RESOLVE_HINT = 12;
@@ -70,9 +75,12 @@ public class LoginActivity extends AppCompatActivity implements
     private GoogleApiClient mGoogleApiClient;
     private String phone;
     private String userType;
-    private ZoneControllerSdk zoneControllerSdk;
-    private SQLiteDrivingApp sqLiteDrivingApp;
-    private ArrayList<Zone> listZone;
+    private boolean emptyEmail = true;
+    private boolean emptyPhone = true;
+    private boolean emptyPassword = true;
+    private boolean emailIsValid = false;
+
+    private boolean etPhoneTouched = false;
 
 
 
@@ -81,6 +89,9 @@ public class LoginActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_login);
+        RelativeLayout lat = (RelativeLayout) findViewById(R.id.toLayout);
+        lat.setBackgroundColor(getColorWithAlpha(Color.parseColor("#2c3e50"), 0.7f));
+
         LOGIN_CONTEXT = LoginActivity.this;
         context = LOGIN_CONTEXT;
 
@@ -102,7 +113,7 @@ public class LoginActivity extends AppCompatActivity implements
                 .build();
         bindUI();
         userController = new UserController(getApplicationContext(), this);
-       // setCredentialsIfExist();
+
 
         //Comprobando la version de Android...
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -141,12 +152,6 @@ public class LoginActivity extends AppCompatActivity implements
             }
 
         }
-        sqLiteDrivingApp = new SQLiteDrivingApp(this);
-        zoneControllerSdk = new ZoneControllerSdk(context, this);
-        listZone = sqLiteDrivingApp.getAllZone();
-        if(listZone.size()== 0){
-            zoneControllerSdk.readAllZone();
-        }
 
     }
     private void setToolbar(){
@@ -164,15 +169,84 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
     private void bindUI(){
+
         etEmailSG = (EditText) findViewById (R.id.etEmailSG);
         etPhone = (EditText) findViewById(R.id.etPhone);
-        etPhone.setEnabled(false);
+        //etPhone.setEnabled(false);
         etLoginPassword = (EditText) findViewById(R.id.etLoginPassword);
         btnPhone = (ImageButton) findViewById (R.id.btnPhone);
         btnLogin = (Button) findViewById (R.id.btnLogin);
         btnLogin.setOnClickListener(this);
+        btnLogin.setEnabled(false);
         btnSignUp = (Button) findViewById(R.id.btnSignUp);
         btnSignUp.setOnClickListener(this);
+
+        etEmailSG.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                isValidEmail(s.toString());
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length() != 0)
+                    emptyEmail = false;
+                else
+                    emptyEmail = true;
+
+                checkEmptyText();
+            }
+        });
+
+        etPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().length() < 13)
+                    etPhone.setError(getResources().getString(R.string.validation_phone_error));
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length() != 0)
+                    emptyPhone = false;
+                else
+                    emptyPhone = true;
+
+                checkEmptyText();
+            }
+        });
+
+        etLoginPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+
+
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length() != 0)
+                    emptyPassword = false;
+                else
+                    emptyPassword = true;
+                checkEmptyText();
+            }
+        });
+
+        etPhone.setOnTouchListener(new View.OnTouchListener(){
+            public boolean onTouch(View v, MotionEvent event){
+                if (etPhoneTouched == false) {
+                    requestHint();
+
+                }
+                return false;
+            }
+        });
 
         if(userType.equals("mobileUser")){
             etEmailSG.setVisibility(View.INVISIBLE);
@@ -186,11 +260,13 @@ public class LoginActivity extends AppCompatActivity implements
         }
     }
 
-    // Construct a request for phone numbers and show the picker
+
     private void requestHint() {
-        //CredentialsClient mCredentialsClient = Credentials.getClient(this);
         HintRequest hintRequest = new HintRequest.Builder()
+                .setHintPickerConfig(new CredentialPickerConfig.Builder().setShowCancelButton(true).build())
                 .setPhoneNumberIdentifierSupported(true)
+                //.setEmailAddressIdentifierSupported(true)
+                //.setAccountTypes(IdentityProviders.GOOGLE)
                 .build();
         PendingIntent intent = Auth.CredentialsApi.getHintPickerIntent(mGoogleApiClient, hintRequest);
         try {
@@ -198,9 +274,26 @@ public class LoginActivity extends AppCompatActivity implements
         } catch (IntentSender.SendIntentException e) {
             e.printStackTrace();
         }
+        etPhoneTouched =  true;
     }
 
-    // Obtain the phone number from the result
+    public  void  checkEmptyText(){
+        boolean accountIsOk = false;
+        if(userType.equals("mobileUser")){
+            if (emptyPhone == false)
+                accountIsOk = true;
+        }else {
+            if (emptyEmail == false && emailIsValid)
+                accountIsOk = true;
+        }
+        if (emptyPassword == false && accountIsOk )
+            btnLogin.setEnabled(true);
+        else
+            btnLogin.setEnabled(false);
+
+    }
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -219,45 +312,33 @@ public class LoginActivity extends AppCompatActivity implements
                 if (resultCode == RESULT_OK) {
                     Bundle extras = data.getExtras();
                     Credential credential = data.getParcelableExtra(Credential.EXTRA_KEY);
-                    etPhone.setText(credential.getId()); //Will need to process phone number string
-                    //credential.getProfilePictureUri()
+                    etPhone.setText(credential.getId());
                 }
             }
         }
     }
 
-    private boolean login(String email, String password){
-        if(userType.equals("mobileUser")) {
-        }
-        else{
-            if(!isValidEmail(email)){
-                Toast.makeText(getApplicationContext(), R.string.message_valid_email, Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        }
-        if(!isValidPassword(password)){
-            Toast.makeText(getApplicationContext(), R.string.message_valid_password, Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        else{
-            return true;
-        }
-    }
 
     private boolean isValidEmail(String email){
-        return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
+        boolean valid = !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
+        if (valid == false) {
+            etEmailSG.setError(getResources().getString(R.string.error_invalid_email));
+            emailIsValid = false;
+        }else {
+            emailIsValid = true;
+        }
+        return valid;
     }
 
-    private boolean isValidPassword(String password){
-        return !TextUtils.isEmpty(password);
-    }
 
 
     private void goToHome(){
         Intent intent = new Intent(LoginActivity.this, SplashActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.putExtra("fromLogin", "YES");
         startActivity(intent);
     }
+
     private boolean setCredentialsIfExist(){
         return !(appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_TOKEN).equals("") && appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_NAME).equals(""));
     }
@@ -267,22 +348,14 @@ public class LoginActivity extends AppCompatActivity implements
         String password = etLoginPassword.getText().toString();
         switch(v.getId()){
             case R.id.btnLogin:
-                //
+
                 if(userType.equals("mobileUser")){
                     phone = etPhone.getText().toString();
                     String subPhone = phone.substring(1, phone.length());
-                    if(login(subPhone, password)){
-                        userController.logInUser(subPhone, password, userType);
-                    }
-                }
-                // ON THE OTHER SIDE, IF THE USER IS A SECURITY GUARD USER SO..
-                else{
+                    userController.logInUser(subPhone, password, userType);
+                } else{
                     emailSG = etEmailSG.getText().toString();
-                    if(login(emailSG, password)){
-                        //Toast.makeText(getApplicationContext(), "Login de Guardia de Seguridad", Toast.LENGTH_SHORT).show();
-                        userController.logInUser(emailSG, password, userType);
-                    }
-
+                    userController.logInUser(emailSG, password, userType);
                 }
                 break;
             case R.id.btnSignUp:
@@ -297,8 +370,12 @@ public class LoginActivity extends AppCompatActivity implements
                     startActivity(webViewSmartSecurity);
                 }
                 break;
-            case R.id.btnPhone:
+            case R.id.btnPhone :
                 requestHint();
+                break;
+
+            case R.id.etPhone:
+
                 break;
         }
     }
@@ -476,45 +553,5 @@ public class LoginActivity extends AppCompatActivity implements
 
     }
 
-    @Override
-    public void readAllZone(Response response) {
-        switch (response.getHttpCode()){
-            case 200:
-                Zone zone;
-                JSONArray jsonArray = response.parseJsonArray(response.getBodyString());
-                //Log.i("Status: ", "----------");
-                //Log.i("Status: ", "BODY Array: "+jsonArray);
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    try {
-                        Log.i("Status: ", "Body "+i+" :"+jsonArray.getJSONObject(i));
-                        zone = new Zone();
-                        JSONObject object = jsonArray.getJSONObject(i);
-                        zone.setIdZone(object.getString("idZone"));
-                        zone.setType(object.getString("type"));
-                        zone.getRefBuildingType().setValue(object.getString("refBuildingType"));
-                        zone.getName().setValue(object.getString("name"));
-                        zone.getAddress().setValue(object.getString("address"));
-                        zone.getCategory().setValue(""+object.getString("category"));
-                        zone.getLocation().setValue(""+object.getJSONArray("location"));
-                        zone.getCenterPoint().setValue(""+object.getJSONArray("centerPoint"));
-                        zone.getDescription().setValue(object.getString("description"));
-                        zone.getDateCreated().setValue(object.getString("dateCreated"));
-                        zone.getDateModified().setValue(object.getString("dateModified"));
-                        zone.getDateModified().setValue(object.getString("dateModified"));
-                        zone.getStatus().setValue(object.getString("status"));
 
-                        if(sqLiteDrivingApp.createZone(zone) == true){
-                            Log.i("Status: ", "Dato insertado correctamente Zone...!");
-                        }else{
-                            Log.i("Status: ", "Error al insertar Zone...!");
-                        }
-                        Log.i("--------: ", "--------------------------------------");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-                break;
-        }
-    }
 }

@@ -22,8 +22,8 @@ import org.json.JSONObject;
 import java.util.Date;
 import java.util.Random;
 
-import mx.edu.cenidet.app.activities.AlertMapDetailActivity;
 import mx.edu.cenidet.app.activities.MainActivity;
+import mx.edu.cenidet.app.activities.SplashActivity;
 import mx.edu.cenidet.app.utils.Config;
 import mx.edu.cenidet.app.utils.NotificationUtils;
 import mx.edu.cenidet.cenidetsdk.httpmethods.Response;
@@ -78,7 +78,7 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
             pushNotification.putExtra("severity", alert.getString("severity"));
             LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
 
-            Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
+            Intent resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
             resultIntent.putExtra("subcategory", alert.getString("subCategory"));
             resultIntent.putExtra("description", alert.getString("description"));
             resultIntent.putExtra("location", alert.getString("location"));
@@ -88,11 +88,11 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
             resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                     | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             resultIntent.setAction(Long.toString(System.currentTimeMillis()));
+            resultIntent.putExtra("fromNotification", "YES");
 
             PendingIntent pendingIntent = PendingIntent.getActivity(
                     this, 0, resultIntent, PendingIntent.FLAG_ONE_SHOT
             );
-
 
             showNotification(pendingIntent,
                     alert.getString("category"),

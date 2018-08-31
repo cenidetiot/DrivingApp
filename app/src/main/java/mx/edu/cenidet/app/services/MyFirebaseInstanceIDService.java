@@ -5,12 +5,9 @@ import android.content.Context;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
-import mx.edu.cenidet.cenidetsdk.controllers.DeviceTokenControllerSdk;
-import mx.edu.cenidet.cenidetsdk.httpmethods.Response;
+
 import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
 import www.fiware.org.ngsi.utilities.ApplicationPreferences;
-import www.fiware.org.ngsi.utilities.DevicePropertiesFunctions;
-
 
 public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService  {
     private static final String TAG = "Alertas";

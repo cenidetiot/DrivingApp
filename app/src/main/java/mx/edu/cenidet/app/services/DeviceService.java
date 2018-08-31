@@ -24,6 +24,11 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import mx.edu.cenidet.cenidetsdk.db.SQLiteDrivingApp;
 import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
 import  mx.edu.cenidet.app.event.EventsDetect;
 
@@ -34,10 +39,10 @@ import java.util.List;
 
 import mx.edu.cenidet.app.activities.HomeActivity;
 import mx.edu.cenidet.app.event.EventsFuntions;
+import mx.edu.cenidet.cenidetsdk.controllers.ZoneControllerSdk;
 import www.fiware.org.ngsi.controller.AlertController;
 import www.fiware.org.ngsi.controller.DeviceController;
 import www.fiware.org.ngsi.controller.SQLiteController;
-import www.fiware.org.ngsi.datamodel.entity.Alert;
 import www.fiware.org.ngsi.datamodel.entity.Device;
 import www.fiware.org.ngsi.datamodel.entity.DeviceSensor;
 import www.fiware.org.ngsi.datamodel.entity.RoadSegment;
@@ -48,8 +53,10 @@ import www.fiware.org.ngsi.utilities.ApplicationPreferences;
 import www.fiware.org.ngsi.utilities.Constants;
 import www.fiware.org.ngsi.utilities.DevicePropertiesFunctions;
 import www.fiware.org.ngsi.utilities.Functions;
+import www.fiware.org.ngsi.datamodel.entity.Zone;
 
-public class DeviceService extends Service implements DeviceController.DeviceResourceMethods{
+
+public class DeviceService extends Service implements DeviceController.DeviceResourceMethods {
     private Context context;
     private static final String STATUS = "STATUS";
     //private double longitudeGPS, latitudeGPS;
@@ -96,21 +103,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
 
 
-    /** variables de control y configuración**/
-    private boolean isDrivingUser=true; // Variable para determinar si una persona va manejando
-    private boolean isMonitoring=false; // Variable para determinar si se deben monitorear los eventos relacionados con la velocidad
-    private boolean isInArea=true; //Variable para saber si una persona se encuentra dentro de un area
-    private boolean isInParking=true; //Variable para verificar si la persona se encuentra en un area que tiene calles
-    private boolean isUnauthorizedSpeed=false;
-
-    private double minimumSpeedToAsk=4.5; // Valor minimo de velocidad al que se preguntara si una persona va manejando.
-    private double minimumSpeedForAutomaticCalculation=7.5; // Valor minimo de la velocidad al que se asumira que la persona va manejando
-    private double timeStampLastReadingGPS=0.0; //Marca de tiempo que permite identificar el tiempo de la ultima lectura realizada, el valor esta en milisegundos.
-    private double timeUpdateAlert=5; // Tiempo en segundos para actualizar una alerta
-    private double timeMinInferiorSpeed=180; //Tiempo minimo en segundos para determinarlo como una velocidad por debajo del limite minimo establecido
-    private double timeStampLastMinSpeedReading=-1.0; //Marca de tiempo que permite identificar el tiempo de la ultima lectura realizada, el valor esta en milisegundos.
-
-    private EventsDetect events ; 
     
     public void onCreate() {
         super.onCreate();
@@ -136,6 +128,8 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         }else{
             owner = "undefined";
         }
+
+
 
     }
 
@@ -353,5 +347,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     public void onDeleteEntity(Response response) {}
     @Override
     public void onGetEntities(Response response) {}
+
 
 }

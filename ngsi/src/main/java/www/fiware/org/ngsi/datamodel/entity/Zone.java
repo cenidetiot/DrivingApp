@@ -55,14 +55,6 @@ public class Zone implements Serializable {
         this.type = type;
     }
 
-    public TextObject getRefBuildingType() {
-        return refBuildingType;
-    }
-
-    public void setRefBuildingType(TextObject refBuildingType) {
-        this.refBuildingType = refBuildingType;
-    }
-
     public TextObject getName() {
         return name;
     }

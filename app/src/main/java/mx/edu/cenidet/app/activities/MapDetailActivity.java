@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -45,6 +46,7 @@ public class MapDetailActivity extends AppCompatActivity implements OnMapReadyCa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_detail);
         context = HomeActivity.MAIN_CONTEXT;
+        setToolbar();
         sqLiteDrivingApp = new SQLiteDrivingApp(context);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -95,7 +97,20 @@ public class MapDetailActivity extends AppCompatActivity implements OnMapReadyCa
         }
     }
 
+    private void setToolbar(){
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle(R.string.title_activity_zone_detail);
+    }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        finish();
+        return true;
+    }
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;

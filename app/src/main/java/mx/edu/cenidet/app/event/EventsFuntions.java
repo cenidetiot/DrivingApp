@@ -60,7 +60,6 @@ public class EventsFuntions {
                 zone = new Zone();
                 zone.setIdZone(listZone.get(i).getIdZone());
                 zone.setType(listZone.get(i).getType());
-                zone.setRefBuildingType(listZone.get(i).getRefBuildingType());
                 zone.setName(listZone.get(i).getName());
                 zone.setAddress(listZone.get(i).getAddress());
                 zone.setCategory(listZone.get(i).getCategory());
@@ -83,9 +82,7 @@ public class EventsFuntions {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                //statusLocation = PolyUtil.containsLocation(new LatLng(latitude,longitude), listLocation, false);
-                //statusLocation = PolyUtil.containsLocation(new LatLng(18.870032,-99.211869), listLocation, false);
-                if(EventsFuntions.detectedArea(latitude, longitude, listLatLng)){
+               if(EventsFuntions.detectedArea(latitude, longitude, listLatLng)){
                     auxZone = zone;
                     return auxZone;
                 }
@@ -134,10 +131,10 @@ public class EventsFuntions {
                     return auxOffStreetParking;
                 }
             }
-            return auxOffStreetParking;
-        }else{
-            return auxOffStreetParking;
+
         }
+        return auxOffStreetParking;
+
     }
 
     public static RoadSegment detectedRoadSegment(Context context, double currentLatitude, double currentLongitude){
@@ -171,7 +168,6 @@ public class EventsFuntions {
             }
 
         }
-
         return roadSegment;
     }
 
@@ -185,20 +181,22 @@ public class EventsFuntions {
     public static RoadSegment getRoadSegmentParking(double currentLatitude, double currentLongitude, OffStreetParking offStreetParking, SQLiteDrivingApp sqLiteDrivingApp){
         RoadSegment auxRoadSegment = null;
         List<LatLng> polyline; //obtiene la polilinea del RoadSegment.
-       //ArrayList<Road> listRoadByResponsible = sqLiteDrivingApp.getRoadByResponsible(offStreetParking.getIdOffStreetParking()); //obtiene la lista de los road por el responsable.
+        ArrayList<Road> listRoadByResponsible = sqLiteDrivingApp.getRoadByResponsible(offStreetParking.getIdOffStreetParking()); //obtiene la lista de los road por el responsable.
         ArrayList<RoadSegment> listRoadSegmentByRefRoad;//obtendra la lista de los roadSegment de acuerdo a los Road.
         LatLng point = new LatLng(currentLatitude,currentLongitude);
-        //if(listRoadByResponsible.size() > 0){
+        Log.d("ROADS", "" +listRoadByResponsible.size());
+        if( listRoadByResponsible.size() > 0){
             JSONArray arrayLocation;
             String originalString, clearString;
             double latitude, longitude;
             String[] subString;
-            //for(int i=0; i<listRoadByResponsible.size(); i++){
+            for(int i=0; i<listRoadByResponsible.size(); i++) {
                 //Obtiene los Road segment correspondiente a un determinado Road.
-                //listRoadSegmentByRefRoad = sqLiteDrivingApp.getAllRoadSegmentByRefRoad(listRoadByResponsible.get(i).getIdRoad());
-                listRoadSegmentByRefRoad = sqLiteDrivingApp.getAllRoadSegmentByRefRoad(offStreetParking.getIdOffStreetParking());
-                if(listRoadSegmentByRefRoad.size() > 0){
-                    for (RoadSegment iteratorRoadSegment: listRoadSegmentByRefRoad){
+                listRoadSegmentByRefRoad = sqLiteDrivingApp.getAllRoadSegmentByRefRoad(listRoadByResponsible.get(i).getIdRoad());
+                //listRoadSegmentByRefRoad = sqLiteDrivingApp.getAllRoadSegmentByRefRoad(offStreetParking.getIdOffStreetParking());
+                Log.d("ROADSEGMENT", ""+ listRoadSegmentByRefRoad.size());
+                if (listRoadSegmentByRefRoad.size() > 0) {
+                    for (RoadSegment iteratorRoadSegment : listRoadSegmentByRefRoad) {
                         polyline = new ArrayList<>();
                         RoadSegment roadSegment = new RoadSegment();
                         roadSegment.setIdRoadSegment(iteratorRoadSegment.getIdRoadSegment());
@@ -214,22 +212,19 @@ public class EventsFuntions {
                         roadSegment.setLaneUsage(iteratorRoadSegment.getLaneUsage());
                         roadSegment.setWidth(iteratorRoadSegment.getWidth());
                         roadSegment.setStatus(iteratorRoadSegment.getStatus());
-                        //Log.i("STATUS: ","LOCATION: "+iteratorRoadSegment.getLocation());
                         try {
                             arrayLocation = new JSONArray(roadSegment.getLocation());
-                            for (int j=0; j<arrayLocation.length(); j++){
+                            for (int j = 0; j < arrayLocation.length(); j++) {
                                 originalString = arrayLocation.get(j).toString();
                                 clearString = originalString.substring(originalString.indexOf("[") + 1, originalString.indexOf("]"));
-                                subString =  clearString.split(",");
+                                subString = clearString.split(",");
                                 latitude = Double.parseDouble(subString[0]);
                                 longitude = Double.parseDouble(subString[1]);
                                 polyline.add(new LatLng(latitude, longitude));
                             }
 
-                            if (EventsFuntions.detectRoadSegment(point, polyline, roadSegment.getWidth()) == true){
-                                Log.i("STATUS: ","SE ENCUENTRA EN EL ROAD EN PARKING: "+roadSegment.getIdRoadSegment()+" --------------------------------------");
+                            if (EventsFuntions.detectRoadSegment(point, polyline, roadSegment.getWidth()) == true) {
                                 auxRoadSegment = roadSegment;
-                                return auxRoadSegment;
                             }
 
                         } catch (JSONException e) {
@@ -237,16 +232,13 @@ public class EventsFuntions {
                         }
 
                     }
-                }else {
-                    Log.i("STATUS: ","ESTE PARKING NO CUENTA CON ROAD_SEGMENT--------------------PARKING: "+offStreetParking.getIdOffStreetParking());
-                    auxRoadSegment = null;
                 }
-           /* }
-        }else {
-            Log.i("STATUS: ","ESTE PARKING NO CUENTA CON ROAD--------------------PARKING: "+offStreetParking.getIdOffStreetParking());
-            auxRoadSegment = null;
-        }*/
-        Log.i("STATUS: ","DENTRO DEL PARKING Y EN NINGUN ROAD SEGMENT----------------------------------------------");
+            }
+
+        }
+
+
+
         return auxRoadSegment;
     }
 
@@ -320,26 +312,12 @@ public class EventsFuntions {
 
 
     public static boolean detectRoadSegment(LatLng point, List<LatLng> polyline, double tolerance){
-        if(PolyUtil.isLocationOnPath(point, polyline, false, tolerance)) {
-            return true;
-        }else{
-            return false;
-        }
+        return PolyUtil.isLocationOnPath(point, polyline, false, tolerance);
     }
     public static String detectRoad(){
         String status = "";
-        //punto en el que se encuentra el dispositivo correcto.
-        //distancia de la linea 0.29730066012580564,
         LatLng point = new LatLng(18.869783,-99.211887);
 
-        //distancia 3.7120693262823634, tolerancia 3.72 lado casa
-        //LatLng point = new LatLng(18.869818,-99.211945);
-
-        //Ecoplastica, 3.5458707853128764 de la calle, tolerancia 3.55
-        //LatLng point = new LatLng(18.869763,-99.211384);
-
-        //Delante de un punto
-        //LatLng point = new LatLng(18.869762,-99.212167);
         List<LatLng> polyline = new ArrayList<>();
         polyline.add(new LatLng(18.869799,-99.21116));
         polyline.add(new LatLng(18.869781,-99.212142));

@@ -23,34 +23,4 @@
 
     <include layout="@layout/content_driving_view" />
 
-   <!-- <android.support.design.widget.FloatingActionButton
-        android:id="@+id/suddenStopButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:layout_margin="25dp"
-        android:clickable="true"
-        app:backgroundTint="@color/bg_screen5"
-        app:elevation="24dp" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/speedButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|left"
-        android:layout_margin="25dp"
-        android:clickable="true"
-        app:backgroundTint="@color/bg_screen3"
-        app:elevation="24dp" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/wrongWayButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_margin="25dp"
-        android:clickable="true"
-        app:backgroundTint="@color/bg_screen4"
-        app:elevation="24dp" />-->
-
 </android.support.design.widget.CoordinatorLayout>

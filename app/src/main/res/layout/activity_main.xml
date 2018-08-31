@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context=".activities.MainActivity"
-    tools:layout_width="wrap_content">
+    android:background="@drawable/drive1"
+    >
 
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="280dp"
+        android:id="@+id/toLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:background="@drawable/drive1">
+        >
 
         <ImageView
             android:layout_width="wrap_content"
@@ -21,15 +21,15 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="30dp"
             android:src="@drawable/logo" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
-            android:layout_marginBottom="57dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="171dp"
             android:focusable="auto"
             android:gravity="center_horizontal"
             android:text="@string/app_name"
@@ -37,64 +37,64 @@
             android:textSize="24sp"
             android:textStyle="bold"
             android:visibility="visible" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="295dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="21dp"
+            android:orientation="vertical"
+            android:padding="30dp">
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:focusable="auto"
+                android:gravity="top|center"
+                android:text="@string/authenticate_user"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="visible" />
+
+            <Button
+                android:id="@+id/btnMobileUser"
+                style="@style/ButtonStyleTwo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:fitsSystemWindows="true"
+                android:text="@string/mobile_user"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textStyle="bold"
+                android:typeface="serif"
+                android:visibility="visible" />
+
+            <Button
+                android:id="@+id/btnSecurityGuard"
+                style="@style/ButtonStyleOne"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/security_guard"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textStyle="bold"
+                android:typeface="serif"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="200dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="bottom|center"
+                android:layout_marginTop="45dp"
+                android:src="@drawable/logo_smartsdk" />
+
+        </LinearLayout>
     </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="295dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="21dp"
-        android:background="@color/colorPrimaryDark"
-        android:orientation="vertical"
-        android:padding="30dp">
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:focusable="auto"
-            android:gravity="top|center"
-            android:text="@string/authenticate_user"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:visibility="visible" />
-
-        <Button
-            android:id="@+id/btnMobileUser"
-            style="@style/ButtonStyleTwo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:fitsSystemWindows="true"
-            android:text="@string/mobile_user"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textStyle="bold"
-            android:typeface="serif"
-            android:visibility="visible" />
-
-        <Button
-            android:id="@+id/btnSecurityGuard"
-            style="@style/ButtonStyleOne"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/security_guard"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textStyle="bold"
-            android:typeface="serif"
-            android:visibility="visible" />
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="200dp"
-            android:layout_height="30dp"
-            android:layout_centerVertical="true"
-            android:layout_gravity="bottom|center"
-            android:layout_marginTop="45dp"
-            android:src="@drawable/logo_smartsdk" />
-
-    </LinearLayout>
 
 
 </RelativeLayout>

@@ -1,6 +1,7 @@
 package mx.edu.cenidet.app.activities;
 
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,8 +12,8 @@ import www.fiware.org.ngsi.utilities.ApplicationPreferences;
 
 import android.content.Intent;
 import android.view.View;
+import android.widget.RelativeLayout;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
@@ -24,58 +25,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         appPreferences = new ApplicationPreferences();
-
-        if(setCredentialsIfExist()){
-
-            Intent redirectUser = new Intent(this, SplashActivity.class);
-            startActivity(redirectUser);
-            this.finish();
-
-            String alert = getIntent().getStringExtra("alert");
-            if ( alert  != null || getIntent().getStringExtra("subcategory") != null) {
-                try {
-
-                    if(alert  != null){
-                        JSONObject jsonObject = new JSONObject(alert);
-                        Intent alertIntent = new Intent(MainActivity.this, AlertMapDetailActivity.class);
-                        alertIntent.putExtra("subcategory", jsonObject.getString("subCategory"));
-                        alertIntent.putExtra("description", jsonObject.getString("description"));
-                        alertIntent.putExtra("location", jsonObject.getString("location"));
-                        alertIntent.putExtra("severity", jsonObject.getString("severity"));
-                        startActivity(alertIntent);
-                    }
-
-                    if(getIntent().getStringExtra("subcategory") != null){
-                        Intent alertIntent = new Intent(MainActivity.this, AlertMapDetailActivity.class);
-                        alertIntent.putExtra("subcategory", getIntent().getStringExtra("subcategory"));
-                        alertIntent.putExtra("description", getIntent().getStringExtra("description"));
-                        alertIntent.putExtra("location", getIntent().getStringExtra("location"));
-                        alertIntent.putExtra("severity", getIntent().getStringExtra("severity"));
-                        startActivity(alertIntent);
-                        Log.d("MENSAJE" , "ALERTA CON APP ABIERTA");
-
-                    }
-
-                    //this.finish();
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-                Log.d("DATA", "Contiene data");
-            }
-
-        }
-
-        //PREFERENCES OF THE APPLICATIONS, TO SAVE THE CONSTANTS
-        appPreferences = new ApplicationPreferences();
-
         //Instance buttons of activities
         btnMobileUser = (Button) findViewById(R.id.btnMobileUser);
         btnSecurityGuard = (Button) findViewById(R.id.btnSecurityGuard);
         btnSecurityGuard.setOnClickListener(this);
         btnMobileUser.setOnClickListener(this);
+        RelativeLayout lat = (RelativeLayout) findViewById(R.id.toLayout);
+        lat.setBackgroundColor(getColorWithAlpha(Color.parseColor("#2c3e50"), 0.7f));
+    }
 
-
-
+    public static int getColorWithAlpha(int color, float ratio) {
+        int newColor = 0;
+        int alpha = Math.round(Color.alpha(color) * ratio);
+        int r = Color.red(color);
+        int g = Color.green(color);
+        int b = Color.blue(color);
+        newColor = Color.argb(alpha, r, g, b);
+        return newColor;
     }
      @Override
     public void onClick(View v) {

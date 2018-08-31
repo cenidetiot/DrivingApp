@@ -22,7 +22,7 @@
     <string name="message_btn_sign_up">Regístrate</string>
     <string name= "alert_location"> Localización de la Alerta</string>
     <string name="send_alert">Enviar Alerta</string>
-    <string name="terms">Al hacer clic en Crear cuenta, aceptas las Condiciones del Servicio y confirmas que leíste nuestra Política de Privacidad. </string>
+    <string name="terms">Acepto los Términos y Condiciones del servicio y he leído la Política de privacidad de DrivingApp.</string>
 
 
     <!--Drawer and Tabs-->
@@ -101,7 +101,16 @@
     <string name="message_severity_medium_slide">Medio</string>
     <string name="message_severity_high_slide">Alto</string>
     <string name="message_severity_critical_slide">Crítico</string>
-
     <string name="message_edit_text_slide">Descripción</string>
     <string name="message_button_send_slide">Enviar Alerta</string>
+    <string name="message_no_accept_terms">Debes aceptar los términos y condiciones del servicio.</string>
+
+    <string name="title_activity_zone_detail">Detalles de zona</string>
+    <string name="terms_title">Terminos y condiciones</string>
+    <string name="viva_register">Aplicación ViVA</string>
+
+    <string name="error_invalid_email">Este email no es valido</string>
+    <string name="validation_phone_error">Por favor completa el numero telefónico</string>
+    <string name= "validation_empty_required_field">Este campo no puede estar vacio</string>
+    <string name= "validation_dont_match_passwords">Las contraseñas no coinciden</string>
 </resources>
