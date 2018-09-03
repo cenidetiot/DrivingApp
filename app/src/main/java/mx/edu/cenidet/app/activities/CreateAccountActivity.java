@@ -15,6 +15,7 @@ import android.util.Log;
 import android.util.Patterns;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -41,12 +42,20 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
     private GoogleApiClient mGoogleApiClient;
     private EditText etFirstName, etLastName, etPhone, etEmail, etPassword, etConfirmPassword;
     private CheckBox ckTerms;
+    private Button createAccount;
     private  UserController userController;
     private ApplicationPreferences appPreferences;
     private String phone;
-    private boolean emptyPhone = true;
-
     private boolean etPhoneTouched = false;
+
+    /**/
+
+    private boolean emptyFirstName = true;
+    private boolean emptyLastName = true;
+    private boolean emptyPhone = true;
+    private boolean emptyEmail =  true;
+    private boolean emptyPassword = true;
+    private boolean emptyConfirmation = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,11 +133,34 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
     }
 
     private boolean isEmptyText(User user, String confirmPassword){
-        if(TextUtils.isEmpty(user.getFirstName()) || TextUtils.isEmpty(user.getLastName()) || TextUtils.isEmpty(user.getPhoneNumber()) || TextUtils.isEmpty(user.getEmail()) || TextUtils.isEmpty(user.getPassword()) || TextUtils.isEmpty(confirmPassword)){
-            return true;
-        }else {
-            return false;
+        boolean temp =  false;
+        if (TextUtils.isEmpty(user.getFirstName())) {
+            etFirstName.setError(getResources().getString(R.string.validation_empty_required_field));
+            temp = true;
         }
+        if(TextUtils.isEmpty(user.getLastName())) {
+            etLastName.setError(getResources().getString(R.string.validation_empty_required_field));
+            temp = true;
+        }
+        if(TextUtils.isEmpty(user.getPhoneNumber())) {
+            etPhone.setError(getResources().getString(R.string.validation_empty_required_field));
+            temp = true;
+        }
+        if(TextUtils.isEmpty(user.getEmail())) {
+            etEmail.setError(getResources().getString(R.string.validation_empty_required_field));
+            temp = true;
+        }
+        if(TextUtils.isEmpty(user.getPassword())) {
+            etPassword.setError(getResources().getString(R.string.validation_empty_required_field));
+            temp = true;
+        }
+        if(TextUtils.isEmpty(confirmPassword)) {
+            etConfirmPassword.setError(getResources().getString(R.string.validation_empty_required_field));
+            temp = true;
+        }
+
+
+        return temp;
     }
 
     private void bindUI() {
@@ -141,11 +173,20 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
         etConfirmPassword = (EditText) findViewById(R.id.etConfirmPassword);
         ckTerms = (CheckBox) findViewById(R.id.checkBox);
 
+        createAccount = (Button) findViewById(R.id.btnCreateAccount);
+        createAccount.setEnabled(false);
+
         etPhone.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.toString().length() < 13)
+                if (s.toString().length() < 13) {
                     etPhone.setError(getResources().getString(R.string.validation_phone_error));
+                    emptyPhone = true;
+                }else{
+                    emptyPhone = false;
+                }
+
+                checkEmptyFields();
             }
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
@@ -159,7 +200,12 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
         etEmail.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                isValidEmail(s.toString());
+                if(isValidEmail(s.toString()))
+                    emptyEmail = false;
+                else{
+                    emptyEmail = true;
+                }
+                checkEmptyFields();
             }
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
@@ -173,8 +219,13 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
             @Override
             public void afterTextChanged(Editable s) {
                 if (!isValidPassword(s.toString(), etPassword.getText().toString())){
+                    emptyConfirmation = true;
                     etConfirmPassword.setError(getResources().getString(R.string.validation_dont_match_passwords));
+                }else{
+                    emptyConfirmation = false;
                 }
+
+                checkEmptyFields();
             }
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
@@ -182,14 +233,61 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
         });
 
+
+
         etPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 if (!isValidPassword(s.toString(), etConfirmPassword.getText().toString())){
+                    emptyConfirmation = true;
                     etConfirmPassword.setError(getResources().getString(R.string.validation_dont_match_passwords));
                 }else{
+                    emptyConfirmation = false;
                     etConfirmPassword.setError(null);
                 }
+
+                if (s.toString().length() < 1)
+                    emptyPassword = true;
+                else
+                    emptyPassword = false;
+
+                checkEmptyFields();
+
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
+        etFirstName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().length() < 1){
+                    emptyFirstName = true;
+                  }else{
+                    emptyFirstName =  false;
+                }
+
+                checkEmptyFields();
+
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
+        etLastName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().length() < 1){
+                    emptyLastName = true;
+                }else{
+                    emptyLastName =  false;
+                }
+
+                checkEmptyFields();
 
             }
             @Override
@@ -273,6 +371,16 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
 
     }
 
+
+
+    private void checkEmptyFields(){
+        Log.d("EMPTYFIELDS", ""+ emptyFirstName + "-" + emptyLastName + "-" + emptyPhone +"-"+ emptyEmail + "-" + emptyPassword + "-" + emptyConfirmation + "-" + !ckTerms.isChecked());
+        if (!(emptyFirstName || emptyLastName || emptyPhone || emptyEmail || emptyPassword || emptyConfirmation || !ckTerms.isChecked() )){
+            createAccount.setEnabled(true);
+        }else {
+            createAccount.setEnabled(false);
+        }
+    }
     // Construct a request for phone numbers and show the picker
     private void requestHint() {
         HintRequest hintRequest = new HintRequest.Builder()
@@ -335,6 +443,7 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
                     Intent intentTerms = new Intent(CreateAccountActivity.this, TermsAndConditions.class);
                     startActivity(intentTerms);
                 }
+                checkEmptyFields();
                 break;
             default:
                 //DEFAULT
