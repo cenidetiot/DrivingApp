@@ -49,6 +49,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:11.8.0'
     implementation 'com.android.support:gridlayout-v7:26.1.0'
     implementation 'pl.bclogic:pulsator4droid:1.0.3'
+    implementation 'com.android.support:cardview-v7:26.1.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -12,6 +12,12 @@
         <item name="android:windowBackground">@drawable/splash</item>
     </style>
 
+    <style name="DrivingButton">
+        <item name="fab_colorNormal">#2980b9</item>
+        <item name="fab_colorPressed">#3498db</item>
+        <item name="fab_colorRipple">#8A0808</item>
+    </style>
+
     <style name="MenuButtonsUnknown">
         <item name="fab_colorNormal">#e74c3c</item>
         <item name="fab_colorPressed">#B40404</item>

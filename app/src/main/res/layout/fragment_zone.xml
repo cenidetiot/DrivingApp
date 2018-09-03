@@ -5,24 +5,79 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="mx.edu.cenidet.app.fragments.ZoneFragment">
 
+
+
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapZone"
         android:name="com.google.android.gms.maps.MapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_screen1"
+        app:cardBackgroundColor="@color/dot_light_screen2">
 
-    <android.support.design.widget.FloatingActionButton
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_margin="15dp">
+
+            <TextView
+                android:id="@+id/textNameZone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_medium"
+                android:textColor="@color/white"
+                android:text="@string/loading_message"
+                android:textAlignment="center"
+                android:textSize="@dimen/title"
+                android:ellipsize="end"
+                android:maxLines="1"/>
+
+            <TextView
+                android:id="@+id/textAddressZone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_medium"
+                android:text="@string/loading_message"
+                android:textAlignment="center"
+                android:textColor="@color/white70"
+                android:textSize="@dimen/subheading"
+                android:ellipsize="end"
+                android:maxLines="1" />
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+    <com.github.clans.fab.FloatingActionButton
         android:id="@+id/speedButtonZone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:src="@drawable/baseline_navigation_white_18"
+        app:fab_size="mini"
+        app:fab_label="@string/message_floating_accident"
+        style="@style/DrivingButton"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
         android:layout_gravity="bottom|right"
         android:layout_marginBottom="16dp"
-        android:layout_marginRight="80dp"
-        android:clickable="true"
-        android:src="@drawable/ic_speed"
-        app:backgroundTint="@color/colorPrimary"
-        app:borderWidth="5dp"
-        app:fabSize="mini" />
+        android:layout_marginRight="70dp"
+        app:fab_showShadow="true"
+        />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="74dp"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom|left"
+        android:layout_marginBottom="30dp"
+        android:src="@mipmap/ic_launcher_logo"
+        />
 
 </FrameLayout>

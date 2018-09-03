@@ -5,16 +5,20 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
+//import android.support.design.widget.FloatingActionButton;
+import com.github.clans.fab.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,6 +28,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
@@ -68,7 +73,6 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
     private Zone currentZone = null;
 
     //Pintar todos los Campus
-    //private ArrayList<Zone> listZone;
     private SQLiteDrivingApp sqLiteDrivingApp;
     private ArrayList<LatLng> listLocation, listLocationParking;
     private LatLng centerLatLngParking = null;
@@ -77,6 +81,10 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
     private FloatingActionButton speedButtonZone;
     private boolean areDrawn = false;
     private boolean mapDrawn = false;
+
+    private TextView textZone;
+    private TextView textAddressZone;
+
 
     public ZoneFragment() {
         context = HomeActivity.MAIN_CONTEXT;
@@ -90,6 +98,9 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_zone, container, false);
+
+        textZone = (TextView) rootView.findViewById(R.id.textNameZone);
+        textAddressZone = (TextView) rootView.findViewById(R.id.textAddressZone);
         speedButtonZone = (FloatingActionButton) rootView.findViewById(R.id.speedButtonZone);
         speedButtonZone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,6 +109,9 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
                 startActivity(drivingView);
             }
         });
+        LinearLayout card = (LinearLayout) rootView.findViewById(R.id.cardTitle);
+        //card.setBackgroundColor(getColorWithAlpha(Color.parseColor("#bdc3c7"), 0.9f));
+        //card.setBackgroundColor(getColorWithAlpha(Color.parseColor("#bdc3c7"), 0.9f));
         return rootView;
     }
 
@@ -124,11 +138,18 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
+
+        try {
+            // Customise map styling via JSON file
+            boolean success = googleMap.setMapStyle( MapStyleOptions.loadRawResourceStyle( context, R.raw.map_style));
+
+        } catch (Resources.NotFoundException e) {
+        }
+
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         gMap.setMyLocationEnabled(true);
-        gMap.getUiSettings().setMyLocationButtonEnabled(false);
     }
 
 
@@ -298,17 +319,15 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
 
             }
             currentZone = zone;
+            textZone.setText(currentZone.getName().getValue());
+            textAddressZone.setText(currentZone.getAddress().getValue());
         }
 
     }
 
     @Override
     public void detectRoadSegment(double latitude, double longitude, RoadSegment roadSegment) {
-        if (roadSegment != null){
-            Log.d("ROADSTEST", roadSegment.getName());
-        }else {
-            Log.d("ROADSTEST", "Sin roadSegmetn");
-        }
+
     }
 
     @Override

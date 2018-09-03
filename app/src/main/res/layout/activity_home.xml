@@ -8,7 +8,9 @@
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true">
 
+
     <LinearLayout
+        android:layout_marginTop="16dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -18,13 +20,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/tabLayout"
-            />
+            >
+
+
+        </android.support.v4.view.ViewPager>
+
         <FrameLayout
             android:id="@+id/content_frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </FrameLayout>
-
 
     </LinearLayout>
 
@@ -39,14 +44,14 @@
         android:paddingLeft="10dp"
         fab:menu_labels_ellipsize="end"
         fab:menu_labels_singleLine="true"
-        fab:menu_icon="@drawable/ic_my_alerts"
+        fab:menu_icon="@drawable/baseline_notification_important_white_36"
         fab:menu_backgroundColor="@color/transparent">
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/btnFloatingUnknown"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_alerts_menu"
+            android:src="@drawable/sharp_warning_white_24"
             fab:fab_size="mini"
             fab:fab_label="@string/message_floating_unknown"
             style="@style/MenuButtonsUnknown"/>
@@ -64,13 +69,12 @@
             android:id="@+id/btnFloatingTraffic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_traffic"
+            android:src="@drawable/baseline_traffic_white_24"
             fab:fab_size="mini"
             fab:fab_label="@string/message_floating_traffic"
             style="@style/MenuButtonsTraffic"/>
 
     </com.github.clans.fab.FloatingActionMenu>
-
 
 
     <android.support.design.widget.NavigationView
