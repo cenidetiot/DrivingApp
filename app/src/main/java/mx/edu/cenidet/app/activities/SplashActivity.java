@@ -19,11 +19,17 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import mx.edu.cenidet.cenidetsdk.controllers.DeviceTokenControllerSdk;
+import mx.edu.cenidet.cenidetsdk.controllers.OffStreetParkingControllerSdk;
+import mx.edu.cenidet.cenidetsdk.controllers.RoadControllerSdk;
+import mx.edu.cenidet.cenidetsdk.controllers.RoadSegmentControllerSdk;
 import mx.edu.cenidet.cenidetsdk.controllers.ZoneControllerSdk;
 import mx.edu.cenidet.cenidetsdk.db.SQLiteDrivingApp;
 import mx.edu.cenidet.cenidetsdk.httpmethods.Response;
 import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
 import mx.edu.cenidet.app.R;
+import www.fiware.org.ngsi.datamodel.entity.OffStreetParking;
+import www.fiware.org.ngsi.datamodel.entity.Road;
+import www.fiware.org.ngsi.datamodel.entity.RoadSegment;
 import www.fiware.org.ngsi.datamodel.entity.Zone;
 import www.fiware.org.ngsi.utilities.ApplicationPreferences;
 import www.fiware.org.ngsi.utilities.DevicePropertiesFunctions;
@@ -31,11 +37,17 @@ import www.fiware.org.ngsi.utilities.DevicePropertiesFunctions;
 
 public class SplashActivity extends AppCompatActivity implements
         DeviceTokenControllerSdk.DeviceTokenServiceMethods,
-        ZoneControllerSdk.ZoneServiceMethods {
+        ZoneControllerSdk.ZoneServiceMethods ,
+        RoadSegmentControllerSdk.RoadSegmentServiceMethods,
+        RoadControllerSdk.RoadServiceMethods,
+        OffStreetParkingControllerSdk.OffStreetParkingServiceMethods{
     private Intent mIntent;
     private SQLiteDrivingApp sqLiteDrivingApp;
     private ArrayList<Zone> listZone;
     private ZoneControllerSdk zoneControllerSdk;
+    private RoadControllerSdk roadControllerSdk;
+    private RoadSegmentControllerSdk roadSegmentControllerSdk;
+    private OffStreetParkingControllerSdk offStreetParkingControllerSdk;
 
     //Envío del token de firebase
     private DeviceTokenControllerSdk deviceTokenControllerSdk;
@@ -43,6 +55,11 @@ public class SplashActivity extends AppCompatActivity implements
     private Context context;
     private ApplicationPreferences appPreferences;
     private ProgressBar progressBar;
+
+    private ArrayList<Road> listRoad;
+    private ArrayList<RoadSegment> listRoadSegment;
+    private ArrayList<OffStreetParking> listOffStreetParking;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +68,8 @@ public class SplashActivity extends AppCompatActivity implements
         progressBar.setIndeterminate(true);
         context = this;
         appPreferences = new ApplicationPreferences();
+        sqLiteDrivingApp = new SQLiteDrivingApp(this);
+
 
         if (setCredentialsIfExist()){
             String alert = getIntent().getStringExtra("alert");
@@ -68,6 +87,10 @@ public class SplashActivity extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
         loadZones();
+        loadRoads();
+        loadParkings();
+        loadSegments();
+        checkGPS();
         sendDeviceToken();
     }
     @Override
@@ -140,16 +163,51 @@ public class SplashActivity extends AppCompatActivity implements
     }
 
     private void loadZones(){
-        sqLiteDrivingApp = new SQLiteDrivingApp(this);
+        Log.d("LOADING", "ZONES");
         zoneControllerSdk = new ZoneControllerSdk(context, this);
         listZone = sqLiteDrivingApp.getAllZone();
         if(listZone.size() <= 0){
             zoneControllerSdk.readAllZone();
-        }else{
-            checkGPS();
         }
         return;
     }
+
+    private void loadRoads (){
+        Log.d("LOADING", "Roads");
+
+        roadControllerSdk = new RoadControllerSdk(context, this);
+        listRoad = sqLiteDrivingApp.getAllRoad();
+        if(listZone.size() <= 0){
+            roadControllerSdk.getAllRoad();
+        }
+
+        return;
+    }
+
+    private void loadSegments() {
+        Log.d("LOADING", "segments");
+
+        roadSegmentControllerSdk = new RoadSegmentControllerSdk(context, this);
+        listRoadSegment = sqLiteDrivingApp.getAllRoadSegment();
+        if(listRoadSegment.size() <= 0){
+            roadSegmentControllerSdk.getAllRoadSegment();
+        }
+        return;
+
+    }
+
+    private void loadParkings () {
+        Log.d("LOADING", "parkings");
+
+        offStreetParkingControllerSdk = new OffStreetParkingControllerSdk(context, this);
+        listOffStreetParking = sqLiteDrivingApp.getAllOffStreetParking();
+        if (listOffStreetParking.size() <= 0){
+            offStreetParkingControllerSdk.getAllOffStreetParking();
+        }
+        return;
+
+    }
+
     private void showGPSDisabledAlert(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setMessage(R.string.message_alert_gps)
@@ -252,5 +310,111 @@ public class SplashActivity extends AppCompatActivity implements
     }
     private boolean setCredentialsIfExist(){
         return !(appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_TOKEN).equals("") && appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_NAME).equals(""));
+    }
+
+    @Override
+    public void getAllOffStreetParking(Response response) {
+        //Log.i("AllOffStreetParking: ", "--------------------------------------------------------\n"+response.getBodyString());
+        switch (response.getHttpCode()){
+            case 200:
+                OffStreetParking offStreetParking;
+                JSONArray jsonArray = response.parseJsonArray(response.getBodyString());
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    offStreetParking = new OffStreetParking();
+                    JSONObject object;
+                    try {
+                        object = jsonArray.getJSONObject(i);
+                        offStreetParking.setIdOffStreetParking(object.getString("idOffStreetParking"));
+                        offStreetParking.setType(object.getString("type"));
+                        offStreetParking.setName(object.getString("name"));
+                        offStreetParking.setCategory(object.getString("category"));
+                        offStreetParking.setLocation(object.getString("location"));
+                        offStreetParking.setDescription(object.getString("description"));
+                        offStreetParking.setAreaServed(object.getString("areaServed"));
+                        offStreetParking.setStatus(object.getString("status"));
+                        sqLiteDrivingApp.createParking(offStreetParking);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void getOffStreetParkingByAreaServed(Response response) {
+
+    }
+
+    @Override
+    public void getAllRoad(Response response) {
+        //Log.i("ALLROAD: ", "--------------------------------------------------------\n"+response.getBodyString());
+        switch (response.getHttpCode()){
+            case 200:
+                Road road;
+                JSONArray jsonArray = response.parseJsonArray(response.getBodyString());
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    road = new Road();
+                    JSONObject object;
+                    try {
+                        object = jsonArray.getJSONObject(i);
+                        road.setIdRoad(object.getString("idRoad"));
+                        road.setType(object.getString("type"));
+                        road.setName(object.getString("name"));
+                        road.setDescription(object.getString("description"));
+                        road.setResponsible(object.getString("responsible"));
+                        road.setStatus(object.getString("status"));
+                        sqLiteDrivingApp.createRoad(road);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void getRoadByResponsible(Response response) {
+
+    }
+
+    @Override
+    public void getAllRoadSegment(Response response) {
+        switch (response.getHttpCode()){
+            case 200:
+                RoadSegment roadSegment;
+                JSONArray jsonArray = response.parseJsonArray(response.getBodyString());
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    roadSegment = new RoadSegment();
+                    JSONObject object = null;
+                    try {
+                        object = jsonArray.getJSONObject(i);
+                        roadSegment.setIdRoadSegment(object.getString("idRoadSegment"));
+                        roadSegment.setType(object.getString("type"));
+                        roadSegment.setName(object.getString("name"));
+                        roadSegment.setRefRoad(object.getString("refRoad"));
+                        roadSegment.setLocation(object.getString("location"));
+                        roadSegment.setStartPoint(object.getString("startPoint"));
+                        roadSegment.setEndPoint(object.getString("endPoint"));
+                        roadSegment.setLaneUsage(object.getString("laneUsage"));
+                        roadSegment.setTotalLaneNumber(object.getInt("totalLaneNumber"));
+                        roadSegment.setMaximumAllowedSpeed(object.getInt("maximumAllowedSpeed"));
+                        roadSegment.setMinimumAllowedSpeed(object.getInt("minimumAllowedSpeed"));
+                        roadSegment.setWidth(object.getInt("width"));
+                        roadSegment.setStatus(object.getString("status"));
+                        sqLiteDrivingApp.createRoadSegment(roadSegment);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void getRoadSegmentByRefRoad(Response response) {
+
     }
 }

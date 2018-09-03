@@ -56,7 +56,9 @@ import static mx.edu.cenidet.app.activities.MainActivity.getColorWithAlpha;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDataService.SendDataMethods {
+public class ZoneFragment extends Fragment implements
+        OnMapReadyCallback,
+        SendDataService.SendDataMethods {
     private View rootView;
     private MapView mapView;
     private GoogleMap gMap;
