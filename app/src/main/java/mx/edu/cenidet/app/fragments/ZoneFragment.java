@@ -142,6 +142,9 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
         try {
             // Customise map styling via JSON file
             boolean success = googleMap.setMapStyle( MapStyleOptions.loadRawResourceStyle( context, R.raw.map_style));
+            //boolean success = googleMap.setMapStyle( MapStyleOptions.loadRawResourceStyle( context, R.raw.map_style_retro));
+            //boolean success = googleMap.setMapStyle( MapStyleOptions.loadRawResourceStyle( context, R.raw.map_style_aubergine));
+
 
         } catch (Resources.NotFoundException e) {
         }
@@ -319,6 +322,7 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
 
             }
             currentZone = zone;
+
             textZone.setText(currentZone.getName().getValue());
             textAddressZone.setText(currentZone.getAddress().getValue());
         }
