@@ -109,6 +109,7 @@ public class ZoneFragment extends Fragment implements
             public void onClick(View v) {
                 Intent drivingView = new Intent(getContext(), DrivingView.class);
                 startActivity(drivingView);
+                //drivingMode();
             }
         });
         LinearLayout card = (LinearLayout) rootView.findViewById(R.id.cardTitle);
@@ -167,7 +168,13 @@ public class ZoneFragment extends Fragment implements
     }
 
     private void createMarkerParking(double latitude, double longitude, String name){
-        marker = gMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+        marker = gMap.addMarker(
+                new MarkerOptions()
+                        .position(
+                            new LatLng(latitude, longitude)
+                        ).title(name)
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                );
     }
 
     private void zoomToLocation(double latitude, double longitude){
@@ -178,6 +185,26 @@ public class ZoneFragment extends Fragment implements
                 .tilt(30)       //efecto 3D 0-90
                 .build();
         gMap.animateCamera(CameraUpdateFactory.newCameraPosition(camera));
+    }
+
+
+    private void drivingMode() {
+
+        camera = new CameraPosition.Builder()
+                .target(new LatLng(latitude, longitude))
+                .zoom(21)       //limit -> 21
+                .bearing(0)    //orientación de la camara hacia el este 0°-365°
+                .tilt(90)       //efecto 3D 0-90
+                .build();
+        gMap.animateCamera(CameraUpdateFactory.newCameraPosition(camera));
+
+        gMap.addMarker(
+                new MarkerOptions()
+                        .position(
+                                new LatLng(latitude, longitude)
+                        ).title(name)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_navigation_white_36))
+        );
     }
 
     public void drawZones(){
