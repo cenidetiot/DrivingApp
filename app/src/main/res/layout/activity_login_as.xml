@@ -7,13 +7,17 @@
     android:background="@drawable/drive1"
     >
 
-
     <RelativeLayout
         android:id="@+id/toLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         >
+
+        <include
+            android:id="@+id/toolbar2"
+            layout="@layout/toolbar2"
+            android:title="@string/emptyTitleToolbar" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -54,7 +58,7 @@
                 android:layout_marginBottom="15dp"
                 android:focusable="auto"
                 android:gravity="top|center"
-                android:text="@string/have_account_question"
+                android:text="@string/authenticate_user"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -67,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:fitsSystemWindows="true"
-                android:text="@string/have_account_button"
+                android:text="@string/mobile_user"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textStyle="bold"
                 android:typeface="serif"
@@ -78,7 +82,7 @@
                 style="@style/ButtonStyleOne"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/have_not_account_button"
+                android:text="@string/security_guard"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textStyle="bold"
                 android:typeface="serif"

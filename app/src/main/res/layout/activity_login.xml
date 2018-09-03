@@ -102,13 +102,7 @@
                     android:layout_marginTop="8dp"
                     android:text="@string/log_in" />
 
-                <Button
-                    android:id="@+id/btnSignUp"
-                    style="@style/ButtonStyleTwo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="3dp"
-                    android:text="@string/message_btn_sign_up" />
+
 
                 <ImageView
                     android:layout_width="match_parent"
