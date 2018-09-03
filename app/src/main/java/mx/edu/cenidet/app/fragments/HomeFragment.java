@@ -76,10 +76,6 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
             }
         });
 
-        //contactPhoto = (ImageView) rootView.findViewById(R.id.contactPhoto);
-        /*if (contactPhoto != null)
-            contactPhoto.setImageBitmap(retrieveContactPhoto(context));*/
-
         return rootView;
     }
 
@@ -99,7 +95,6 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
     @Override
     public void detectZone(Zone zone, boolean statusLocation) {
         if (statusLocation == true) {
-            //Log.i("STATUS: ","Campus Name: "+campus.getName()+" statusLocation: "+statusLocation);
             if (imagenViewDetailCampus != null && tvDetailCampus != null) {
                 imagenViewDetailCampus.setImageResource(R.mipmap.ic_inside_foreground);
                 tvDetailCampus.setText(zone.getName().getValue() + "\n" + zone.getAddress().getValue());
@@ -116,75 +111,15 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
 
     @Override
     public void detectRoadSegment(double latitude, double longitude, RoadSegment roadSegment) {
-        if(tvRoadSegment != null){
-            if(roadSegment != null){
-                //tvRoadSegment.setText("ID: "+roadSegment.getIdRoadSegment()+"\n"+context.getString(R.string.name)+": "+roadSegment.getName()+"\n"+context.getString(R.string.message_minimum)+": "+roadSegment.getMinimumAllowedSpeed()+"km/h\n"+context.getString(R.string.message_maximum)+": "+roadSegment.getMaximumAllowedSpeed()+"km/h");
-                //tvRoadSegment.setText(roadSegment.getName()+"\n"+context.getString(R.string.message_minimum)+": "+roadSegment.getMinimumAllowedSpeed()+"km/h\n"+context.getString(R.string.message_maximum)+": "+roadSegment.getMaximumAllowedSpeed()+"km/h");
-            }else{
-                //tvRoadSegment.setText(context.getString(R.string.message_not_road_segment));
-            }
-        }
     }
 
     @Override
     public void sendDataAccelerometer(double ax, double ay, double az) {
-        //Log.i("STATUS 1: ","ax: "+ax+" ay: "+ay+" az: "+az);
     }
 
     @Override
     public void sendEvent(String event) {
-
     }
 
-
-    //Android - Get Contact Photo from phone number
-
-
-    /*public Bitmap retrieveContactPhoto(Context context) {
-        ContentResolver contentResolver = context.getContentResolver();
-        String contactId = null;
-        //String number = "7471054389";
-        String number = "7471154097";
-
-        String phone = ContactsContract.CommonDataKinds.Phone.NUMBER;
-        Log.i("PHONE: ","---------------------------------: "+phone);
-        Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
-
-        String[] projection = new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME, ContactsContract.PhoneLookup._ID};
-
-        Cursor cursor =
-                contentResolver.query(
-                        uri,
-                        projection,
-                        null,
-                        null,
-                        null);
-
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                contactId = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.PhoneLookup._ID));
-            }
-            cursor.close();
-        }
-
-        Bitmap photo = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_alert_critical);
-
-        try {
-            InputStream inputStream = ContactsContract.Contacts.openContactPhotoInputStream(context.getContentResolver(),
-                    ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, new Long(contactId)));
-
-            if (inputStream != null) {
-                photo = BitmapFactory.decodeStream(inputStream);
-            }
-
-            assert inputStream != null;
-            inputStream.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return photo;
-
-    }*/
 
 }

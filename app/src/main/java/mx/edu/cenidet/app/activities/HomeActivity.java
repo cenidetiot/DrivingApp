@@ -79,7 +79,7 @@ public class HomeActivity extends AppCompatActivity
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     public static Context MAIN_CONTEXT = null;
-    private int numberTab;
+    private int numberTab = 3;
     private FrameLayout frameLayout;
     private ApplicationPreferences appPreferences;
     private double latitude, longitude;
@@ -135,39 +135,15 @@ public class HomeActivity extends AppCompatActivity
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //Mandar a llamar el toolbar una vez generado en el activity_main de la actividad
-        setToolbar();
+
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.navView);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
-        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
         menuItemInNavMenuDrawer();
-        setUpTabLayout();
         setUpViewPager(viewPager);
         btnFloatingGUI();
-        setFragmentDefault();
-        //frameLayout = (FrameLayout)findViewById(R.id.headerNavigationDrawer).findViewById(R.id.tvUserName);
 
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                int position = tab.getPosition();
-                viewPager.setCurrentItem(position);
-                //changeDrawerMenu(position);
-                Log.i("POSITION: ", "-------------------------------------"+position);
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -182,16 +158,12 @@ public class HomeActivity extends AppCompatActivity
                         Intent intentDrivingView = new Intent(getApplicationContext(), DrivingView.class);
                         startActivity(intentDrivingView);
                         break;
-                    case R.id.menu_campus:
+                    case R.id.menu_alerts:
                         viewPager.setCurrentItem(1);
                         fragmentTransaction = true;
                         break;
-                    case R.id.menu_alerts:
-                        viewPager.setCurrentItem(2);
-                        fragmentTransaction = true;
-                        break;
                     case R.id.menu_my_campus:
-                        viewPager.setCurrentItem(3);
+                        viewPager.setCurrentItem(2);
                         fragmentTransaction = true;
                         break;
                     case R.id.menu_history:
@@ -246,30 +218,13 @@ public class HomeActivity extends AppCompatActivity
         startService(deviceService);
         Log.i("onCreate", "-----------------------------------------------------------------------------");
 
-
-
     }
     private void menuItemInNavMenuDrawer() {
         if(appPreferences.getPreferenceString(getApplicationContext(),ConstantSdk.PREFERENCE_NAME_GENERAL,ConstantSdk.PREFERENCE_USER_TYPE).equals("mobileUser")) {
             navigationView.getMenu().findItem(R.id.menu_my_campus).setVisible(false);
         }
     }
-    public void setUpTabLayout(){
-        //TabLayout set text title
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.menu_home));
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.menu_campus_map));
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.menu_alerts));
-        if(appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_USER_TYPE).equals("securityGuard")){
-            tabLayout.addTab(tabLayout.newTab().setText(R.string.menu_my_campus));
-            tabLayout.getTabAt(3).setIcon(tabIcons[3]);
-        }
-        //TabLayout set up tab icons
-        tabLayout.getTabAt(0).setIcon(tabIcons[0]);
-        tabLayout.getTabAt(1).setIcon(tabIcons[1]);
-        tabLayout.getTabAt(2).setIcon(tabIcons[2]);
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-        numberTab = tabLayout.getTabCount();
-    }
+
     public void setUpViewPager(ViewPager viewPager){
         PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), numberTab);
         viewPager.setAdapter(adapter);
@@ -319,29 +274,6 @@ public class HomeActivity extends AppCompatActivity
         btnFloatingTraffic.setOnClickListener(this);
     }
 
-    private void setToolbar(){
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(myToolbar);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-    private void setFragmentDefault(){
-        navigationView.getMenu().getItem(0);
-        //changeFragment(new HomeFragment(), navigationView.getMenu().getItem(0));
-    }
-
-    private void changeFragment(Fragment fragment, MenuItem item){
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
-        item.setChecked(true);
-        getSupportActionBar().setTitle(item.getTitle());
-    }
-
-    private void changeDrawerMenu(int position){
-        MenuItem item = navigationView.getMenu().getItem(position);
-        item.setChecked(true);
-        getSupportActionBar().setTitle(item.getTitle());
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -435,18 +367,14 @@ public class HomeActivity extends AppCompatActivity
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btnFloatingUnknown:
-               // startActivity(new Intent(HomeActivity.this, SendManualAlertsActivity.class));
-                //Toast.makeText(getApplicationContext(), "btnFloatingUnknown...!", Toast.LENGTH_LONG).show();
                 confirmAlert();
                 break;
             case R.id.btnFloatingAccident:
                 Intent intentAccident = new Intent(HomeActivity.this, SendManualAlertsActivity.class);
                 intentAccident.putExtra("typeAlert", 1);
                 startActivity(intentAccident);
-                //Toast.makeText(getApplicationContext(), "btnFloatingAccident...!", Toast.LENGTH_LONG).show();
                 break;
             case R.id.btnFloatingTraffic:
-                //Toast.makeText(getApplicationContext(), "btnFloatingTraffic...!", Toast.LENGTH_LONG).show();
                 Intent intentTraffic = new Intent(HomeActivity.this, SendManualAlertsActivity.class);
                 intentTraffic.putExtra("typeAlert", 2);
                 startActivity(intentTraffic);
@@ -607,6 +535,5 @@ public class HomeActivity extends AppCompatActivity
     }
 
 
-    //.setCancelable(false)
 
 }

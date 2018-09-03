@@ -113,4 +113,7 @@
     <string name="validation_phone_error">Por favor completa el numero telefónico</string>
     <string name= "validation_empty_required_field">Este campo no puede estar vacio</string>
     <string name= "validation_dont_match_passwords">Las contraseñas no coinciden</string>
+
+    <string name="loading_message">Cargando...</string>
+
 </resources>
