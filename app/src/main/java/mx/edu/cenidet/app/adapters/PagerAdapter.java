@@ -35,6 +35,7 @@ public class PagerAdapter extends FragmentPagerAdapter {
                 return new AlertsFragment();
             case 2:
                 return new MyCampusFragment();
+
             default:
                 return null;
         }

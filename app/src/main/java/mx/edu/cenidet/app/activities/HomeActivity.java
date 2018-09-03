@@ -141,8 +141,12 @@ public class HomeActivity extends AppCompatActivity
         viewPager = (ViewPager) findViewById(R.id.viewPager);
 
         menuItemInNavMenuDrawer();
-        setUpViewPager(viewPager);
+        //setUpViewPager(viewPager);
         btnFloatingGUI();
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.content_frame, new ZoneFragment());
+        ft.commit();
 
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -159,8 +163,10 @@ public class HomeActivity extends AppCompatActivity
                         startActivity(intentDrivingView);
                         break;
                     case R.id.menu_alerts:
-                        viewPager.setCurrentItem(1);
-                        fragmentTransaction = true;
+                        Intent intentAlert = new Intent(getApplicationContext(), AlertsListActivity.class);
+                        startActivity(intentAlert);
+                        //viewPager.setCurrentItem(1);
+                        //fragmentTransaction = true;
                         break;
                     case R.id.menu_my_campus:
                         viewPager.setCurrentItem(2);
@@ -228,7 +234,7 @@ public class HomeActivity extends AppCompatActivity
     public void setUpViewPager(ViewPager viewPager){
         PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), numberTab);
         viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        //viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
     }
 
     @Override
