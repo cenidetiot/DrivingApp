@@ -127,4 +127,12 @@
     <string name= "validation_empty_required_field">This field can not be empty</string>
     <string name= "validation_dont_match_passwords">The password does not match</string>
 
+    <string name="loading_message">Loading...</string>
+
+
+    <string name="have_account_question">Do you have an account?</string>
+
+    <string name="have_account_button">I have an Account</string>
+    <string name="have_not_account_button">I do not have an Account</string>
+    <string name="create_account_as">  Create account as: </string>
 </resources>

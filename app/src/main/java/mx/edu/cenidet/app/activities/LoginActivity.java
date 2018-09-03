@@ -178,8 +178,6 @@ public class LoginActivity extends AppCompatActivity implements
         btnLogin = (Button) findViewById (R.id.btnLogin);
         btnLogin.setOnClickListener(this);
         btnLogin.setEnabled(false);
-        btnSignUp = (Button) findViewById(R.id.btnSignUp);
-        btnSignUp.setOnClickListener(this);
 
         etEmailSG.addTextChangedListener(new TextWatcher() {
             @Override
@@ -352,18 +350,6 @@ public class LoginActivity extends AppCompatActivity implements
                 } else{
                     emailSG = etEmailSG.getText().toString();
                     userController.logInUser(emailSG, password, userType);
-                }
-                break;
-            case R.id.btnSignUp:
-                if(userType.equals("mobileUser")) {
-                    //INTENT CREATE NEW ACCOUNT
-                    Intent intentCreateAccount = new Intent(LoginActivity.this, CreateAccountActivity.class);
-                    startActivity(intentCreateAccount);
-                }
-                else{
-                    //INTENT WEBVIEW
-                    Intent webViewSmartSecurity = new Intent(LoginActivity.this, WebViewSmartSecurity.class);
-                    startActivity(webViewSmartSecurity);
                 }
                 break;
             case R.id.btnPhone :

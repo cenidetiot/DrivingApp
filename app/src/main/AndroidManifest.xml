@@ -33,6 +33,11 @@
             android:screenOrientation="portrait" />
         <activity android:name=".activities.MainActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".activities.CreateAccountAsActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.LoginAsActivity"
+            android:screenOrientation="portrait"/>
+
         <activity android:name=".activities.AlertMapDetailActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".activities.MapDetailActivity"
