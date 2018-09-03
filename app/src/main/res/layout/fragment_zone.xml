@@ -46,7 +46,7 @@
                 android:fontFamily="@font/roboto_medium"
                 android:text="@string/loading_message"
                 android:textAlignment="center"
-                android:textColor="@color/white70"
+                android:textColor="@color/sub_title_home"
                 android:textSize="@dimen/subheading"
                 android:ellipsize="end"
                 android:maxLines="1" />

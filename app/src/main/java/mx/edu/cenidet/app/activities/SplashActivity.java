@@ -304,7 +304,7 @@ public class SplashActivity extends AppCompatActivity implements
                     }
                 }
                 Log.d("LOADZONES", "ZONES ARE READY");
-                checkGPS();
+                //checkGPS();
                 break;
         }
     }

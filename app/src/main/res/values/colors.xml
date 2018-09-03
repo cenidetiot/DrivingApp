@@ -12,7 +12,7 @@
 
     <color name="backgroundDefault">#30336b</color>
     <color name="white">#ffffff</color>
-    <color name="white70">#f3d19c</color>
+    <color name="white70">#b3ffffff</color>
     <color name="white50">#80ffffff</color>
     <color name="transparent">#00000000</color>
     <color name="red">#e74c3c</color>
@@ -62,4 +62,5 @@
         <item>@color/dot_dark_screen5</item>
     </array>
     <color name="black">#000000</color>
+    <color name="sub_title_home">#f3d19c</color>
 </resources>
