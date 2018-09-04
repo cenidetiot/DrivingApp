@@ -169,8 +169,8 @@ public class HomeActivity extends AppCompatActivity
                         //fragmentTransaction = true;
                         break;
                     case R.id.menu_my_campus:
-                        viewPager.setCurrentItem(2);
-                        fragmentTransaction = true;
+                        Intent intentZone = new Intent(getApplicationContext(), ZonesActivity.class);
+                        startActivity(intentZone);
                         break;
                     case R.id.menu_history:
                         drawerLayout.closeDrawers();
@@ -190,10 +190,10 @@ public class HomeActivity extends AppCompatActivity
                         break;
                 }
 
-                if(fragmentTransaction){
+                //if(fragmentTransaction){
                     //changeFragment(fragment, item);
                     drawerLayout.closeDrawers();
-                }
+                //}
                 return true;
             }
         });

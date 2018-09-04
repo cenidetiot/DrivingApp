@@ -71,6 +71,7 @@
             android:label="@string/terms_title"
             android:screenOrientation="portrait"/>
         <activity android:name=".activities.AlertsActivity" />
+        <activity android:name=".activities.ZonesActivity" />
 
         <service android:name=".services.DeviceService" />
         <service android:name=".services.DrivingFirebaseMessagingService">

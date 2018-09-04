@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -16,6 +15,7 @@ import com.github.clans.fab.FloatingActionButton;
 
 import mx.edu.cenidet.app.R;
 import mx.edu.cenidet.app.fragments.AlertsFragment;
+import mx.edu.cenidet.app.fragments.MyCampusFragment;
 import mx.edu.cenidet.app.fragments.ZoneFragment;
 import mx.edu.cenidet.app.services.SendDataService;
 import www.fiware.org.ngsi.controller.AlertController;
@@ -26,7 +26,7 @@ import www.fiware.org.ngsi.httpmethodstransaction.Response;
 import www.fiware.org.ngsi.utilities.DevicePropertiesFunctions;
 import www.fiware.org.ngsi.utilities.Functions;
 
-public class AlertsActivity extends AppCompatActivity implements View.OnClickListener,
+public class ZonesActivity extends AppCompatActivity implements View.OnClickListener,
         SendDataService.SendDataMethods,
         AlertController.AlertResourceMethods {
     private AlertController alertController;
@@ -50,7 +50,7 @@ public class AlertsActivity extends AppCompatActivity implements View.OnClickLis
         setToolbar();
         btnFloatingGUI();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.content_frame, new AlertsFragment());
+        ft.replace(R.id.content_frame, new MyCampusFragment());
         ft.commit();
     }
 
@@ -59,7 +59,7 @@ public class AlertsActivity extends AppCompatActivity implements View.OnClickLis
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(R.string.menu_alerts);
+        getSupportActionBar().setTitle(R.string.menu_my_campus);
     }
 
     public void btnFloatingGUI(){
