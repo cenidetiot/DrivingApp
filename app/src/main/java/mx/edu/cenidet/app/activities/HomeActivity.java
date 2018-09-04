@@ -155,8 +155,6 @@ public class HomeActivity extends AppCompatActivity
                 Fragment fragment = null;
                 switch (item.getItemId()){
                     case R.id.menu_home:
-                        viewPager.setCurrentItem(0);
-                        fragmentTransaction = true;
                         break;
                     case R.id.menu_speed:
                         Intent intentDrivingView = new Intent(getApplicationContext(), DrivingView.class);
@@ -165,8 +163,6 @@ public class HomeActivity extends AppCompatActivity
                     case R.id.menu_alerts:
                         Intent intentAlert = new Intent(getApplicationContext(), AlertsActivity.class);
                         startActivity(intentAlert);
-                        //viewPager.setCurrentItem(1);
-                        //fragmentTransaction = true;
                         break;
                     case R.id.menu_my_campus:
                         Intent intentZone = new Intent(getApplicationContext(), ZonesActivity.class);
