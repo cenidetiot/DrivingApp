@@ -11,17 +11,4 @@
         android:layout_height="match_parent"
         android:background="@color/common_google_signin_btn_text_dark_default" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/speedButtonAlerts"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_marginBottom="16dp"
-        android:layout_marginRight="80dp"
-        android:clickable="true"
-        android:src="@drawable/ic_speed"
-        app:backgroundTint="@color/colorPrimary"
-        app:borderWidth="5dp"
-        app:fabSize="mini" />
-
 </FrameLayout>
