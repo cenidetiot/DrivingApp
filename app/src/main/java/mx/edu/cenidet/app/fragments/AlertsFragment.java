@@ -65,6 +65,7 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
         context = HomeActivity.MAIN_CONTEXT;
         alertsControllerSdk = new AlertsControllerSdk(context, this);
         applicationPreferences = new ApplicationPreferences();
+        Log.d("LOADING", "ALERTS");
 
     }
 

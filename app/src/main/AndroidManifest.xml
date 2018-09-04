@@ -45,8 +45,6 @@
         <activity android:name=".activities.AlertHistoryActivity"
             android:screenOrientation="portrait"/>
 
-        <activity android:name=".activities.AlertsListActivity"
-            android:screenOrientation="portrait"/>
         <activity
             android:name=".activities.SendManualAlertsActivity"
             android:configChanges="screenSize|orientation"

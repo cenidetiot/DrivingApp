@@ -29,13 +29,8 @@ public class PagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         Log.i("ADAPTER: ", "POSITION: -------------------" + (position));
         switch (position) {
-            case 0:
-                return new ZoneFragment();
             case 1:
                 return new AlertsFragment();
-            case 2:
-                return new MyCampusFragment();
-
             default:
                 return null;
         }
