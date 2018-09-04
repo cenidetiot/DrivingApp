@@ -70,6 +70,7 @@
             android:theme="@style/Theme.AppCompat.Dialog.Alert"
             android:label="@string/terms_title"
             android:screenOrientation="portrait"/>
+        <activity android:name=".activities.AlertsActivity" />
 
         <service android:name=".services.DeviceService" />
         <service android:name=".services.DrivingFirebaseMessagingService">

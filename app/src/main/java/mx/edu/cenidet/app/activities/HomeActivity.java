@@ -163,8 +163,8 @@ public class HomeActivity extends AppCompatActivity
                         startActivity(intentDrivingView);
                         break;
                     case R.id.menu_alerts:
-                        //Intent intentAlert = new Intent(getApplicationContext(), AlertsListActivity.class);
-                        //startActivity(intentAlert);
+                        Intent intentAlert = new Intent(getApplicationContext(), AlertsActivity.class);
+                        startActivity(intentAlert);
                         //viewPager.setCurrentItem(1);
                         //fragmentTransaction = true;
                         break;

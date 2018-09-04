@@ -88,7 +88,7 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
         listAlerts = new ArrayList<Alert>();
         myAdapterAlerts = new MyAdapterAlerts(context, R.id.listViewAlerts, listAlerts);
         header  = getLayoutInflater().inflate(R.layout.empty_alerts_list, listViewAlerts, false);
-
+        getFirstAlerts();
         return rootView;
     }
 
