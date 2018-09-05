@@ -39,6 +39,9 @@ public class AlertsActivity extends AppCompatActivity implements View.OnClickLis
     private FloatingActionButton btnFloatingAccident;
     private FloatingActionButton btnFloatingTraffic;
 
+    private FloatingActionButton btnBack;
+
+
 
 
     @Override
@@ -48,20 +51,13 @@ public class AlertsActivity extends AppCompatActivity implements View.OnClickLis
         MAIN_CONTEXT = this;
         sendDataService = new SendDataService(this);
         alertController = new AlertController(this);
-        setToolbar();
+        //setToolbar();
         btnFloatingGUI();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.content_frame, new AlertsMapFragment());
         ft.commit();
     }
 
-    private void setToolbar(){
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(myToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(R.string.menu_alerts);
-    }
 
     public void btnFloatingGUI(){
         btnFloatingUnknown = (FloatingActionButton)findViewById(R.id.btnFloatingUnknown);
@@ -70,6 +66,8 @@ public class AlertsActivity extends AppCompatActivity implements View.OnClickLis
         btnFloatingAccident.setOnClickListener(this);
         btnFloatingTraffic = (FloatingActionButton)findViewById(R.id.btnFloatingTraffic);
         btnFloatingTraffic.setOnClickListener(this);
+        btnBack = (FloatingActionButton)findViewById(R.id.backButton);
+        btnBack.setOnClickListener(this);
     }
 
     @Override
@@ -112,6 +110,9 @@ public class AlertsActivity extends AppCompatActivity implements View.OnClickLis
                 Intent intentTraffic = new Intent(MAIN_CONTEXT, SendManualAlertsActivity.class);
                 intentTraffic.putExtra("typeAlert", 2);
                 startActivity(intentTraffic);
+                break;
+            case R.id.backButton:
+                onBackPressed();
                 break;
         }
     }

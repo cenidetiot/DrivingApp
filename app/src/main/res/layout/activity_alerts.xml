@@ -6,17 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
+
     android:fitsSystemWindows="true">
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         xmlns:app="http://schemas.android.com/apk/res-auto">
-
-        <include
-            android:id="@+id/toolbar"
-            layout="@layout/toolbar"
-            android:title="@string/menu_current_alerts"/>
 
         <FrameLayout
             android:id="@+id/content_frame"
@@ -25,6 +21,15 @@
         </FrameLayout>
 
     </LinearLayout>
+
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/backButton"
+        style="@style/MenuButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_action_return"
+        app:fab_showShadow="true"
+        app:fab_size="mini" />
 
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/menuFloating"
