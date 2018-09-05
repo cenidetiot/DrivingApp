@@ -18,6 +18,12 @@
         <item name="fab_colorRipple">#8A0808</item>
     </style>
 
+    <style name="MenuButton">
+        <item name="fab_colorNormal">@color/dot_light_screen2</item>
+        <item name="fab_colorPressed">@color/dot_light_screen2</item>
+        <item name="fab_colorRipple">@color/dot_light_screen2</item>
+    </style>
+
     <style name="MenuButtonsUnknown">
         <item name="fab_colorNormal">#e74c3c</item>
         <item name="fab_colorPressed">#B40404</item>

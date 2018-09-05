@@ -9,6 +9,7 @@
     android:fitsSystemWindows="true">
 
 
+
     <LinearLayout
         android:layout_marginTop="16dp"
         android:layout_width="match_parent"
@@ -22,6 +23,16 @@
         </FrameLayout>
 
     </LinearLayout>
+
+
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/openMenuButton"
+        style="@style/MenuButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_home"
+        app:fab_showShadow="true"
+        app:fab_size="mini" />
 
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/menuFloating"

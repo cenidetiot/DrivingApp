@@ -94,6 +94,8 @@ public class HomeActivity extends AppCompatActivity
     private FloatingActionButton btnFloatingUnknown;
     private FloatingActionButton btnFloatingAccident;
     private FloatingActionButton btnFloatingTraffic;
+    private FloatingActionButton btnOpenDrawer;
+
 
     //Gestión Road y RoadSegment
     private ArrayList<Road> listRoad;
@@ -274,6 +276,8 @@ public class HomeActivity extends AppCompatActivity
         btnFloatingAccident.setOnClickListener(this);
         btnFloatingTraffic = (FloatingActionButton)findViewById(R.id.btnFloatingTraffic);
         btnFloatingTraffic.setOnClickListener(this);
+        btnOpenDrawer = (FloatingActionButton)findViewById(R.id.openMenuButton);
+        btnOpenDrawer.setOnClickListener(this);
     }
 
 
@@ -380,6 +384,9 @@ public class HomeActivity extends AppCompatActivity
                 Intent intentTraffic = new Intent(HomeActivity.this, SendManualAlertsActivity.class);
                 intentTraffic.putExtra("typeAlert", 2);
                 startActivity(intentTraffic);
+                break;
+            case R.id.openMenuButton:
+                drawerLayout.openDrawer(GravityCompat.START);
                 break;
         }
     }
