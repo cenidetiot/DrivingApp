@@ -1,6 +1,5 @@
 package mx.edu.cenidet.app.fragments;
 
-
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -9,8 +8,6 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-//import android.support.design.widget.FloatingActionButton;
-import com.github.clans.fab.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -19,7 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.github.clans.fab.FloatingActionButton;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -36,15 +35,18 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
-import mx.edu.cenidet.app.activities.DrivingView;
-import mx.edu.cenidet.cenidetsdk.db.SQLiteDrivingApp;
-import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
 import mx.edu.cenidet.app.R;
+import mx.edu.cenidet.app.activities.DrivingView;
 import mx.edu.cenidet.app.activities.HomeActivity;
 import mx.edu.cenidet.app.services.SendDataService;
-import www.fiware.org.ngsi.datamodel.datatypes.LocationGeoJsonObject;
+import mx.edu.cenidet.cenidetsdk.controllers.AlertsControllerSdk;
+import mx.edu.cenidet.cenidetsdk.db.SQLiteDrivingApp;
+import mx.edu.cenidet.cenidetsdk.httpmethods.Response;
+import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
 import www.fiware.org.ngsi.datamodel.entity.OffStreetParking;
 import www.fiware.org.ngsi.datamodel.entity.Road;
 import www.fiware.org.ngsi.datamodel.entity.RoadSegment;
@@ -53,12 +55,10 @@ import www.fiware.org.ngsi.utilities.ApplicationPreferences;
 
 import static mx.edu.cenidet.app.activities.MainActivity.getColorWithAlpha;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class ZoneFragment extends Fragment implements
+public class AlertsMapFragment extends Fragment implements
         OnMapReadyCallback,
-        SendDataService.SendDataMethods {
+        SendDataService.SendDataMethods,
+        AlertsControllerSdk.AlertsServiceMethods{
     private View rootView;
     private MapView mapView;
     private GoogleMap gMap;
@@ -86,13 +86,31 @@ public class ZoneFragment extends Fragment implements
 
     private TextView textZone;
     private TextView textAddressZone;
+    private AlertsControllerSdk alertsControllerSdk;
+    private String zoneId;
 
-
-    public ZoneFragment() {
+    public AlertsMapFragment() {
         context = HomeActivity.MAIN_CONTEXT;
         sendDataService = new SendDataService(this);
+        alertsControllerSdk = new AlertsControllerSdk(context, this);
         sqLiteDrivingApp = new SQLiteDrivingApp(context);
         applicationPreferences = new ApplicationPreferences();
+        getFirstAlerts();
+
+    }
+
+    public void getFirstAlerts() {
+        if(applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_CURRENT_ZONE) != null){
+            zoneId = applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_CURRENT_ZONE);
+            if(!zoneId.equals("undetectedZone")) {
+                String typeUser = applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_USER_TYPE);
+                String tempQuery = zoneId;
+                if (typeUser != null && typeUser !="" && typeUser.equals("mobileUser")){
+                    tempQuery += "?id=Alert:Device_Smartphone_.*&location=false";
+                }
+                alertsControllerSdk.currentAlertByZone(tempQuery);
+            }
+        }
     }
 
 
@@ -143,7 +161,7 @@ public class ZoneFragment extends Fragment implements
         gMap = googleMap;
 
         try {
-           boolean success = googleMap.setMapStyle( MapStyleOptions.loadRawResourceStyle( context, R.raw.map_style_retro));
+            boolean success = googleMap.setMapStyle( MapStyleOptions.loadRawResourceStyle( context, R.raw.map_style_retro));
 
         } catch (Resources.NotFoundException e) {
         }
@@ -167,10 +185,10 @@ public class ZoneFragment extends Fragment implements
         marker = gMap.addMarker(
                 new MarkerOptions()
                         .position(
-                            new LatLng(latitude, longitude)
+                                new LatLng(latitude, longitude)
                         ).title(name)
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-                );
+                        //.icon(BitmapDescriptorFactory.fromResource(R.drawable.redmarker))
+        );
     }
 
     private void zoomToLocation(double latitude, double longitude){
@@ -215,27 +233,27 @@ public class ZoneFragment extends Fragment implements
      * @param zone el identificador de la zona.
      */
     public void drawZone(Zone zone){
-            JSONArray arrayLocation;
-            String originalString, clearString;
-            double latitude, longitude;
-            String[] subString;
-            listLocation = new ArrayList<>();
-            try {
-                arrayLocation = new JSONArray(zone.getLocation().getValue());
-                for (int j=0; j<arrayLocation.length(); j++){
-                    originalString = arrayLocation.get(j).toString();
-                    clearString = originalString.substring(originalString.indexOf("[") + 1, originalString.indexOf("]"));
-                    subString =  clearString.split(",");
-                    latitude = Double.parseDouble(subString[0]);
-                    longitude = Double.parseDouble(subString[1]);
-                    listLocation.add(new LatLng(latitude,longitude));
-                }
-                gMap.addPolygon(new PolygonOptions()
-                        .fillColor(getColorWithAlpha(Color.parseColor("#2ecc71"), 0.1f))
-                        .addAll(listLocation).strokeColor(Color.parseColor("#2ecc71")));
-            } catch (JSONException e) {
-                e.printStackTrace();
+        JSONArray arrayLocation;
+        String originalString, clearString;
+        double latitude, longitude;
+        String[] subString;
+        listLocation = new ArrayList<>();
+        try {
+            arrayLocation = new JSONArray(zone.getLocation().getValue());
+            for (int j=0; j<arrayLocation.length(); j++){
+                originalString = arrayLocation.get(j).toString();
+                clearString = originalString.substring(originalString.indexOf("[") + 1, originalString.indexOf("]"));
+                subString =  clearString.split(",");
+                latitude = Double.parseDouble(subString[0]);
+                longitude = Double.parseDouble(subString[1]);
+                listLocation.add(new LatLng(latitude,longitude));
             }
+            gMap.addPolygon(new PolygonOptions()
+                    .fillColor(getColorWithAlpha(Color.parseColor("#2ecc71"), 0.1f))
+                    .addAll(listLocation).strokeColor(Color.parseColor("#2ecc71")));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -244,46 +262,46 @@ public class ZoneFragment extends Fragment implements
      * @param zoneId el identificador de la zona.
      */
     public void drawParking(String zoneId){
-            listOffStreetParking = sqLiteDrivingApp.getAllOffStreetParkingByAreaServed(zoneId);
-            if (listOffStreetParking.size() > 0) {
-                String originalStringParking, clearStringParking;
-                double latitudeParking, longitudeParking;
-                String[] subStringParking;
-                LatLngBounds.Builder builder;
-                for (int i = 0; i < listOffStreetParking.size(); i++) {
-                    builder = new LatLngBounds.Builder();
-                    listLocationParking = new ArrayList<>();
-                    try {
-                        arrayLocationParking = new JSONArray(listOffStreetParking.get(i).getLocation());
-                        for (int j = 0; j < arrayLocationParking.length(); j++) {
-                            originalStringParking = arrayLocationParking.get(j).toString();
-                            clearStringParking = originalStringParking.substring(originalStringParking.indexOf("[") + 1, originalStringParking.indexOf("]"));
-                            subStringParking = clearStringParking.split(",");
-                            latitudeParking = Double.parseDouble(subStringParking[0]);
-                            longitudeParking = Double.parseDouble(subStringParking[1]);
-                            //listLocationParking.add(new LatLng(latitudeParking, longitudeParking));
-                            LatLng tmp = new LatLng(latitudeParking, longitudeParking);
-                            listLocationParking.add(tmp);
-                            builder.include(tmp); //Le agregas los puntos del poligono
-                        }
-                        LatLngBounds bounds = builder.build(); //Obtienes los limites del poligono
-                        centerLatLngParking = bounds.getCenter(); //Obtienes el centro de los limites del poligono
-                        if (gMap != null) {
-                            gMap.addPolygon(
-                                    new PolygonOptions().
-                                            addAll(listLocationParking)
-                                            .fillColor(getColorWithAlpha(Color.parseColor("#3498db"), 0.1f))
-                                            .strokeColor(Color.parseColor("#3498db")))                             ;
-
-                        }
-                        //createMarkerParking(centerLatLngParking.latitude, centerLatLngParking.longitude, listOffStreetParking.get(i).getName());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+        listOffStreetParking = sqLiteDrivingApp.getAllOffStreetParkingByAreaServed(zoneId);
+        if (listOffStreetParking.size() > 0) {
+            String originalStringParking, clearStringParking;
+            double latitudeParking, longitudeParking;
+            String[] subStringParking;
+            LatLngBounds.Builder builder;
+            for (int i = 0; i < listOffStreetParking.size(); i++) {
+                builder = new LatLngBounds.Builder();
+                listLocationParking = new ArrayList<>();
+                try {
+                    arrayLocationParking = new JSONArray(listOffStreetParking.get(i).getLocation());
+                    for (int j = 0; j < arrayLocationParking.length(); j++) {
+                        originalStringParking = arrayLocationParking.get(j).toString();
+                        clearStringParking = originalStringParking.substring(originalStringParking.indexOf("[") + 1, originalStringParking.indexOf("]"));
+                        subStringParking = clearStringParking.split(",");
+                        latitudeParking = Double.parseDouble(subStringParking[0]);
+                        longitudeParking = Double.parseDouble(subStringParking[1]);
+                        //listLocationParking.add(new LatLng(latitudeParking, longitudeParking));
+                        LatLng tmp = new LatLng(latitudeParking, longitudeParking);
+                        listLocationParking.add(tmp);
+                        builder.include(tmp); //Le agregas los puntos del poligono
                     }
+                    LatLngBounds bounds = builder.build(); //Obtienes los limites del poligono
+                    centerLatLngParking = bounds.getCenter(); //Obtienes el centro de los limites del poligono
+                    if (gMap != null) {
+                        gMap.addPolygon(
+                                new PolygonOptions().
+                                        addAll(listLocationParking)
+                                        .fillColor(getColorWithAlpha(Color.parseColor("#3498db"), 0.1f))
+                                        .strokeColor(Color.parseColor("#3498db")))                             ;
 
-                    drawRoadSegmentByParking(listOffStreetParking.get(i).getIdOffStreetParking());
+                    }
+                    //createMarkerParking(centerLatLngParking.latitude, centerLatLngParking.longitude, listOffStreetParking.get(i).getName());
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+
+                drawRoadSegmentByParking(listOffStreetParking.get(i).getIdOffStreetParking());
             }
+        }
 
     }
 
@@ -365,6 +383,40 @@ public class ZoneFragment extends Fragment implements
 
     @Override
     public void sendEvent(String event) {
+
+    }
+
+    @Override
+    public void currentAlertByZone(Response response) {
+        switch (response.getHttpCode()) {
+            case 0:
+                Log.i("STATUS", "Internal Server Error 1...!");
+                break;
+            case 200:
+                JSONArray jsonArray = response.parseJsonArray(response.getBodyString());
+                if(jsonArray.length() == 0 || jsonArray == null){
+                    Toast.makeText(context, R.string.message_no_alerts_show, Toast.LENGTH_SHORT).show();
+                }else{
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        try {
+                            JSONObject object = jsonArray.getJSONObject(i);
+                            Log.d("GETTINGALERTS", object.getString("id"));
+                            String[] subString;
+                            subString = object.getString("location").split(",");
+                            double centerLatitude = Double.parseDouble(subString[0]);
+                            double centerLongitude = Double.parseDouble(subString[1]);
+                            createMarkerParking(centerLatitude, centerLongitude,  object.getString("id"));
+                        }catch (JSONException e){
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void historyAlertByZone(Response response) {
 
     }
 }

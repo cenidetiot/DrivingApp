@@ -16,6 +16,7 @@ import com.github.clans.fab.FloatingActionButton;
 
 import mx.edu.cenidet.app.R;
 import mx.edu.cenidet.app.fragments.AlertsFragment;
+import mx.edu.cenidet.app.fragments.AlertsMapFragment;
 import mx.edu.cenidet.app.fragments.ZoneFragment;
 import mx.edu.cenidet.app.services.SendDataService;
 import www.fiware.org.ngsi.controller.AlertController;
@@ -50,7 +51,7 @@ public class AlertsActivity extends AppCompatActivity implements View.OnClickLis
         setToolbar();
         btnFloatingGUI();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.content_frame, new AlertsFragment());
+        ft.replace(R.id.content_frame, new AlertsMapFragment());
         ft.commit();
     }
 
