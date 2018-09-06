@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,6 +26,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -48,6 +51,7 @@ import mx.edu.cenidet.cenidetsdk.controllers.AlertsControllerSdk;
 import mx.edu.cenidet.cenidetsdk.db.SQLiteDrivingApp;
 import mx.edu.cenidet.cenidetsdk.httpmethods.Response;
 import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
+import www.fiware.org.ngsi.datamodel.entity.Alert;
 import www.fiware.org.ngsi.datamodel.entity.OffStreetParking;
 import www.fiware.org.ngsi.datamodel.entity.Road;
 import www.fiware.org.ngsi.datamodel.entity.RoadSegment;
@@ -58,6 +62,7 @@ import static mx.edu.cenidet.app.activities.MainActivity.getColorWithAlpha;
 
 public class AlertsMapFragment extends Fragment implements
         OnMapReadyCallback,
+        GoogleMap.OnMarkerClickListener,
         SendDataService.SendDataMethods,
         AlertsControllerSdk.AlertsServiceMethods{
     private View rootView;
@@ -89,6 +94,9 @@ public class AlertsMapFragment extends Fragment implements
     private TextView textAddressZone;
     private AlertsControllerSdk alertsControllerSdk;
     private String zoneId;
+
+    private ArrayList<Alert> listAlerts;
+
 
 
 
@@ -138,6 +146,7 @@ public class AlertsMapFragment extends Fragment implements
         speedButtonZone.setVisibility(View.INVISIBLE);
         //card.setBackgroundColor(getColorWithAlpha(Color.parseColor("#bdc3c7"), 0.9f));
         //card.setBackgroundColor(getColorWithAlpha(Color.parseColor("#bdc3c7"), 0.9f));
+        listAlerts = new ArrayList<Alert>();
         return rootView;
     }
 
@@ -174,7 +183,8 @@ public class AlertsMapFragment extends Fragment implements
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        gMap.setMyLocationEnabled(true);
+        //gMap.setMyLocationEnabled(true);
+        gMap.setOnMarkerClickListener(this);
     }
 
 
@@ -186,14 +196,19 @@ public class AlertsMapFragment extends Fragment implements
         }
     }
 
-    private void createMarkerParking(double latitude, double longitude, String name){
+    private void createMarkerAlert(double latitude, double longitude, String name){
+
+
         marker = gMap.addMarker(
                 new MarkerOptions()
                         .position(
-                                new LatLng(latitude, longitude)
-                        ).title(name)
-                        //.icon(BitmapDescriptorFactory.fromResource(R.drawable.artboard))
+                                new LatLng(latitude, longitude))
+                        //.title(name)
+                        .snippet(name)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.lap1))
+
         );
+
 
     }
 
@@ -222,7 +237,7 @@ public class AlertsMapFragment extends Fragment implements
                 new MarkerOptions()
                         .position(
                                 new LatLng(latitude, longitude)
-                        ).title(name)
+                        )
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.baseline_navigation_white_36))
         );
     }
@@ -353,6 +368,8 @@ public class AlertsMapFragment extends Fragment implements
         createOrUpdateMarkerByLocation(latitude, longitude);
     }
 
+
+
     @Override
     public void detectZone(Zone zone, boolean statusLocation) {
         if (statusLocation){
@@ -399,6 +416,7 @@ public class AlertsMapFragment extends Fragment implements
                 Log.i("STATUS", "Internal Server Error 1...!");
                 break;
             case 200:
+                listAlerts.clear();
                 JSONArray jsonArray = response.parseJsonArray(response.getBodyString());
                 if(jsonArray.length() == 0 || jsonArray == null){
                     Toast.makeText(context, R.string.message_no_alerts_show, Toast.LENGTH_SHORT).show();
@@ -411,7 +429,21 @@ public class AlertsMapFragment extends Fragment implements
                             subString = object.getString("location").split(",");
                             double centerLatitude = Double.parseDouble(subString[0]);
                             double centerLongitude = Double.parseDouble(subString[1]);
-                            createMarkerParking(centerLatitude, centerLongitude,  object.getString("id"));
+                            createMarkerAlert(centerLatitude, centerLongitude,  object.getString("id"));
+                            Alert tempAlert = new Alert();
+                            tempAlert.setId(object.getString("id"));
+                            tempAlert.setType(object.getString("type"));
+                            tempAlert.getAlertSource().setValue(object.getString("alertSource"));
+                            tempAlert.getCategory().setValue(object.getString("category"));
+                            tempAlert.getDateObserved().setValue(object.getString("dateObserved"));
+                            tempAlert.getDescription().setValue(object.getString("description"));
+                            tempAlert.getLocation().setValue(object.getString("location"));
+                            tempAlert.getSeverity().setValue(object.getString("severity"));
+                            tempAlert.getSubCategory().setValue(object.getString("subCategory"));
+                            tempAlert.getValidFrom().setValue(object.getString("validFrom"));
+                            tempAlert.getValidTo().setValue(object.getString("validTo"));
+                            listAlerts.add(tempAlert);
+                            Log.d("MAKERS", tempAlert.getId());
                         }catch (JSONException e){
                             e.printStackTrace();
                         }
@@ -424,5 +456,13 @@ public class AlertsMapFragment extends Fragment implements
     @Override
     public void historyAlertByZone(Response response) {
 
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+
+        Log.d("MAKERS", marker.getSnippet());
+
+        return false;
     }
 }
