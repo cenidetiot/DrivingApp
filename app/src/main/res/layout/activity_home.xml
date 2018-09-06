@@ -43,6 +43,7 @@
         android:paddingRight="10dp"
         android:paddingBottom="10dp"
         android:paddingLeft="10dp"
+        fab:fab_size="mini"
         fab:menu_labels_ellipsize="end"
         fab:menu_labels_singleLine="true"
         fab:menu_icon="@drawable/baseline_notification_important_white_36"

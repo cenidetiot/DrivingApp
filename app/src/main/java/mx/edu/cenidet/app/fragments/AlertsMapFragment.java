@@ -161,14 +161,6 @@ public class AlertsMapFragment extends Fragment implements
         }
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser){
-            //zoomToLocation(latitude, longitude);
-        }
-    }
-
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -183,7 +175,8 @@ public class AlertsMapFragment extends Fragment implements
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        //gMap.setMyLocationEnabled(true);
+        gMap.setMyLocationEnabled(true);
+        //gMap.setTrafficEnabled(true);
         gMap.setOnMarkerClickListener(this);
     }
 
@@ -196,20 +189,67 @@ public class AlertsMapFragment extends Fragment implements
         }
     }
 
-    private void createMarkerAlert(double latitude, double longitude, String name){
+    private void createMarkerAlert(double latitude, double longitude, String name, String severity, String subCategory){
 
+        Bitmap markerBySeverity;
+        String markerName = "";
+
+        if (subCategory.equals("trafficJam")){
+            markerName = "traffic";
+        }else if(subCategory.equals("carAccident")){
+            markerName = "accident";
+        } else if(subCategory.equals("suddenStop")){
+            markerName = "sudden";
+        }else if(subCategory.equals("wrongWay")){
+            markerName = "wrong";
+        }else if(subCategory.equals("speeding")){
+            markerName = "speed";
+        } else {
+            markerName = "warning";
+            severity = "";
+        }
+
+        switch (severity) {
+            case "informational" :
+                markerName += "_low";
+                break;
+            case "low":
+                markerName += "_info";
+                break;
+            case "medium":
+                markerName += "_med";
+                break;
+            case "high":
+                markerName += "_high";
+                break;
+            case "critical" :
+                markerName += "_critical";
+                break;
+                default:
+                    break;
+        }
+
+        markerBySeverity = resizeMapIcons(markerName,80,80);
 
         marker = gMap.addMarker(
                 new MarkerOptions()
                         .position(
                                 new LatLng(latitude, longitude))
-                        //.title(name)
                         .snippet(name)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.lap1))
+                        .icon(BitmapDescriptorFactory.fromBitmap(markerBySeverity))
 
         );
 
+        //gMap.setInfoWindowAdapter();
 
+
+
+    }
+
+    private Bitmap resizeMapIcons(String iconName,int width, int height){
+        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),getResources().getIdentifier(iconName, "drawable", getActivity().getPackageName()));
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
+        return resizedBitmap;
     }
 
     private void zoomToLocation(double latitude, double longitude){
@@ -429,7 +469,7 @@ public class AlertsMapFragment extends Fragment implements
                             subString = object.getString("location").split(",");
                             double centerLatitude = Double.parseDouble(subString[0]);
                             double centerLongitude = Double.parseDouble(subString[1]);
-                            createMarkerAlert(centerLatitude, centerLongitude,  object.getString("id"));
+                            createMarkerAlert(centerLatitude, centerLongitude,  object.getString("id"), object.getString("severity"), object.getString("subCategory"));
                             Alert tempAlert = new Alert();
                             tempAlert.setId(object.getString("id"));
                             tempAlert.setType(object.getString("type"));
