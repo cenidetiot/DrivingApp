@@ -123,6 +123,6 @@
     <string name="have_not_account_button">No tengo una cuenta</string>
     <string name="create_account_as">  Crear cuenta como: </string>
 
-
+    <string name="message_severity">Severidad :</string>
 
 </resources>

@@ -135,5 +135,7 @@
     <string name="have_not_account_button">I do not have an Account</string>
     <string name="create_account_as">  Create account as: </string>
 
+    <string name="message_severity">Severity :</string>
+
 
 </resources>

@@ -9,6 +9,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -18,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -192,9 +194,21 @@ public class AlertsMapFragment extends Fragment implements
         }
     }
 
-    private void createMarkerAlert(double latitude, double longitude, String name, String severity, String subCategory){
+    private void createMarkerAlert(double latitude, double longitude, String name, Bitmap markerBySeverity){
 
-        Bitmap markerBySeverity;
+        marker = gMap.addMarker(
+                new MarkerOptions()
+                        .position(
+                                new LatLng(latitude, longitude))
+                        .snippet(name)
+                        .icon(BitmapDescriptorFactory.fromBitmap(markerBySeverity))
+
+        );
+
+    }
+
+    private Bitmap getImageOfAlert (String severity, String subCategory , int width, int height ) {
+
         String markerName = "";
 
         if (subCategory.equals("trafficJam")){
@@ -228,25 +242,13 @@ public class AlertsMapFragment extends Fragment implements
             case "critical" :
                 markerName += "_critical";
                 break;
-                default:
-                    break;
+            default:
+                break;
         }
 
-        markerBySeverity = resizeMapIcons(markerName,80,80);
-
-        marker = gMap.addMarker(
-                new MarkerOptions()
-                        .position(
-                                new LatLng(latitude, longitude))
-                        .snippet(name)
-                        .icon(BitmapDescriptorFactory.fromBitmap(markerBySeverity))
-
-        );
 
 
-
-
-
+        return resizeMapIcons(markerName,80,80);
     }
 
     private Bitmap resizeMapIcons(String iconName,int width, int height){
@@ -472,7 +474,17 @@ public class AlertsMapFragment extends Fragment implements
                             subString = object.getString("location").split(",");
                             double centerLatitude = Double.parseDouble(subString[0]);
                             double centerLongitude = Double.parseDouble(subString[1]);
-                            createMarkerAlert(centerLatitude, centerLongitude,  object.getString("id"), object.getString("severity"), object.getString("subCategory"));
+                            createMarkerAlert(
+                                    centerLatitude,
+                                    centerLongitude,
+                                    object.getString("id"),
+                                    getImageOfAlert(
+                                            object.getString("severity"),
+                                            object.getString("subCategory"),
+                                            80,
+                                            80
+                                    )
+                            );
                             Alert tempAlert = new Alert();
                             tempAlert.setId(object.getString("id"));
                             tempAlert.setType(object.getString("type"));
@@ -496,8 +508,51 @@ public class AlertsMapFragment extends Fragment implements
         }
     }
 
+    public Alert searchInAlertList (String id){
+        Alert tempAlert = new Alert();
+        for (Alert alert : listAlerts){
+            if (alert.getId().equals(id)){
+                tempAlert = alert;
+            }
+        }
+        return tempAlert;
+    }
+
     @Override
     public void historyAlertByZone(Response response) {
+
+    }
+
+    int getColorBySeverity (String severity){
+        int color;
+        switch (severity){
+            case "informational":
+                color  = R.color.driving_blue;
+                Log.d("COLOR", "" + 1);
+                break;
+            case "low":
+                color  = R.color.driving_dark_blue;
+                Log.d("COLOR", "" + 2);
+                break;
+            case "medium":
+                color  = R.color.driving_yellow;
+                Log.d("COLOR", "" + 3);
+                break;
+            case "high":
+                color  = R.color.driving_orange;
+                Log.d("COLOR", "" + 4);
+                break;
+            case "critical":
+                color  = R.color.driving_red;
+                Log.d("COLOR", "" + 5);
+                break;
+                default:
+                    color = R.color.white50;
+                    Log.d("COLOR", "" + 6);
+                    break;
+        }
+        return color;
+
 
     }
 
@@ -506,8 +561,34 @@ public class AlertsMapFragment extends Fragment implements
 
         Log.d("MAKERS", marker.getSnippet());
 
+        Alert alert = searchInAlertList(marker.getSnippet());
+
+        Log.d("MAKERS", alert.getAlertSource().getValue());
+
         Dialog makerDescription = new Dialog(context);
         makerDescription.setContentView(R.layout.alert_dialog_description);
+        ImageView alertIcon = (ImageView) makerDescription.findViewById(R.id.alertIcon);
+        alertIcon.setImageBitmap(
+                getImageOfAlert(
+                        alert.getSeverity().getValue(),
+                        alert.getSubCategory().getValue(),
+                        200,
+                        200
+                )
+        );
+        TextView textSubCategory = (TextView) makerDescription.findViewById(R.id.txtSubcategory) ;
+        TextView textDescription = (TextView) makerDescription.findViewById(R.id.txtDescription) ;
+        TextView textDate = (TextView) makerDescription.findViewById(R.id.txtDate) ;
+        TextView textSeverity = (TextView) makerDescription.findViewById(R.id.txtSeverity );
+
+        String severity = alert.getSeverity().getValue();
+        textSeverity.setText(severity.toUpperCase());
+        textSeverity.setTextColor(getResources().getColor(getColorBySeverity(severity)));
+
+
+        textSubCategory.setText(alert.getSubCategory().getValue().toUpperCase());
+        textDescription.setText(alert.getDescription().getValue());
+        textDate.setText(alert.getDateObserved().getValue().substring(11,16));
 
 
         makerDescription.show();

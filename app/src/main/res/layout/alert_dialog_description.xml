@@ -1,40 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
     >
 
+        <TextView
+                android:id="@+id/txtSubcategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/roboto_medium"
+                android:text="@string/loading_message"
+                android:textSize="@dimen/title"
+                android:textAlignment="center"
+            android:layout_marginTop="10dp"
+            />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        <ImageView
+                android:id="@+id/alertIcon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="150dp"
+                android:layout_marginLeft="150dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                app:srcCompat="@mipmap/ic_launcher_logo"
+            />
+        <TextView
+            android:id="@+id/txtSeverity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/roboto_medium"
+            android:text="@string/loading_message"
+            android:textAlignment="center"
+            android:textSize="@dimen/subheading"
+            />
 
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="46dp"
-        app:srcCompat="@mipmap/ic_accident" />
+        <TextView
+            android:id="@+id/txtDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/roboto_medium"
+            android:text="@string/loading_message"
+            android:textSize="@dimen/subheading"
+            android:textAlignment="center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"/>
 
-    <TextView
-        android:id="@+id/txtSubcategory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="189dp"
-        android:layout_weight="1"
-        android:text="TextView" />
-
-    <TextView
-        android:id="@+id/txtDrescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="243dp"
-        android:layout_weight="1"
-        android:text="TextView" />
-
-</RelativeLayout>
+        <TextView
+                android:id="@+id/txtDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+                android:fontFamily="@font/roboto_medium"
+                android:text="@string/loading_message"
+                android:textSize="@dimen/subheading"
+                android:textAlignment="center"
+            />
+</LinearLayout>
