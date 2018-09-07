@@ -298,15 +298,11 @@ public class LoginActivity extends AppCompatActivity implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == 1002){
-            String phone1;
-            if(!TextUtils.isEmpty(appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_PHONE))){
-                phone1 = appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_PHONE);
-                etPhone.setText(phone1);
-            }else{
+            if (FunctionSdk.getPhoneNumber(getApplicationContext()) != null)
                 etPhone.setText(FunctionSdk.getPhoneNumber(getApplicationContext()));
-                etPhone.setEnabled(true);
-                etPhone.requestFocus(View.FOCUS_LEFT);
-            }
+            else
+                etPhone.setText("+52");
+            etPhone.requestFocus(View.FOCUS_LEFT);
         }else {
             if (requestCode == RESOLVE_HINT) {
                 if (resultCode == RESULT_OK) {
