@@ -1,6 +1,7 @@
 package mx.edu.cenidet.app.fragments;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -44,6 +45,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import mx.edu.cenidet.app.R;
+import mx.edu.cenidet.app.activities.AlertsActivity;
 import mx.edu.cenidet.app.activities.DrivingView;
 import mx.edu.cenidet.app.activities.HomeActivity;
 import mx.edu.cenidet.app.services.SendDataService;
@@ -101,7 +103,7 @@ public class AlertsMapFragment extends Fragment implements
 
 
     public AlertsMapFragment() {
-        context = HomeActivity.MAIN_CONTEXT;
+        context = AlertsActivity.MAIN_CONTEXT;
         sendDataService = new SendDataService(this);
         alertsControllerSdk = new AlertsControllerSdk(context, this);
         sqLiteDrivingApp = new SQLiteDrivingApp(context);
@@ -178,6 +180,7 @@ public class AlertsMapFragment extends Fragment implements
         gMap.setMyLocationEnabled(true);
         //gMap.setTrafficEnabled(true);
         gMap.setOnMarkerClickListener(this);
+        gMap.setIndoorEnabled(true);
     }
 
 
@@ -240,7 +243,7 @@ public class AlertsMapFragment extends Fragment implements
 
         );
 
-        //gMap.setInfoWindowAdapter();
+
 
 
 
@@ -502,6 +505,12 @@ public class AlertsMapFragment extends Fragment implements
     public boolean onMarkerClick(Marker marker) {
 
         Log.d("MAKERS", marker.getSnippet());
+
+        Dialog makerDescription = new Dialog(context);
+        makerDescription.setContentView(R.layout.alert_dialog_description);
+
+
+        makerDescription.show();
 
         return false;
     }
