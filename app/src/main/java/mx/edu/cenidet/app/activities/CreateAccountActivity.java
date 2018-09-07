@@ -305,6 +305,7 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
             }
         });
 
+
         etFirstName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -400,9 +401,13 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
         super.onActivityResult(requestCode, resultCode, data);
         Log.i("RESULT: ", "------------------------------Result Code: "+resultCode+" Request Code: "+requestCode);
         if(resultCode == 1002){
-            etPhone.setText(FunctionSdk.getPhoneNumber(getApplicationContext()));
-            etPhone.setEnabled(true);
+
+            if (FunctionSdk.getPhoneNumber(getApplicationContext()) != null)
+                etPhone.setText(FunctionSdk.getPhoneNumber(getApplicationContext()));
+            else
+                etPhone.setText("+52");
             etPhone.requestFocus(View.FOCUS_LEFT);
+
         }else {
             if (requestCode == RESOLVE_HINT) {
                 if (resultCode == RESULT_OK) {
