@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -27,9 +28,13 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import mx.edu.cenidet.app.activities.AlertsActivity;
 import mx.edu.cenidet.app.activities.DrivingView;
+import mx.edu.cenidet.app.activities.MainActivity;
+import mx.edu.cenidet.app.services.SendDataService;
 import mx.edu.cenidet.app.utils.Config;
 import mx.edu.cenidet.cenidetsdk.controllers.AlertsControllerSdk;
+import mx.edu.cenidet.cenidetsdk.db.SQLiteDrivingApp;
 import mx.edu.cenidet.cenidetsdk.httpmethods.Response;
 import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
 import mx.edu.cenidet.app.R;
@@ -37,12 +42,16 @@ import mx.edu.cenidet.app.activities.AlertMapDetailActivity;
 import mx.edu.cenidet.app.activities.HomeActivity;
 import mx.edu.cenidet.app.adapters.MyAdapterAlerts;
 import www.fiware.org.ngsi.datamodel.entity.Alert;
+import www.fiware.org.ngsi.datamodel.entity.RoadSegment;
+import www.fiware.org.ngsi.datamodel.entity.Zone;
 import www.fiware.org.ngsi.utilities.ApplicationPreferences;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AlertsFragment extends Fragment implements AlertsControllerSdk.AlertsServiceMethods{
+public class AlertsFragment extends Fragment implements
+        AlertsControllerSdk.AlertsServiceMethods,
+        SendDataService.SendDataMethods{
     private View rootView;
     private Context context;
     private ListView listViewAlerts;
@@ -59,14 +68,24 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
     private boolean _hasLoadedOnce = false;
     private View header;
 
+    private TextView textTitle;
+    private TextView textSubTitle;
+    private SendDataService sendDataService;
+    private Zone currentZone = null;
+    private SQLiteDrivingApp sqLiteDrivingApp;
+
+
+
+
+
 
 
     public AlertsFragment() {
-        context = HomeActivity.MAIN_CONTEXT;
+        context = AlertsActivity.MAIN_CONTEXT;
         alertsControllerSdk = new AlertsControllerSdk(context, this);
+        sendDataService = new SendDataService(this);
+        sqLiteDrivingApp = new SQLiteDrivingApp(context);
         applicationPreferences = new ApplicationPreferences();
-        Log.d("LOADING", "ALERTS");
-
     }
 
 
@@ -81,6 +100,10 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
         listAlerts = new ArrayList<Alert>();
         myAdapterAlerts = new MyAdapterAlerts(context, R.id.listViewAlerts, listAlerts);
         header  = getLayoutInflater().inflate(R.layout.empty_alerts_list, listViewAlerts, false);
+        textTitle = (TextView) rootView.findViewById(R.id.textTitle);
+        textTitle.setText(R.string.menu_alerts);
+        textSubTitle = (TextView) rootView.findViewById(R.id.textSubtitle);
+
         getFirstAlerts();
         return rootView;
     }
@@ -103,6 +126,10 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
         if(applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_CURRENT_ZONE) != null){
             zoneId = applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_CURRENT_ZONE);
             if(!zoneId.equals("undetectedZone")) {
+
+                Zone zone  = sqLiteDrivingApp.getZoneById(zoneId);
+                textSubTitle.setText(zone.getName().getValue());
+
                 String typeUser = applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_USER_TYPE);
                 String tempQuery = zoneId;
                 if (typeUser != null && typeUser !="" && typeUser.equals("mobileUser")){
@@ -111,6 +138,31 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
                 alertsControllerSdk.currentAlertByZone(tempQuery);
             }
         }
+    }
+
+    @Override
+    public void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr) {
+
+    }
+
+    @Override
+    public void detectZone(Zone zone, boolean statusLocation) {
+
+    }
+
+    @Override
+    public void detectRoadSegment(double latitude, double longitude, RoadSegment roadSegment) {
+
+    }
+
+    @Override
+    public void sendDataAccelerometer(double ax, double ay, double az) {
+
+    }
+
+    @Override
+    public void sendEvent(String event) {
+
     }
 
     private class ResponseReceiver extends BroadcastReceiver {

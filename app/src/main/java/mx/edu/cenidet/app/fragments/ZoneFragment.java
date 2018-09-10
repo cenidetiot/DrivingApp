@@ -426,19 +426,22 @@ public class ZoneFragment extends Fragment implements
                 if (!currentZone.getIdZone().equals(zone.getIdZone())){
                     drawZone(zone);
                     drawParking(zone.getIdZone());
+                    textZone.setText(zone.getName().getValue());
+                    textAddressZone.setText(zone.getAddress().getValue());
                     //drawRoadSegmentByParking(zone.getIdZone());
                 }
 
             }else {
                 drawZone(zone);
                 drawParking(zone.getIdZone());
+                textZone.setText(zone.getName().getValue());
+                textAddressZone.setText(zone.getAddress().getValue());
                 //drawRoadSegmentByParking(zone.getIdZone());
 
             }
             currentZone = zone;
 
-            textZone.setText(currentZone.getName().getValue());
-            textAddressZone.setText(currentZone.getAddress().getValue());
+
         }
 
     }

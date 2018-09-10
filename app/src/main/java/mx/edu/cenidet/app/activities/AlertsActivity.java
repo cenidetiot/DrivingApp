@@ -42,8 +42,6 @@ public class AlertsActivity extends AppCompatActivity implements View.OnClickLis
     private FloatingActionButton btnBack;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +52,7 @@ public class AlertsActivity extends AppCompatActivity implements View.OnClickLis
         //setToolbar();
         btnFloatingGUI();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.content_frame, new AlertsMapFragment());
+        ft.replace(R.id.content_frame, new AlertsFragment());
         ft.commit();
     }
 
