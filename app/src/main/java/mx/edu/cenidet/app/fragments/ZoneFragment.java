@@ -3,8 +3,10 @@ package mx.edu.cenidet.app.fragments;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -16,6 +18,7 @@ import android.support.annotation.Nullable;
 import com.github.clans.fab.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +49,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import mx.edu.cenidet.app.activities.DrivingView;
+import mx.edu.cenidet.app.utils.Config;
 import mx.edu.cenidet.cenidetsdk.controllers.AlertsControllerSdk;
 import mx.edu.cenidet.cenidetsdk.db.SQLiteDrivingApp;
 import mx.edu.cenidet.cenidetsdk.httpmethods.Response;
@@ -102,6 +106,9 @@ public class ZoneFragment extends Fragment implements
     private AlertsControllerSdk alertsControllerSdk;
     private String zoneId;
     private ArrayList<Alert> listAlerts;
+    private IntentFilter filter;
+    private ResponseReceiver receiver;
+    private ArrayList<Marker> myMarkers;
 
 
     public ZoneFragment() {
@@ -133,7 +140,29 @@ public class ZoneFragment extends Fragment implements
         LinearLayout card = (LinearLayout) rootView.findViewById(R.id.cardTitle);
         listAlerts = new ArrayList<Alert>();
 
+        filter = new IntentFilter(Config.PUSH_NOTIFICATION);
+        receiver = new ResponseReceiver();
+        LocalBroadcastManager.getInstance(context).registerReceiver(receiver, filter);
+
         return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(receiver);
+    }
+
+    private class ResponseReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null) {
+                String alert = intent.getStringExtra("subcategory");
+                if ( alert  != null) {
+                    getFirstAlerts();
+                }
+            }
+        }
     }
 
     @Override
@@ -468,6 +497,7 @@ public class ZoneFragment extends Fragment implements
                 break;
             case 200:
                 listAlerts.clear();
+                clearMarkers();
                 JSONArray jsonArray = response.parseJsonArray(response.getBodyString());
                 if(jsonArray.length() == 0 || jsonArray == null){
                     Toast.makeText(context, R.string.message_no_alerts_show, Toast.LENGTH_SHORT).show();
@@ -516,6 +546,16 @@ public class ZoneFragment extends Fragment implements
 
     @Override
     public void historyAlertByZone(Response response) {
+
+    }
+
+
+    public void clearMarkers () {
+        gMap.clear();
+        if (currentZone != null){
+            drawZone(currentZone);
+            drawParking(currentZone.getIdZone());
+        }
 
     }
 
