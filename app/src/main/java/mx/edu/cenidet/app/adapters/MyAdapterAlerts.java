@@ -1,6 +1,7 @@
 package mx.edu.cenidet.app.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import mx.edu.cenidet.app.R;
+import mx.edu.cenidet.app.fragments.AlertsFragment;
 import www.fiware.org.ngsi.datamodel.entity.Alert;
 
 /**
@@ -81,7 +83,7 @@ public class MyAdapterAlerts extends BaseAdapter {
         TextView textViewDescription = (TextView) view.findViewById(R.id.textViewDescription);
         textViewDescription.setText(description);
 
-
         return view;
     }
+
 }

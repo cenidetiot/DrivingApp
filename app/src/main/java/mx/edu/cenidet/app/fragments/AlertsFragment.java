@@ -98,8 +98,13 @@ public class AlertsFragment extends Fragment implements
         receiver = new ResponseReceiver();
         LocalBroadcastManager.getInstance(context).registerReceiver(receiver, filter);
         listAlerts = new ArrayList<Alert>();
+
         myAdapterAlerts = new MyAdapterAlerts(context, R.id.listViewAlerts, listAlerts);
         header  = getLayoutInflater().inflate(R.layout.empty_alerts_list, listViewAlerts, false);
+
+        //ListView listAlerts = (ListView) rootView.findViewById(R.id.listViewAlerts);
+        //listAlerts.set
+
         textTitle = (TextView) rootView.findViewById(R.id.textTitle);
         textTitle.setText(R.string.menu_alerts);
         textSubTitle = (TextView) rootView.findViewById(R.id.textSubtitle);
@@ -165,6 +170,7 @@ public class AlertsFragment extends Fragment implements
 
     }
 
+
     private class ResponseReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -180,6 +186,26 @@ public class AlertsFragment extends Fragment implements
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         listViewAlerts = (ListView) rootView.findViewById(R.id.listViewAlerts);
+        listViewAlerts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Object listItem = listViewAlerts.getItemAtPosition(position);
+                Log.d("LIST", "" + listAlerts.get(position).getId());
+
+                subcategory = listAlerts.get(position).getSubCategory().getValue();
+                description = listAlerts.get(position).getDescription().getValue();
+                location = listAlerts.get(position).getLocation().getValue();
+                severity = listAlerts.get(position).getSeverity().getValue();
+                Intent intent = new Intent(context, AlertMapDetailActivity.class);
+
+                intent.putExtra("subcategory", subcategory);
+                intent.putExtra("description", description);
+                intent.putExtra("location", location);
+                intent.putExtra("severity", severity);
+                startActivity(intent);
+                
+            }
+        });
         registerForContextMenu(listViewAlerts);
     }
 
