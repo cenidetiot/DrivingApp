@@ -148,8 +148,6 @@ public class AlertsMapFragment extends Fragment implements
         LinearLayout card = (LinearLayout) rootView.findViewById(R.id.cardTitle);
         speedButtonZone = (FloatingActionButton) rootView.findViewById(R.id.speedButtonZone);
         speedButtonZone.setVisibility(View.INVISIBLE);
-        //card.setBackgroundColor(getColorWithAlpha(Color.parseColor("#bdc3c7"), 0.9f));
-        //card.setBackgroundColor(getColorWithAlpha(Color.parseColor("#bdc3c7"), 0.9f));
         listAlerts = new ArrayList<Alert>();
         return rootView;
     }
@@ -558,12 +556,7 @@ public class AlertsMapFragment extends Fragment implements
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-
-        Log.d("MAKERS", marker.getSnippet());
-
         Alert alert = searchInAlertList(marker.getSnippet());
-
-        Log.d("MAKERS", alert.getAlertSource().getValue());
 
         Dialog makerDescription = new Dialog(context);
         makerDescription.setContentView(R.layout.alert_dialog_description);

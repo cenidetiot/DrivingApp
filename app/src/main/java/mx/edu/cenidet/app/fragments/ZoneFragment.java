@@ -2,10 +2,13 @@ package mx.edu.cenidet.app.fragments;
 
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,8 +20,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -36,15 +41,20 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import mx.edu.cenidet.app.activities.DrivingView;
+import mx.edu.cenidet.cenidetsdk.controllers.AlertsControllerSdk;
 import mx.edu.cenidet.cenidetsdk.db.SQLiteDrivingApp;
+import mx.edu.cenidet.cenidetsdk.httpmethods.Response;
 import mx.edu.cenidet.cenidetsdk.utilities.ConstantSdk;
 import mx.edu.cenidet.app.R;
 import mx.edu.cenidet.app.activities.HomeActivity;
 import mx.edu.cenidet.app.services.SendDataService;
 import www.fiware.org.ngsi.datamodel.datatypes.LocationGeoJsonObject;
+import www.fiware.org.ngsi.datamodel.entity.Alert;
 import www.fiware.org.ngsi.datamodel.entity.OffStreetParking;
 import www.fiware.org.ngsi.datamodel.entity.Road;
 import www.fiware.org.ngsi.datamodel.entity.RoadSegment;
@@ -58,7 +68,9 @@ import static mx.edu.cenidet.app.activities.MainActivity.getColorWithAlpha;
  */
 public class ZoneFragment extends Fragment implements
         OnMapReadyCallback,
-        SendDataService.SendDataMethods {
+        GoogleMap.OnMarkerClickListener,
+        SendDataService.SendDataMethods,
+        AlertsControllerSdk.AlertsServiceMethods{
     private View rootView;
     private MapView mapView;
     private GoogleMap gMap;
@@ -87,12 +99,18 @@ public class ZoneFragment extends Fragment implements
     private TextView textZone;
     private TextView textAddressZone;
 
+    private AlertsControllerSdk alertsControllerSdk;
+    private String zoneId;
+    private ArrayList<Alert> listAlerts;
+
 
     public ZoneFragment() {
         context = HomeActivity.MAIN_CONTEXT;
         sendDataService = new SendDataService(this);
         sqLiteDrivingApp = new SQLiteDrivingApp(context);
+        alertsControllerSdk = new AlertsControllerSdk(context, this);
         applicationPreferences = new ApplicationPreferences();
+        getFirstAlerts();
     }
 
 
@@ -113,8 +131,8 @@ public class ZoneFragment extends Fragment implements
             }
         });
         LinearLayout card = (LinearLayout) rootView.findViewById(R.id.cardTitle);
-        //card.setBackgroundColor(getColorWithAlpha(Color.parseColor("#bdc3c7"), 0.9f));
-        //card.setBackgroundColor(getColorWithAlpha(Color.parseColor("#bdc3c7"), 0.9f));
+        listAlerts = new ArrayList<Alert>();
+
         return rootView;
     }
 
@@ -129,12 +147,82 @@ public class ZoneFragment extends Fragment implements
         }
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser){
-            //zoomToLocation(latitude, longitude);
+
+    public void getFirstAlerts() {
+        if(applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_CURRENT_ZONE) != null){
+            zoneId = applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_CURRENT_ZONE);
+            if(!zoneId.equals("undetectedZone")) {
+                String typeUser = applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_USER_TYPE);
+                String tempQuery = zoneId;
+                if (typeUser != null && typeUser !="" && typeUser.equals("mobileUser")){
+                    tempQuery += "?id=Alert:Device_Smartphone_.*&location=false";
+                }
+                alertsControllerSdk.currentAlertByZone(tempQuery);
+            }
         }
+    }
+
+    private void createMarkerAlert(double latitude, double longitude, String name, Bitmap markerBySeverity){
+
+        marker = gMap.addMarker(
+                new MarkerOptions()
+                        .position(
+                                new LatLng(latitude, longitude))
+                        .snippet(name)
+                        .icon(BitmapDescriptorFactory.fromBitmap(markerBySeverity))
+
+        );
+
+    }
+
+    private Bitmap getImageOfAlert (String severity, String subCategory , int width, int height ) {
+
+        String markerName = "";
+
+        if (subCategory.equals("trafficJam")){
+            markerName = "traffic";
+        }else if(subCategory.equals("carAccident")){
+            markerName = "accident";
+        } else if(subCategory.equals("suddenStop")){
+            markerName = "sudden";
+        }else if(subCategory.equals("wrongWay")){
+            markerName = "wrong";
+        }else if(subCategory.equals("speeding")){
+            markerName = "speed";
+        } else {
+            markerName = "warning";
+            severity = "";
+        }
+
+        switch (severity) {
+            case "informational" :
+                markerName += "_low";
+                break;
+            case "low":
+                markerName += "_info";
+                break;
+            case "medium":
+                markerName += "_med";
+                break;
+            case "high":
+                markerName += "_high";
+                break;
+            case "critical" :
+                markerName += "_critical";
+                break;
+            default:
+                break;
+        }
+
+
+
+        return resizeMapIcons(markerName,80,80);
+    }
+
+    private Bitmap resizeMapIcons(String iconName,int width, int height){
+        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),getResources().getIdentifier(iconName, "drawable", getActivity().getPackageName()));
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
+        return resizedBitmap;
     }
 
 
@@ -151,6 +239,7 @@ public class ZoneFragment extends Fragment implements
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
+        gMap.setOnMarkerClickListener(this);
         gMap.setMyLocationEnabled(true);
     }
 
@@ -366,5 +455,142 @@ public class ZoneFragment extends Fragment implements
     @Override
     public void sendEvent(String event) {
 
+    }
+
+    @Override
+    public void currentAlertByZone(Response response) {
+        switch (response.getHttpCode()) {
+            case 0:
+                Log.i("STATUS", "Internal Server Error 1...!");
+                break;
+            case 200:
+                listAlerts.clear();
+                JSONArray jsonArray = response.parseJsonArray(response.getBodyString());
+                if(jsonArray.length() == 0 || jsonArray == null){
+                    Toast.makeText(context, R.string.message_no_alerts_show, Toast.LENGTH_SHORT).show();
+                }else{
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        try {
+                            JSONObject object = jsonArray.getJSONObject(i);
+                            Log.d("GETTINGALERTS", object.getString("id"));
+                            String[] subString;
+                            subString = object.getString("location").split(",");
+                            double centerLatitude = Double.parseDouble(subString[0]);
+                            double centerLongitude = Double.parseDouble(subString[1]);
+                            createMarkerAlert(
+                                    centerLatitude,
+                                    centerLongitude,
+                                    object.getString("id"),
+                                    getImageOfAlert(
+                                            object.getString("severity"),
+                                            object.getString("subCategory"),
+                                            80,
+                                            80
+                                    )
+                            );
+                            Alert tempAlert = new Alert();
+                            tempAlert.setId(object.getString("id"));
+                            tempAlert.setType(object.getString("type"));
+                            tempAlert.getAlertSource().setValue(object.getString("alertSource"));
+                            tempAlert.getCategory().setValue(object.getString("category"));
+                            tempAlert.getDateObserved().setValue(object.getString("dateObserved"));
+                            tempAlert.getDescription().setValue(object.getString("description"));
+                            tempAlert.getLocation().setValue(object.getString("location"));
+                            tempAlert.getSeverity().setValue(object.getString("severity"));
+                            tempAlert.getSubCategory().setValue(object.getString("subCategory"));
+                            tempAlert.getValidFrom().setValue(object.getString("validFrom"));
+                            tempAlert.getValidTo().setValue(object.getString("validTo"));
+                            listAlerts.add(tempAlert);
+                            Log.d("MAKERS", tempAlert.getId());
+                        }catch (JSONException e){
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void historyAlertByZone(Response response) {
+
+    }
+
+    public Alert searchInAlertList (String id){
+        Alert tempAlert = new Alert();
+        for (Alert alert : listAlerts){
+            if (alert.getId().equals(id)){
+                tempAlert = alert;
+            }
+        }
+        return tempAlert;
+    }
+
+    int getColorBySeverity (String severity){
+        int color;
+        switch (severity){
+            case "informational":
+                color  = R.color.driving_blue;
+                Log.d("COLOR", "" + 1);
+                break;
+            case "low":
+                color  = R.color.driving_dark_blue;
+                Log.d("COLOR", "" + 2);
+                break;
+            case "medium":
+                color  = R.color.driving_yellow;
+                Log.d("COLOR", "" + 3);
+                break;
+            case "high":
+                color  = R.color.driving_orange;
+                Log.d("COLOR", "" + 4);
+                break;
+            case "critical":
+                color  = R.color.driving_red;
+                Log.d("COLOR", "" + 5);
+                break;
+            default:
+                color = R.color.white50;
+                Log.d("COLOR", "" + 6);
+                break;
+        }
+        return color;
+
+
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        Alert alert = searchInAlertList(marker.getSnippet());
+
+        Dialog makerDescription = new Dialog(context);
+        makerDescription.setContentView(R.layout.alert_dialog_description);
+        ImageView alertIcon = (ImageView) makerDescription.findViewById(R.id.alertIcon);
+        alertIcon.setImageBitmap(
+                getImageOfAlert(
+                        alert.getSeverity().getValue(),
+                        alert.getSubCategory().getValue(),
+                        200,
+                        200
+                )
+        );
+        TextView textSubCategory = (TextView) makerDescription.findViewById(R.id.txtSubcategory) ;
+        TextView textDescription = (TextView) makerDescription.findViewById(R.id.txtDescription) ;
+        TextView textDate = (TextView) makerDescription.findViewById(R.id.txtDate) ;
+        TextView textSeverity = (TextView) makerDescription.findViewById(R.id.txtSeverity );
+
+        String severity = alert.getSeverity().getValue();
+        textSeverity.setText(severity.toUpperCase());
+        textSeverity.setTextColor(getResources().getColor(getColorBySeverity(severity)));
+
+
+        textSubCategory.setText(alert.getSubCategory().getValue().toUpperCase());
+        textDescription.setText(alert.getDescription().getValue());
+        textDate.setText(alert.getDateObserved().getValue().substring(11,16));
+
+
+        makerDescription.show();
+
+        return false;
     }
 }
