@@ -32,7 +32,7 @@
     <string name="menu_profile">My Profile</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_logout">Logout</string>
-    <string name="menu_current_alerts">Last 10 alerts</string>
+    <string name="menu_alerts_history">Alerts History</string>
     <string name="alert_location"> Alert Location</string>
     <string name="send_alert">Send Alert</string>
 

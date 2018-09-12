@@ -170,11 +170,11 @@ public class HomeActivity extends AppCompatActivity
                         Intent intentZone = new Intent(getApplicationContext(), ZonesActivity.class);
                         startActivity(intentZone);
                         break;
-                    case R.id.menu_history:
+                    /*case R.id.menu_history:
                         drawerLayout.closeDrawers();
                         Intent intent = new Intent(getApplicationContext(), AlertHistoryActivity.class);
                         startActivity(intent);
-                        break;
+                        break;*/
                     case R.id.menu_logout:
                         sqLiteDrivingApp.deleteDatabase(MAIN_CONTEXT);
                         appPreferences.removeSharedPreferences(MAIN_CONTEXT, ConstantSdk.PREFERENCE_NAME_GENERAL);
