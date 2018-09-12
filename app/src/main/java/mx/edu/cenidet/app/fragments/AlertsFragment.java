@@ -59,7 +59,7 @@ public class AlertsFragment extends Fragment implements
     private ArrayList<Alert> listAlerts;
     private MyAdapterAlerts myAdapterAlerts;
     private AdapterView.AdapterContextMenuInfo info;
-    private String subcategory, description, location, severity;
+    private String subcategory, description, location, severity, dateObserved, idAlert;
     private ApplicationPreferences applicationPreferences;
     private FloatingActionButton speedButtonAlerts;
     private String zoneId;
@@ -192,18 +192,25 @@ public class AlertsFragment extends Fragment implements
                 Object listItem = listViewAlerts.getItemAtPosition(position);
                 Log.d("LIST", "" + listAlerts.get(position).getId());
 
+                idAlert = listAlerts.get(position).getId();
                 subcategory = listAlerts.get(position).getSubCategory().getValue();
                 description = listAlerts.get(position).getDescription().getValue();
                 location = listAlerts.get(position).getLocation().getValue();
                 severity = listAlerts.get(position).getSeverity().getValue();
+                dateObserved = listAlerts.get(position).getDateObserved().getValue();
+
                 Intent intent = new Intent(context, AlertMapDetailActivity.class);
 
+                intent.putExtra("id", idAlert);
                 intent.putExtra("subcategory", subcategory);
                 intent.putExtra("description", description);
                 intent.putExtra("location", location);
                 intent.putExtra("severity", severity);
+                intent.putExtra("dateObserved", dateObserved);
+
+
                 startActivity(intent);
-                
+
             }
         });
         registerForContextMenu(listViewAlerts);

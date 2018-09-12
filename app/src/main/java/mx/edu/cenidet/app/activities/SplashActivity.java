@@ -121,20 +121,27 @@ public class SplashActivity extends AppCompatActivity implements
                 if(alert  != null){
                     JSONObject jsonObject = new JSONObject(alert);
                     Intent alertIntent = new Intent(this, AlertMapDetailActivity.class);
+                    alertIntent.putExtra("id", jsonObject.getString("id"));
+
                     alertIntent.putExtra("subcategory", jsonObject.getString("subCategory"));
                     alertIntent.putExtra("description", jsonObject.getString("description"));
                     alertIntent.putExtra("location", jsonObject.getString("location"));
                     alertIntent.putExtra("severity", jsonObject.getString("severity"));
+                    alertIntent.putExtra("dateObserved", jsonObject.getString("dateObserved"));
+
                     Log.d("CHEKINGALERT" , "ALERTA CON APP CERRADA");
                     startActivity(alertIntent);
                 }
 
                 if(getIntent().getStringExtra("subcategory") != null){
                     Intent alertIntent = new Intent(this, AlertMapDetailActivity.class);
+                    alertIntent.putExtra("id", getIntent().getStringExtra("id"));
                     alertIntent.putExtra("subcategory", getIntent().getStringExtra("subcategory"));
                     alertIntent.putExtra("description", getIntent().getStringExtra("description"));
                     alertIntent.putExtra("location", getIntent().getStringExtra("location"));
                     alertIntent.putExtra("severity", getIntent().getStringExtra("severity"));
+                    alertIntent.putExtra("dateObserved", getIntent().getStringExtra("dateObserved"));
+
                     startActivity(alertIntent);
                     Log.d("CHEKINGALERT" , "ALERTA CON APP ABIERTA");
 

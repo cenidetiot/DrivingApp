@@ -72,17 +72,25 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
 
             JSONObject alert = json.getJSONObject("alert");
             Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
+            pushNotification.putExtra("id", alert.getString("id"));
+
             pushNotification.putExtra("subcategory", alert.getString("subCategory"));
             pushNotification.putExtra("description", alert.getString("description"));
             pushNotification.putExtra("location", alert.getString("location"));
             pushNotification.putExtra("severity", alert.getString("severity"));
+            pushNotification.putExtra("dateObserved", alert.getString("dateObserved"));
+
             LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
 
             Intent resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
+            resultIntent.putExtra("id", alert.getString("id"));
+
             resultIntent.putExtra("subcategory", alert.getString("subCategory"));
             resultIntent.putExtra("description", alert.getString("description"));
             resultIntent.putExtra("location", alert.getString("location"));
             resultIntent.putExtra("severity", alert.getString("severity"));
+            resultIntent.putExtra("dateObserved", alert.getString("dateObserved"));
+
 
             resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
