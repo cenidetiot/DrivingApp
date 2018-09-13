@@ -31,6 +31,7 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -51,6 +52,8 @@ public class Functions {
         Date date = new Date();
         SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault());
         String strUTCDate = isoFormat.format(date);
+
+
         return strUTCDate;
     }
     /**
