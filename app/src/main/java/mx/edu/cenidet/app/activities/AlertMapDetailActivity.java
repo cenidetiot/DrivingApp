@@ -1,10 +1,15 @@
 package mx.edu.cenidet.app.activities;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.location.LocationManager;
+import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -136,6 +141,36 @@ public class AlertMapDetailActivity extends AppCompatActivity implements
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    private void checkGPS(){
+        Log.d("LOADZONES", "CHEKING GPS");
+
+        LocationManager manager = (LocationManager) getSystemService(this.LOCATION_SERVICE);
+        if(manager.isProviderEnabled( LocationManager.GPS_PROVIDER )){
+            Intent mIntent = new Intent(this, HomeActivity.class);
+            startActivity(mIntent);
+            Log.i("Status ", "Activo gps");
+            this.finish();
+        }else {
+            showGPSDisabledAlert();
+        }
+        return;
+    }
+
+    private void showGPSDisabledAlert(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage(R.string.message_alert_gps)
+                .setCancelable(false)
+                .setPositiveButton(R.string.button_enable_alert_gps,
+                        new DialogInterface.OnClickListener(){
+                            public void onClick(DialogInterface dialog, int id){
+                                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                startActivity(intent);
+                            }
+                        });
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
     }
 
     private void createOrUpdateMarkerByLocation(double latitude, double longitude, String severity, String subcategory, String description){

@@ -288,16 +288,21 @@ public class AlertsFragment extends Fragment implements
         switch (item.getItemId()){
             case R.id.menu_see_map_alert:
                 info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+                idAlert = listAlerts.get(info.position).getId();
                 subcategory = listAlerts.get(info.position).getSubCategory().getValue();
                 description = listAlerts.get(info.position).getDescription().getValue();
                 location = listAlerts.get(info.position).getLocation().getValue();
                 severity = listAlerts.get(info.position).getSeverity().getValue();
+                dateObserved = listAlerts.get(info.position).getDateObserved().getValue();
                 Intent intent = new Intent(context, AlertMapDetailActivity.class);
 
+                intent.putExtra("id", idAlert);
                 intent.putExtra("subcategory", subcategory);
                 intent.putExtra("description", description);
                 intent.putExtra("location", location);
                 intent.putExtra("severity", severity);
+                intent.putExtra("dateObserved", dateObserved);
+
                 startActivity(intent);
                 return true;
         }
