@@ -115,43 +115,6 @@ public class LoginActivity extends AppCompatActivity implements
         userController = new UserController(getApplicationContext(), this);
 
 
-        //Comprobando la version de Android...
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            List<String> permissionsNeeded = new ArrayList<String>();
-            final List<String> permissionsList = new ArrayList<String>();
-            if(!addPermission(permissionsList, Manifest.permission.ACCESS_FINE_LOCATION)){
-                String gps = this.getString(R.string.message_gps);
-                permissionsNeeded.add(gps);
-            }
-            if(!addPermission(permissionsList, Manifest.permission.READ_PHONE_STATE)){
-                String readPhone = this.getString(R.string.message_read_phone);
-                permissionsNeeded.add(readPhone);
-            }
-
-            if (permissionsList.size() > 0) {
-                if (permissionsNeeded.size() > 0) {
-                    // Need Rationale
-                    String needRationale = this.getString(R.string.message_need_rationale);
-                    String message = needRationale+" "+ permissionsNeeded.get(0);
-                    //String message =  permissionsNeeded.get(0);
-                    for (int i = 1; i < permissionsNeeded.size(); i++)
-                        message = message + ", " + permissionsNeeded.get(i);
-                    showMessageOKCancel(message,
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                        requestPermissions(permissionsList.toArray(new String[permissionsList.size()]), REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
-                                    }
-                                }
-                            });
-                    return;
-                }
-                requestPermissions(permissionsList.toArray(new String[permissionsList.size()]), REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
-                return;
-            }
-
-        }
 
     }
     private void setToolbar(){
@@ -455,32 +418,7 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
 
-    /**
-     * Metodo que comprueba si tenemos activo algun determinado permiso.
-     * @param permission los permisos que se verifican si estan activos o no.
-     * @return verdadero si los permisos se encuentran activos.
-     */
-    private boolean checkPermission(String permission){
-        int result = this.checkCallingOrSelfPermission(permission);
-        return result == PackageManager.PERMISSION_GRANTED;
-    }
 
-    /**
-     * Añade los permisos a una lista en caso de que no esten autorizados por el usuario.
-     * @param permissionsList lista de los permisos
-     * @param permission los permisos que se van a permitir.
-     * @return verdadero si los permisos ya fueron autorizados por el usuario.
-     */
-    private boolean addPermission(List<String> permissionsList, String permission) {
-        if(checkPermission(permission) == false){
-            permissionsList.add(permission);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (!shouldShowRequestPermissionRationale(permission))
-                    return false;
-            }
-        }
-        return true;
-    }
 
     //Mensaje que muestra que permisos son requeridos para que la aplicación funcione.
     private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
