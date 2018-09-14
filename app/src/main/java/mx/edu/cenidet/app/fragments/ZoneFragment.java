@@ -117,7 +117,7 @@ public class ZoneFragment extends Fragment implements
         sqLiteDrivingApp = new SQLiteDrivingApp(context);
         alertsControllerSdk = new AlertsControllerSdk(context, this);
         applicationPreferences = new ApplicationPreferences();
-        getFirstAlerts();
+        //getFirstAlerts();
     }
 
 
@@ -457,6 +457,8 @@ public class ZoneFragment extends Fragment implements
                     drawParking(zone.getIdZone());
                     textZone.setText(zone.getName().getValue());
                     textAddressZone.setText(zone.getAddress().getValue());
+                    getFirstAlerts();
+
                     //drawRoadSegmentByParking(zone.getIdZone());
                 }
 
@@ -465,6 +467,8 @@ public class ZoneFragment extends Fragment implements
                 drawParking(zone.getIdZone());
                 textZone.setText(zone.getName().getValue());
                 textAddressZone.setText(zone.getAddress().getValue());
+                getFirstAlerts();
+
                 //drawRoadSegmentByParking(zone.getIdZone());
 
             }
