@@ -352,6 +352,11 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
         if(response.getHttpCode() == 201){
             appPreferences.saveOnPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_PHONE, phone);
             Toast.makeText(getApplicationContext(), R.string.message_account_generated, Toast.LENGTH_LONG).show();
+
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            this.finish();
+
         }else if(response.getHttpCode() == 409){
             Toast.makeText(getApplicationContext(), R.string.message_user_exists, Toast.LENGTH_LONG).show();
         }
