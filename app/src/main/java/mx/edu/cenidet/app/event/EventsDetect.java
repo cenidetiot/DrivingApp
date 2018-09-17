@@ -91,7 +91,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
         alert.getValidFrom().setValue(Functions.getActualDate());
         alert.getValidTo().setValue(Functions.getActualDate());
         try {
-            //alertController.createEntity(context, alert.getId(), alert);
+            alertController.createEntity(context, alert.getId(), alert);
         } catch (Exception e) {
             e.printStackTrace();
         }
