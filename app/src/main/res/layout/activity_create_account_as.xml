@@ -76,6 +76,8 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textStyle="bold"
                 android:typeface="serif"
+
+                android:background="@drawable/rounded_button_blue"
                 android:visibility="visible" />
 
             <Button
@@ -87,6 +89,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textStyle="bold"
                 android:typeface="serif"
+                android:background="@drawable/rounded_button"
                 android:visibility="visible" />
 
             <ImageView

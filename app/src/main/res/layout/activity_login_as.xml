@@ -67,6 +67,8 @@
             <Button
                 android:id="@+id/btnMobileUser"
                 style="@style/ButtonStyleTwo"
+
+                android:background="@drawable/rounded_button_blue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
@@ -80,6 +82,7 @@
             <Button
                 android:id="@+id/btnSecurityGuard"
                 style="@style/ButtonStyleOne"
+                android:background="@drawable/rounded_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/security_guard"
