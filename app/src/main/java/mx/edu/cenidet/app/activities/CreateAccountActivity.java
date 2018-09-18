@@ -463,6 +463,7 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
             Toast.makeText(getApplicationContext(), R.string.message_account_generated, Toast.LENGTH_LONG).show();
 
             Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             this.finish();
 

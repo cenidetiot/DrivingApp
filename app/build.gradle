@@ -6,8 +6,8 @@ android {
         applicationId "mx.edu.cenidet.app"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 8
-        versionName "Version estable corrigiendo bugs de pruebas 1.4.0"
+        versionCode 9
+        versionName "Version estable corrigiendo bugs de pruebas 1.4.0 envia alertas"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
