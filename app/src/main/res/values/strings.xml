@@ -131,7 +131,7 @@
 
     <string name="have_account_question">Do you have an account?</string>
 
-    <string name="have_account_button">I have an Account</string>
-    <string name="have_not_account_button">I do not have an Account</string>
+    <string name="have_account_button">Sign in</string>
+    <string name="have_not_account_button"><u>Sign up</u></string>
     <string name="create_account_as">  Create account as: </string>
 </resources>

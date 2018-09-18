@@ -137,6 +137,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:onClick="onClickEvent"
+                    android:background="@drawable/rounded_button"
                     android:text="@string/message_btn_create_account" />
 
             </LinearLayout>

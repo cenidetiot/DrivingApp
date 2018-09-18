@@ -119,8 +119,8 @@
 
     <string name="have_account_question">¿Tienes una cuenta?</string>
 
-    <string name="have_account_button">Tengo una cuenta</string>
-    <string name="have_not_account_button">No tengo una cuenta</string>
+    <string name="have_account_button">Iniciar Sesión</string>
+    <string name="have_not_account_button"><u>Regístrate</u></string>
     <string name="create_account_as">  Crear cuenta como: </string>
 
 
