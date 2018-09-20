@@ -24,6 +24,7 @@
             android:layout_alignParentBottom="true"
             android:orientation="vertical"
             android:gravity="center"
+            android:layout_marginTop="10dp"
             android:padding="30dp">
 
             <ImageView
@@ -64,7 +65,7 @@
                 style="@style/ButtonStyleTwo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="70dp"
+                android:layout_marginTop="50dp"
                 android:background="@drawable/rounded_button"
                 android:fitsSystemWindows="true"
                 android:text="@string/have_account_button"
