@@ -4,17 +4,24 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Interpolator;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -29,7 +36,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.PolyUtil;
 import com.google.maps.android.SphericalUtil;
 
@@ -40,6 +58,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 
 import mx.edu.cenidet.app.R;
 import mx.edu.cenidet.app.event.EventsDetect;
@@ -53,7 +72,7 @@ import www.fiware.org.ngsi.utilities.ApplicationPreferences;
 import www.fiware.org.ngsi.utilities.Constants;
 import mx.edu.cenidet.app.utils.MyBounceInterpolator;
 
-public class DrivingView extends AppCompatActivity implements SensorEventListener {
+public class DrivingView extends AppCompatActivity implements SensorEventListener, OnMapReadyCallback {
 
     private SensorManager sensorManager;
     private Sensor accelerometer;
@@ -67,18 +86,19 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
     private TextView textEvent;
     private TextView textPruebas;
     private TextView textAcelerometer;
+    private SupportMapFragment mfDrivingView;
 
     private FloatingActionButton floatingSpeeding;
     private FloatingActionButton floatingSudden;
     private FloatingActionButton floatingWrong;
 
-    private double latitude, longitude;
+    private double latitude, longitude, lastLatitude, lastLongitude, lastLastLatitude, lastLastLongitude;
     private double speedMS, speedKmHr;
 
     private static final String STATUS = "Status";
     private EventsDetect events;
     private RoadSegment roadSegment  = null;
-    private PulsatorLayout pulsator1;
+    //private PulsatorLayout pulsator1;
     private SendDataService sendDataService;
     private DecimalFormat df;
     private ApplicationPreferences appPreferences;
@@ -86,6 +106,12 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
     private long lastUpdateAcc = 0, lastUpdateGPS = 0;
     private float last_x, last_y, last_z, speed;
     private static final int SHAKE_THRESHOLD = 600;
+    private GoogleMap googleMapDrivingView;
+    private CameraPosition cameraPositionDrivingView;
+    private Marker markerDrivingView;
+    private Circle circleDrivingView;
+    private long currentTimeMillis, previousTimeMillis;
+    private float bearing, previousBearing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +126,9 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
         textEvent = (TextView) findViewById(R.id.textEvent);
         textAcelerometer = (TextView) findViewById(R.id.textAcelerometer);
 
+        mfDrivingView = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.mfDrivingView);
+
         floatingSpeeding = (FloatingActionButton) findViewById(R.id.floatingActionSpeeding);
         floatingSudden = (FloatingActionButton) findViewById(R.id.floatingActionSudden);
         floatingWrong = (FloatingActionButton) findViewById(R.id.floatingActionWrong);
@@ -107,8 +136,8 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
         floatingSudden.setBackgroundTintList(getResources().getColorStateList(R.color.driving_green));
         floatingWrong.setBackgroundTintList(getResources().getColorStateList(R.color.driving_green));
 
-        pulsator1 = (PulsatorLayout) findViewById(R.id.pulsator1);
-        pulsator1.start();
+        //pulsator1 = (PulsatorLayout) findViewById(R.id.pulsator1);
+        //pulsator1.start();
 
         appPreferences = new ApplicationPreferences();
 
@@ -118,6 +147,58 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorManager.registerListener(this, accelerometer, 000000);
+
+        if (mfDrivingView != null) {
+            mfDrivingView.getMapAsync(this);
+        }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        googleMapDrivingView = googleMap;
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        googleMapDrivingView.setMyLocationEnabled(false);
+        googleMapDrivingView.getUiSettings().setMyLocationButtonEnabled(false);
+        googleMapDrivingView.getUiSettings().setScrollGesturesEnabled(false);
+
+    }
+
+    private void createOrUpdateMarkerByLocation(double latitude, double longitude, String title, float bearing){
+
+        if(markerDrivingView == null){
+            //circleDrivingView = googleMapDrivingView.addCircle(new CircleOptions().center(new LatLng(latitude, longitude)).radius(10).strokeColor(Color.argb(255, 20, 160, 255)).fillColor(Color.argb(80,20,160, 255)));
+
+
+            //circleDrivingView.setStrokeWidth(1);
+            markerDrivingView = googleMapDrivingView.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(title));
+
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.car_icon);
+            Bitmap bitmap = bitmapDrawable.getBitmap();
+            Bitmap bitmapSmall = Bitmap.createScaledBitmap(bitmap, 80, 80, false);
+            markerDrivingView.setIcon(BitmapDescriptorFactory.fromBitmap(bitmapSmall));
+            markerDrivingView.setFlat(true);
+            markerDrivingView.setAnchor(0.5f, 0.5f);
+            zoomToLocation(latitude, longitude, bearing);
+        }else{
+            //circleDrivingView.setCenter(new LatLng(latitude, longitude));
+            markerDrivingView.setPosition(new LatLng(latitude, longitude));
+            markerDrivingView.setRotation(bearing);
+            zoomToLocation(latitude, longitude, bearing);
+            //googleMapDrivingView.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(latitude, longitude)));
+        }
+    }
+
+    private void zoomToLocation(double latitude, double longitude, float bearing){
+        cameraPositionDrivingView = new CameraPosition.Builder()
+                .target(new LatLng(latitude, longitude))
+                .zoom(17)       //limit -> 21
+                .bearing(bearing)    //orientación de la camara hacia el este 0°-365°
+                .tilt(50)       //efecto 3D 0-90
+                .build();
+        googleMapDrivingView.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPositionDrivingView));
     }
 
     private class ResponseReceiver extends BroadcastReceiver {
@@ -301,8 +382,59 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
 
     
     public void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr) {
+        String sTextSpeed = df.format(speedKmHr) + " km/hr";
 
-        textSpeed.setText(df.format(speedKmHr) + " km/hr");
+        textSpeed.setText(sTextSpeed);
+        if (latitude!=0 && longitude!=0){
+            if(lastLatitude==0 && lastLongitude==0){
+                lastLatitude = latitude;
+                lastLongitude = longitude;
+                bearing = 0;
+                createOrUpdateMarkerByLocation(latitude, longitude, sTextSpeed, bearing);
+            }else{
+                if (lastLatitude!=latitude && lastLongitude!=longitude) { //SE COMPARA CON LA UBICACION ANTERIOR
+                    if (lastLastLatitude==0  && lastLastLongitude==0){
+                        lastLastLatitude = lastLatitude;
+                        lastLastLongitude = lastLongitude;
+                        createOrUpdateMarkerByLocation(latitude, longitude, sTextSpeed, bearing);
+                    }else { //SE COMPARA CON LA UBICACION ANTERIOR A LA ANTERIOR
+                        if (lastLastLatitude != latitude && lastLastLongitude != longitude) {
+                            currentTimeMillis = System.currentTimeMillis();
+                            if (previousTimeMillis==0){
+                                previousTimeMillis = currentTimeMillis;
+                            }else{
+                                if ((currentTimeMillis-previousTimeMillis)/1000>10){
+                                    Location firstLocation = new Location("First location");
+                                    firstLocation.setLatitude(lastLatitude);
+                                    firstLocation.setLongitude(lastLongitude);
+                                    Location secondLocation = new Location("Second location");
+                                    secondLocation.setLatitude(latitude);
+                                    secondLocation.setLongitude(longitude);
+                                    bearing = firstLocation.bearingTo(secondLocation);
+                                    if (bearing>0.0f && bearing<=180.0f){
+                                        bearing = bearing;
+                                    }else{
+                                        bearing = 180 + (bearing + 180);
+                                    }
+                                    previousTimeMillis = currentTimeMillis;
+                                }
+                            }
+                            lastLastLatitude = lastLatitude;
+                            lastLastLongitude = lastLongitude;
+                            lastLatitude = latitude;
+                            lastLongitude = longitude;
+                            Log.i("CENIDET.TAG", "latitud:" + latitude + " longitud:" + longitude);
+
+
+
+                            Log.i("CENIDET.TAG", "bearing:" + bearing);
+                            createOrUpdateMarkerByLocation(latitude, longitude, sTextSpeed, bearing);
+                        }
+                    }
+
+                }
+            }
+        }
 
         if (appPreferences.getPreferenceBoolean(getApplicationContext(),
                 ConstantSdk.PREFERENCE_NAME_GENERAL,
