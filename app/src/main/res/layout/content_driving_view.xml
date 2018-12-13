@@ -9,134 +9,177 @@
     tools:context=".activities.DrivingView"
     tools:showIn="@layout/activity_driving_view">
 
-    <LinearLayout
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <fragment
+            android:id="@+id/mfDrivingView"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></fragment>
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingTop="20dp">
+        android:background="#40000000">
 
-        <TextView
-            android:id="@+id/textEvent"
+        <LinearLayout
+            android:id="@+id/llEvents"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:fontFamily="@font/roboto_medium"
-            android:gravity="center_horizontal"
-            android:textColor="@color/white"
-            android:textSize="@dimen/title"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/textSpeedEvent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:fontFamily="@font/roboto_medium"
-            android:gravity="center_horizontal"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/textWrongWayEvent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:gravity="center_horizontal"
-            android:textColor="@color/white"
-            android:textSize="13sp" />
-
-        <TextView
-            android:id="@+id/textAcelerometer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:fontFamily="@font/roboto_medium"
-            android:gravity="center_horizontal"
-            android:textColor="@color/white"
-            android:textSize="12sp"
-            android:textStyle="bold" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:orientation="horizontal">
-
-        <pl.bclogic.pulsator4droid.library.PulsatorLayout
-            android:id="@+id/pulsator1"
-            android:layout_width="wrap_content"
-            android:layout_height="474dp"
             android:layout_alignParentTop="true"
-            android:layout_margin="12dp"
-            app:pulse_color="@color/white"
-            app:pulse_count="4"
-            app:pulse_duration="7000"
-            app:pulse_interpolator="Linear"
-            app:pulse_repeat="0"
-            app:pulse_startFromScratch="false">
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="15dp">
 
             <TextView
-                android:id="@+id/textSpeed"
-                android:layout_width="wrap_content"
+                android:id="@+id/textEvent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
                 android:layout_gravity="center"
+                android:layout_weight="1"
                 android:fontFamily="@font/roboto_medium"
                 android:gravity="center_horizontal"
                 android:textColor="@color/white"
                 android:textSize="@dimen/title"
                 android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/textSpeed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_medium"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="@dimen/title"
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/floatingActionSpeeding"
+                android:textStyle="bold"
+                android:layout_margin="15dp"
+                android:layout_below="@+id/llEvents"/>
+
+            <TextView
+                android:id="@+id/textSpeedEvent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:fontFamily="@font/roboto_medium"
+                android:gravity="center_horizontal"
+                android:textColor="@color/white"
+
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textWrongWayEvent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:textColor="@color/white"
+
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/textAcelerometer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:fontFamily="@font/roboto_medium"
+                android:gravity="center_horizontal"
+                android:textColor="@color/white"
+
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!--<RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >-->
+
+            <!--<pl.bclogic.pulsator4droid.library.PulsatorLayout
+                android:id="@+id/pulsator1"
                 android:layout_width="wrap_content"
+                android:layout_height="174dp"
+                android:layout_margin="12dp"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                app:pulse_color="@color/white"
+                app:pulse_count="4"
+                app:pulse_duration="7000"
+                app:pulse_interpolator="Linear"
+                app:pulse_repeat="0"
+                app:pulse_startFromScratch="false">
+
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                -->
+
+                <!--<TextView
+                    android:id="@+id/textSpeed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_medium"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/title"
+                    android:shadowColor="#7fffffff"
+                    android:textStyle="bold"
+                    android:layout_margin="15dp"
+                    android:layout_below="@+id/llEvents"/>-->
+
+
+            <!--</pl.bclogic.pulsator4droid.library.PulsatorLayout>-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="bottom|center_horizontal|center"
-                android:layout_weight="1"
-                android:clickable="false"
-                app:fabSize="normal"
-                app:srcCompat="@mipmap/speedometer" />
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="8dp">
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/floatingActionWrong"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_gravity="bottom|right"
-                android:layout_weight="1"
-                android:clickable="false"
-                app:fabSize="normal"
-                app:srcCompat="@mipmap/sign" />
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/floatingActionWrong"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|bottom"
+                    android:layout_margin="15dp"
+                    android:layout_weight="1"
+                    android:clickable="false"
+                    app:fabSize="normal"
+                    app:srcCompat="@mipmap/sign" />
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/floatingActionSudden"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/floatingActionSpeeding"
-                android:layout_alignParentEnd="true"
-                android:layout_gravity="bottom|left"
-                android:layout_marginEnd="23dp"
-                android:layout_weight="1"
-                android:clickable="true"
-                app:fabSize="normal"
-                app:srcCompat="@mipmap/stop" />
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/floatingActionSpeeding"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|bottom"
+                    android:layout_margin="15dp"
+                    android:layout_weight="1"
+                    android:clickable="false"
+                    app:fabSize="normal"
+                    app:srcCompat="@mipmap/speedometer" />
 
-        </pl.bclogic.pulsator4droid.library.PulsatorLayout>
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/floatingActionSudden"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|bottom"
+                    android:layout_margin="15dp"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    app:fabSize="normal"
+                    app:srcCompat="@mipmap/stop" />
+            </LinearLayout>
 
-    </LinearLayout>
-
+        <!--</RelativeLayout>-->
+    </RelativeLayout>
 </RelativeLayout>
