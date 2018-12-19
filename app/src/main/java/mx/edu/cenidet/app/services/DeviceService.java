@@ -212,8 +212,10 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
         if (location != null) {
             RoadSegment roadSegment;
+
             latitude = (double) location.getLatitude();
             longitude = (double) location.getLongitude();
+
             speedMS = (double) location.getSpeed();
             speedKmHr = (double) (location.getSpeed() * 3.6);
             //Envía el Modelo de datos Device

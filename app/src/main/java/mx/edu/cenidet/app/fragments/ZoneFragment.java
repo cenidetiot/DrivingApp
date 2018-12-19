@@ -449,8 +449,12 @@ public class ZoneFragment extends Fragment implements
 
     @Override
     public void detectZone(Zone zone, boolean statusLocation) {
+        Log.d("LOADING", "EXECUTING" + zone);
+
         if (statusLocation){
             if (currentZone != null){
+                Log.d("LOADING", zone.getIdZone());
+
 
                 if (!currentZone.getIdZone().equals(zone.getIdZone())){
                     drawZone(zone);
