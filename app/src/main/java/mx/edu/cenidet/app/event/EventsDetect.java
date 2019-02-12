@@ -69,7 +69,9 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
     private static boolean speedingAlertSent = false;
     boolean isSpeeding  = false;
 
-
+    /**
+     * Initialize the context and the alertController
+     */
     public  EventsDetect () {
         context = HomeActivity.MAIN_CONTEXT;
         alertController = new AlertController(this);
@@ -77,6 +79,15 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
 
     }
 
+    /**
+     * Used to send the alert to the Orion
+     * @param description
+     * @param severity
+     * @param subCategory
+     * @param latitude
+     * @param longitude
+     * @return
+     */
     public Alert sendAlert(String description, String severity, String subCategory, double latitude, double longitude) {
 
         Alert alert = new Alert();
@@ -98,8 +109,15 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
         return  alert;
     }
 
+    /**
+     * Used to detects automatically if the user is in wrongWay(opposite direction)
+     * @param currentPoint
+     * @param startPoint
+     * @param endPoint
+     * @param currentDate
+     * @return
+     */
     public JSONObject wrongWay(LatLng currentPoint, LatLng startPoint, LatLng endPoint, long currentDate){
-
 
         double longitude = currentPoint.longitude;
         double latitude = currentPoint.latitude;
@@ -143,7 +161,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
                         }
                     }
                     if (severity != "") {
-                        //sendAlert("Wrong Way Detection", severity, "wrongWay", latitude, longitude);
+                        sendAlert("Wrong Way Detection", severity, "wrongWay", latitude, longitude);
                     }
                 }
                 isWrongWay = false;
@@ -176,18 +194,32 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
         return alert;
     }
 
+    /**
+     * Used to save the results into a file
+     * @param fileName
+     * @param text
+     */
     public void writeFile( String fileName ,String text){
         Functions.saveToFile(fileName, text);
-    } 
+    }
 
+    /**
+     * Used to store the axis
+     * @param x
+     * @param y
+     * @param z
+     */
     public void saveAxis (double x, double y, double z ) {
-
         this.x = x;
         this.y = y;
         this.z = z;
         return;
     }
 
+    /**
+     * Define if the device is moving
+     * @return
+     */
     public boolean moving (){
         boolean isMoving = true;
         if (this.z < 9.6 || this.z >= 9.95){
@@ -195,16 +227,20 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
         }
         return isMoving;
     }
-    
+
+    /**
+     * Used to detects automatically if the user have a sudden stop
+     * @param currentSpeed
+     * @param currentDate
+     * @param latitude
+     * @param longitude
+     * @return
+     */
     public JSONObject suddenStop(double currentSpeed , long currentDate, double latitude, double longitude) {
         String suddenDescription = "Sudden Stop Detection";
-
         JSONObject alert = new JSONObject();
-
         String commonData = currentSpeed + ", " + "x: "+x+", y: "+y+", z: "+z+", Fecha Actual: " + sdf.format(currentDate) + ",";
-
         writeFile( "locations.csv", "" +latitude +", " + longitude + ", "+ sdf.format(currentDate));
-
         String result = "";
 
         boolean _isStopped = false;
@@ -330,6 +366,7 @@ public class EventsDetect implements AlertController.AlertResourceMethods {
     }
 
     /**
+     * Used to detects automatically if the user is speeding
      * @param maximumSpeed velocidad maxima del road segment
      * @param speed velocidad anterior.
      * @return la severidad del exceso de velocidad.

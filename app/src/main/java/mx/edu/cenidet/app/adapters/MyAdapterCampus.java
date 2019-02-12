@@ -41,6 +41,13 @@ public class MyAdapterCampus extends BaseAdapter {
         return position;
     }
 
+    /**
+     * Used to show the elements of the zone list
+     * @param position
+     * @param convertView
+     * @param parent
+     * @return
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         //Copiamos la vista

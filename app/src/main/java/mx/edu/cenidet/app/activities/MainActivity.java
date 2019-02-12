@@ -31,6 +31,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private List<String> permissionsList;
     private String permission;
 
+    /**
+     * Used to assigns the UI, check the android version and check the permits
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         RelativeLayout lat = (RelativeLayout) findViewById(R.id.toLayout);
         lat.setBackgroundColor(getColorWithAlpha(Color.parseColor("#2c3e50"), 0.7f));
 
-        //Comprobando la version de Android...
+        // Retrieve the android version
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             List<String> permissionsNeeded = new ArrayList<String>();
             final List<String> permissionsList = new ArrayList<String>();
@@ -85,10 +89,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     /**
-     * Añade los permisos a una lista en caso de que no esten autorizados por el usuario.
-     * @param permissionsList lista de los permisos
-     * @param permission los permisos que se van a permitir.
-     * @return verdadero si los permisos ya fueron autorizados por el usuario.
+     * Add the permits to a list when the ussed not allowed
+     * @param permissionsList
+     * @param permission
+     * @return
      */
     private boolean addPermission(List<String> permissionsList, String permission) {
         if(checkPermission(permission) == false){
@@ -101,6 +105,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
+    /**
+     * Shows the Required permissions
+     * @param message
+     * @param okListener
+     */
     private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.message_title_showMessageOKCancel)
@@ -112,6 +121,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .show();
     }
 
+    /**
+     * Add alpha to the color
+     * @param color
+     * @param ratio
+     * @return
+     */
     public static int getColorWithAlpha(int color, float ratio) {
         int newColor = 0;
         int alpha = Math.round(Color.alpha(color) * ratio);
@@ -123,14 +138,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /**
-     * Metodo que comprueba si tenemos activo algun determinado permiso.
-     * @param permission los permisos que se verifican si estan activos o no.
-     * @return verdadero si los permisos se encuentran activos.
+     * Check if some permit is enabled
+     * @param permission
+     * @return
      */
     private boolean checkPermission(String permission){
         int result = this.checkCallingOrSelfPermission(permission);
         return result == PackageManager.PERMISSION_GRANTED;
     }
+
+    /**
+     * Assigns the click event
+     * @param v
+     */
      @Override
     public void onClick(View v) {
         switch(v.getId()){

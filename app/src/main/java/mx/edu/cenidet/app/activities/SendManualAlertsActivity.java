@@ -54,6 +54,10 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
     private FloatingActionButton btnFloatingCritical;
 
 
+    /**
+     * Used to retrieve the typeAlert to change the appearance
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +97,9 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
        // viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
     }
 
+    /**
+     * Initialize the UI
+     */
     private void elementsGUI(){
         imageViewSendAlert = (ImageView) findViewById(R.id.imageViewSendAlert);
         tvTitle = (TextView) findViewById(R.id.tvTitle);
@@ -116,6 +123,7 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
     }
 
     /**
+     * Set the respective image and title depending the alert type
      * @param typeAlert
      */
     private  void viewTypeAlertGUI(int typeAlert){
@@ -133,6 +141,10 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
         }
     }
 
+    /**
+     * Change the text of the severity depending the position
+     * @param position
+     */
     private void viewPositionSlide(int position){
         auxPosition = position;
         switch (position){
@@ -154,6 +166,11 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
         }
     }
 
+    /**
+     * Assign a severity depending the position
+     * @param position
+     * @param typeAlert
+     */
     private void sendAlert(int position, int typeAlert){
         String severity = "";
         switch (position){
@@ -180,6 +197,11 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
         }
     }
 
+    /**
+     * Used to structure and send the Alert
+     * @param typeAlert
+     * @param severity
+     */
     private void structureAlert(int typeAlert, String severity){
         Alert alert = new Alert();
 
@@ -216,6 +238,10 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
         getSupportActionBar().setTitle(R.string.send_alert);
     }
 
+    /**
+     * Add the Back pressed event to the back arrow
+     * @return
+     */
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
@@ -227,7 +253,7 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
     }
 
 
-    //	viewpager change listener
+
     ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener() {
 
         @Override
@@ -236,12 +262,10 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
             //addBottomDots(position);
             viewPositionSlide(position);
         }
-
         @Override
         public void onPageScrolled(int arg0, float arg1, int arg2) {
 
         }
-
         @Override
         public void onPageScrollStateChanged(int arg0) {
 
@@ -249,16 +273,9 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
     };
 
     /**
-     * Making notification bar transparent
+     * Add the click event to the buttons
+     * @param v
      */
-    /*private void changeStatusBarColor() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(Color.TRANSPARENT);
-        }
-    }*/
-
     @Override
     public void onClick(View v) {
         int position;
@@ -310,6 +327,13 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
     }
 
 
+    /**
+     * Used to store the location when change
+     * @param latitude
+     * @param longitude
+     * @param speedMS
+     * @param speedKmHr
+     */
     @Override
     public void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr) {
         this.latitude = latitude;
@@ -336,6 +360,10 @@ public class SendManualAlertsActivity extends AppCompatActivity implements SendD
 
     }
 
+    /**
+     * Receives the server response
+     * @param response
+     */
     @Override
     public void onCreateEntityAlert(Response response) {
         Log.i("SEND", "---------------------------------------"+response.getHttpCode());

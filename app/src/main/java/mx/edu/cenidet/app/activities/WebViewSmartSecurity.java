@@ -13,6 +13,10 @@ import mx.edu.cenidet.app.R;
 
 public class WebViewSmartSecurity extends AppCompatActivity {
 
+    /**
+     * Used to initialize the UI
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,6 +25,10 @@ public class WebViewSmartSecurity extends AppCompatActivity {
         loadWebViewLoad(myWebView);
     }
 
+    /**
+     * Load the security guard registration from a web site
+     * @param webview
+     */
     private void loadWebViewLoad(WebView webview) {
         webview.getSettings().setJavaScriptEnabled(true);
         webview.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
@@ -31,6 +39,9 @@ public class WebViewSmartSecurity extends AppCompatActivity {
         setToolbar();
     }
 
+    /**
+     * Used to add the tool bar to the view
+     */
     private void setToolbar(){
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -38,6 +49,10 @@ public class WebViewSmartSecurity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
+    /**
+     * Used to add the back pressed event
+     * @return
+     */
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();

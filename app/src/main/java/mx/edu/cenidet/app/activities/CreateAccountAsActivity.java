@@ -18,6 +18,10 @@ public class CreateAccountAsActivity extends AppCompatActivity implements View.O
     private Button btnMobileUser, btnSecurityGuard;
     private ApplicationPreferences appPreferences;
 
+    /**
+     * Used to initialize the UI
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +37,12 @@ public class CreateAccountAsActivity extends AppCompatActivity implements View.O
         setToolbar();
     }
 
+    /**
+     * Get color With alpha
+     * @param color
+     * @param ratio
+     * @return
+     */
     public static int getColorWithAlpha(int color, float ratio) {
         int newColor = 0;
         int alpha = Math.round(Color.alpha(color) * ratio);
@@ -42,6 +52,11 @@ public class CreateAccountAsActivity extends AppCompatActivity implements View.O
         newColor = Color.argb(alpha, r, g, b);
         return newColor;
     }
+
+    /**
+     * Assigns the click listener to the buttons
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         switch(v.getId()){
@@ -58,6 +73,9 @@ public class CreateAccountAsActivity extends AppCompatActivity implements View.O
         }
     }
 
+    /**
+     * Add the toolbar into the view
+     */
     private void setToolbar(){
         Toolbar toolbarLogin = (Toolbar) findViewById(R.id.toolbar2);
         setSupportActionBar(toolbarLogin);
@@ -66,6 +84,10 @@ public class CreateAccountAsActivity extends AppCompatActivity implements View.O
         getSupportActionBar().setTitle(R.string.emptyTitleToolbar);
     }
 
+    /**
+     * Add the event onBackPressed to the back arrow
+     * @return
+     */
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;

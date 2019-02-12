@@ -86,11 +86,21 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
     }
 
 
+    /**
+     * Used to initialize the UI
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_zone, container, false);
         speedButtonZone = (FloatingActionButton) rootView.findViewById(R.id.speedButtonZone);
+        /**
+         * Add the onClickListener to change the activity to DrawView
+         */
         speedButtonZone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,6 +111,11 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
         return rootView;
     }
 
+    /**
+     * Used to initialize the map
+     * @param view
+     * @param savedInstanceState
+     */
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -112,6 +127,10 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
         }
     }
 
+    /**
+     * Runs when the View is visible to the user
+     * @param isVisibleToUser
+     */
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
@@ -121,6 +140,10 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
     }
 
 
+    /**
+     * Runs qhen the map is ready
+     * @param googleMap
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
@@ -132,6 +155,11 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
     }
 
 
+    /**
+     * Used to store the location and call the zoom
+     * @param latitude
+     * @param longitude
+     */
     private void createOrUpdateMarkerByLocation(double latitude, double longitude){
         if (this.latitude == 0 && this.longitude == 0) {
             zoomToLocation(latitude, longitude);
@@ -140,10 +168,21 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
         }
     }
 
+    /**
+     * USed to draw an maker inside the parking DEPRECATED
+     * @param latitude
+     * @param longitude
+     * @param name
+     */
     private void createMarkerParking(double latitude, double longitude, String name){
         marker = gMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
     }
 
+    /**
+     * Make the zoom animation
+     * @param latitude
+     * @param longitude
+     */
     private void zoomToLocation(double latitude, double longitude){
         camera = new CameraPosition.Builder()
                 .target(new LatLng(latitude, longitude))
@@ -162,6 +201,7 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
     }
 
     /**
+     * Draw the zone where the user is
      * Dibuja la zona en el que se encuentra el dispositivo.
      * @param zone el identificador de la zona.
      */
@@ -191,6 +231,7 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
     }
 
     /**
+     * Draw the parking of the zone where the user is
      * Dibuja el parking de la zona.
      * @param zoneId el identificador de la zona.
      */
@@ -238,6 +279,10 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
 
     }
 
+    /**
+     * Draw the roadSegments inside the parking where the user is
+     * @param responsible
+     */
     public void drawRoadSegmentByParking(String responsible){
         ArrayList<Road> listRoadByResponsible = sqLiteDrivingApp.getRoadByResponsible(responsible); //obtiene la lista de los road por el responsable.
         if( listRoadByResponsible.size() > 0) {
@@ -275,11 +320,23 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
         }
     }
 
+    /**
+     * Runs when he location change
+     * @param latitude
+     * @param longitude
+     * @param speedMS
+     * @param speedKmHr
+     */
     @Override
     public void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr) {
         createOrUpdateMarkerByLocation(latitude, longitude);
     }
 
+    /**
+     * Runs when change the zone where the user is
+     * @param zone
+     * @param statusLocation
+     */
     @Override
     public void detectZone(Zone zone, boolean statusLocation) {
         if (statusLocation){
@@ -302,6 +359,12 @@ public class ZoneFragment extends Fragment implements OnMapReadyCallback, SendDa
 
     }
 
+    /**
+     * Runs when change the roadSegment where the user is
+     * @param latitude
+     * @param longitude
+     * @param roadSegment
+     */
     @Override
     public void detectRoadSegment(double latitude, double longitude, RoadSegment roadSegment) {
         if (roadSegment != null){

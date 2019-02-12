@@ -25,22 +25,15 @@ public class PagerAdapter extends FragmentPagerAdapter {
         this.numberOfTsb = numberOfTsb;
     }
 
+    /**
+     * Used in the draw menu items
+     * @param position
+     * @return
+     */
     @Override
     public Fragment getItem(int position) {
         Log.i("ADAPTER: ", "POSITION: -------------------" + (position));
         switch (position) {
-            /*case 0:
-                return new HomeFragment();
-            case 1:
-                return new SpeedFragment();
-            case 2:
-                return new ZoneFragment();
-            case 3:
-                return new AlertsFragment();
-            case 4:
-                return new MyCampusFragment();
-            default:
-                return null;*/
             case 0:
                 return new HomeFragment();
             case 1:

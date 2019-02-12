@@ -47,9 +47,6 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
     private ApplicationPreferences appPreferences;
     private String phone;
     private boolean etPhoneTouched = false;
-
-    /**/
-
     private boolean emptyFirstName = true;
     private boolean emptyLastName = true;
     private boolean emptyPhone = true;
@@ -57,6 +54,10 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
     private boolean emptyPassword = true;
     private boolean emptyConfirmation = true;
 
+    /**
+     * Used to initialize the UI and check the app preferences
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +86,9 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
         super.onPause();
     }
 
+    /**
+     * assigns the toolbar aspect into the view
+     */
     private void setToolbar(){
         Toolbar toolbarLogin = (Toolbar) findViewById(R.id.toolbar2);
         setSupportActionBar(toolbarLogin);
@@ -93,12 +97,22 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
         getSupportActionBar().setTitle(R.string.emptyTitleToolbar);
     }
 
+    /**
+     * Assigns the onBackPressed when the user click the back arrow
+     * @return
+     */
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
     }
 
+    /**
+     * Check if the user and the password are correct
+     * @param user
+     * @param confirmPassword
+     * @return
+     */
     private boolean createAccount(User user, String confirmPassword){
         boolean band = false;
 
@@ -116,6 +130,12 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
         }
         return band;
     }
+
+    /**
+     * Check if the email is valid
+     * @param email
+     * @return
+     */
     private boolean isValidEmail(String email){
         boolean valid = !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
         if (valid == false) {
@@ -124,6 +144,12 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
         return valid;
     }
 
+    /**
+     * Check if password and the confirmation are the same
+     * @param password
+     * @param confirmPassword
+     * @return
+     */
     private boolean isValidPassword(String password, String confirmPassword){
         if(password.equals(confirmPassword)){
             return true;
@@ -132,6 +158,12 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
         }
     }
 
+    /**
+     * Check that the fields are not empties
+     * @param user
+     * @param confirmPassword
+     * @return
+     */
     private boolean isEmptyText(User user, String confirmPassword){
         boolean temp =  false;
         if (TextUtils.isEmpty(user.getFirstName())) {
@@ -159,10 +191,12 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
             temp = true;
         }
 
-
         return temp;
     }
 
+    /**
+     * Initialize the UI and add events to the fields
+     */
     private void bindUI() {
         etFirstName = (EditText) findViewById(R.id.etFirstName);
         etLastName = (EditText) findViewById(R.id.etLastName);
@@ -172,10 +206,11 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
         etPassword = (EditText) findViewById(R.id.etPassword);
         etConfirmPassword = (EditText) findViewById(R.id.etConfirmPassword);
         ckTerms = (CheckBox) findViewById(R.id.checkBox);
-
         createAccount = (Button) findViewById(R.id.btnCreateAccount);
         createAccount.setEnabled(false);
-
+        /**
+         * Check the length of the number when the user stops writing
+         */
         etPhone.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -197,6 +232,9 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
                     requestHint();
             }
         });
+        /**
+         *  Check if the email is valid when the user stops writing
+         */
         etEmail.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -213,8 +251,9 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
         });
 
-
-
+        /**
+         * Check if the confirmation password is valid when the user stops writing
+         */
         etConfirmPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -234,7 +273,9 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
         });
 
 
-
+        /**
+         * Check if the password is valid when the user stops writing
+         */
         etPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -260,6 +301,9 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
         });
 
+        /**
+         * Check if the first name is not empty when the user stops writing
+         */
         etFirstName.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -278,6 +322,9 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
         });
 
+        /**
+         * Check if the Last name is not empty when the user stops writing
+         */
         etLastName.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -296,6 +343,9 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
         });
 
+        /**
+         * Assigns the onThouchListener to the etPhone to retrieve the phone number
+         */
         etPhone.setOnTouchListener(new View.OnTouchListener(){
             public boolean onTouch(View v, MotionEvent event){
                 if (etPhoneTouched == false) {
@@ -305,7 +355,9 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
             }
         });
 
-
+        /**
+         * Check if the first name is not empty when the user change the field
+         */
         etFirstName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -316,6 +368,9 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
             }
         });
 
+        /**
+         * Check if the last name is not empty when the user change the field
+         */
         etLastName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -326,6 +381,9 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
             }
         });
 
+        /**
+         * Check if the email is valid when the user change the field
+         */
         etEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -336,6 +394,9 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
             }
         });
 
+        /**
+         * Check if the retrieve the phone number when the user change the field
+         */
         etPhone.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -346,6 +407,9 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
             }
         });
 
+        /**
+         * Check if the password is not empty when the user change the field
+         */
         etPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -355,6 +419,10 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
                 }
             }
         });
+
+        /**
+         * Check if the confirmation password is not empty when the user change the field
+         */
         etConfirmPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -371,8 +439,9 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
 
     }
 
-
-
+    /**
+     * Check if all the fields are empties
+     */
     private void checkEmptyFields(){
         Log.d("EMPTYFIELDS", ""+ emptyFirstName + "-" + emptyLastName + "-" + emptyPhone +"-"+ emptyEmail + "-" + emptyPassword + "-" + emptyConfirmation + "-" + !ckTerms.isChecked());
         if (!(emptyFirstName || emptyLastName || emptyPhone || emptyEmail || emptyPassword || emptyConfirmation || !ckTerms.isChecked() )){
@@ -381,7 +450,10 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
             createAccount.setEnabled(false);
         }
     }
-    // Construct a request for phone numbers and show the picker
+
+    /**
+     * Construct a request for phone numbers and show the picker
+     */
     private void requestHint() {
         HintRequest hintRequest = new HintRequest.Builder()
                 .setPhoneNumberIdentifierSupported(true)
@@ -395,7 +467,12 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
         etPhoneTouched =  true;
     }
 
-    // Obtain the phone number from the result
+    /**
+     * Retrieve the phone number from the result
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -419,6 +496,10 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
         }
     }
 
+    /**
+     * Assigns the click event to the buttons
+     * @param v
+     */
     public void onClickEvent(View v) {
         switch (v.getId()) {
             case R.id.btnCreateAccount:
@@ -430,6 +511,9 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
                 user.setEmail(etEmail.getText().toString());
                 user.setPassword(etPassword.getText().toString());
                 String confirmPassword = etConfirmPassword.getText().toString();
+                /**
+                 * Create the user
+                 */
                 if(createAccount(user, confirmPassword) == true){
                     userController.createUser(user);
                 }
@@ -455,6 +539,10 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleAp
 
     }
 
+    /**
+     * Receives the server response
+     * @param response
+     */
     @Override
     public void createUser(Response response) {
         Log.i("CODE: ", "CREATE USER:------------------------------------: "+response.getHttpCode()+" PHONE: "+phone);

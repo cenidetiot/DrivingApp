@@ -59,8 +59,9 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
     private boolean _hasLoadedOnce = false;
     private View header;
 
-
-
+    /**
+     * Constructor used to initialize the Alerts controller and the application preferences
+     */
     public AlertsFragment() {
         context = HomeActivity.MAIN_CONTEXT;
         alertsControllerSdk = new AlertsControllerSdk(context, this);
@@ -68,7 +69,13 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
 
     }
 
-
+    /**
+     * Used to initialize the UI and the registry the Broadcast receiver
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -91,6 +98,10 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
         return rootView;
     }
 
+    /**
+     * Used to reload the alerts when this fragments is visible to the user
+     * @param isVisibleToUser
+     */
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
@@ -99,6 +110,9 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
         }
     }
 
+    /**
+     * Used to unregister the Broadcast receiver
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -119,6 +133,9 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
         }
     }
 
+    /**
+     * The response receiver receive new alert data from the Firebase Messaging service
+     */
     private class ResponseReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -130,6 +147,12 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
             }
         }
     }
+
+    /**
+     * Used to initialize the UI and registry the ListViewAlerts as a context menu
+     * @param view
+     * @param savedInstanceState
+     */
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -137,6 +160,10 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
         registerForContextMenu(listViewAlerts);
     }
 
+    /**
+     * Receive the server response when get the current alerts
+     * @param response
+     */
     @Override
     public void currentAlertByZone(Response response) {
 
@@ -194,6 +221,12 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
 
     }
 
+    /**
+     * Runs when a new Context menu is registered
+     * @param menu
+     * @param v
+     * @param menuInfo
+     */
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -204,6 +237,11 @@ public class AlertsFragment extends Fragment implements AlertsControllerSdk.Aler
         menuInflater.inflate(R.menu.alert_map_menu, menu);
     }
 
+    /**
+     * Get the alert data and put to AlertMapDetailActivity
+     * @param item
+     * @return
+     */
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()){

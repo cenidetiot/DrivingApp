@@ -16,6 +16,11 @@ import mx.edu.cenidet.cenidetsdk.entities.User;
 
 public class TermsAndConditions extends AppCompatActivity implements View.OnClickListener {
     private FloatingActionButton close ;
+
+    /**
+     * Used to initialize the UI
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +32,10 @@ public class TermsAndConditions extends AppCompatActivity implements View.OnClic
 
     }
 
+    /**
+     * Load the Terms and conditions from some web site
+     * @param webview
+     */
     private void loadWebViewLoad(WebView webview) {
         webview.getSettings().setJavaScriptEnabled(true);
         webview.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
@@ -38,6 +47,10 @@ public class TermsAndConditions extends AppCompatActivity implements View.OnClic
     }
 
 
+    /**
+     * Add the back pressed event
+     * @return
+     */
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
@@ -45,6 +58,10 @@ public class TermsAndConditions extends AppCompatActivity implements View.OnClic
     }
 
 
+    /**
+     * Used to assign the click event to the button
+     * @param view
+     */
     @Override
     public void onClick(View view) {
         switch (view.getId()) {

@@ -41,6 +41,10 @@ public class MapDetailActivity extends AppCompatActivity implements OnMapReadyCa
     private SQLiteDrivingApp sqLiteDrivingApp;
     private Context context;
 
+    /**
+     * Used to get the zone data of the intent
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +56,7 @@ public class MapDetailActivity extends AppCompatActivity implements OnMapReadyCa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
         if(getIntent().getStringExtra("idZone") != null && getIntent().getStringExtra("name") != null && getIntent().getStringExtra("location") != null && getIntent().getStringExtra("centerPoint") != null){
             idZone = getIntent().getStringExtra("idZone");
             name = getIntent().getStringExtra("name");
@@ -97,6 +102,9 @@ public class MapDetailActivity extends AppCompatActivity implements OnMapReadyCa
         }
     }
 
+    /**
+     * Add the toolbar
+     */
     private void setToolbar(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -105,12 +113,22 @@ public class MapDetailActivity extends AppCompatActivity implements OnMapReadyCa
         getSupportActionBar().setTitle(R.string.title_activity_zone_detail);
     }
 
+
+    /**
+     * Used to back using the back arrow
+     * @return true
+     */
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         finish();
         return true;
     }
+
+    /**
+     * Runs when the map is ready
+     * @param googleMap
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
@@ -122,6 +140,12 @@ public class MapDetailActivity extends AppCompatActivity implements OnMapReadyCa
         //createOrUpdateMarkerByLocation(pointLatitude, pointLongitude);
     }
 
+    /**
+     *
+     * @param latitude
+     * @param longitude
+     * @param name
+     */
     private void createOrUpdateMarkerByLocation(double latitude, double longitude, String name){
         if(marker == null) {
             marker = gMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(name));
@@ -130,10 +154,22 @@ public class MapDetailActivity extends AppCompatActivity implements OnMapReadyCa
             marker.setPosition(new LatLng(latitude, longitude));
         }
     }
+
+    /**
+     * Create the marker of the parking
+     * @param latitude
+     * @param longitude
+     * @param name
+     */
     private void createMarkerParking(double latitude, double longitude, String name){
         marker = gMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
     }
 
+    /**
+     * Make the animated zoom effect in the alert location
+     * @param latitude
+     * @param longitude
+     */
     private void zoomToLocation(double latitude, double longitude){
         camera = new CameraPosition.Builder()
                 .target(new LatLng(latitude, longitude))
@@ -144,6 +180,10 @@ public class MapDetailActivity extends AppCompatActivity implements OnMapReadyCa
         gMap.animateCamera(CameraUpdateFactory.newCameraPosition(camera));
     }
 
+    /**
+     * Draw the parking that are inside the zone
+     * @param idZone
+     */
     public void drawParking(String idZone){
         listOffStreetParking = sqLiteDrivingApp.getAllOffStreetParkingByAreaServed(idZone);
         if(listOffStreetParking.size() > 0){

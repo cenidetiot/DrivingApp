@@ -41,11 +41,13 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
     private String location = "";
     private String subcategory = "";
     private String description = "";
-
     private NotificationUtils notificationUtils;
     private ApplicationPreferences appPreferences;
 
-
+    /**
+     * Runs when a new message is received
+     * @param remoteMessage
+     */
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.e(TAG, "From: " + remoteMessage.getFrom());
@@ -53,6 +55,9 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "REMOTE NULL");
             return;
         }
+        /**
+         * if the user is logged
+         */
         if (setCredentialsIfExist()) {
             if (remoteMessage.getData().size() > 0) {
                 try {
@@ -67,9 +72,16 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
+    /**
+     * Used to retrieve the alert data from the JSON
+     * @param json
+     */
     private void handleDataMessage(JSONObject json) {
         try {
 
+            /**
+             * if the app is open the alert data is send using a broadcast receiver
+             */
             JSONObject alert = json.getJSONObject("alert");
             Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
             pushNotification.putExtra("subcategory", alert.getString("subCategory"));
@@ -78,6 +90,9 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
             pushNotification.putExtra("severity", alert.getString("severity"));
             LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
 
+            /**
+             * If the app is stopped, when the user touch the notification the data alert is sent to SplashActivity
+             */
             Intent resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
             resultIntent.putExtra("subcategory", alert.getString("subCategory"));
             resultIntent.putExtra("description", alert.getString("description"));
@@ -94,6 +109,9 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
                     this, 0, resultIntent, PendingIntent.FLAG_ONE_SHOT
             );
 
+            /**
+             * Call to show the notification
+             */
             showNotification(pendingIntent,
                     alert.getString("category"),
                     alert.getString("subCategory"),
@@ -106,6 +124,13 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
+    /**
+     * Used to build the notification
+     * @param pendingIntent
+     * @param messageTitle
+     * @param messageBody
+     * @param severity
+     */
     private void showNotification(PendingIntent pendingIntent ,
                                   String messageTitle ,
                                   String messageBody,
@@ -124,6 +149,9 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
 
+        /**
+         * Change the icon color depending the severity
+         */
         switch (severity){
             case "informational":
                 notificationBuilder
@@ -152,6 +180,10 @@ public class DrivingFirebaseMessagingService extends FirebaseMessagingService {
         notificationManager.notify(notificationId , notificationBuilder.build());
     }
 
+    /**
+     * Used to know if the user is logged
+     * @return
+     */
     private boolean setCredentialsIfExist(){
         appPreferences = new ApplicationPreferences();
         return !(appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_TOKEN).equals("") && appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_NAME).equals(""));

@@ -45,6 +45,9 @@ public class SpeedFragment extends Fragment implements SendDataService.SendDataM
     private EventsDetect events;
     private RoadSegment roadSegment  = null;
 
+    /**
+     * Constructor used to initialize the context, sendDataService, appPreferences and the events detection
+     */
     public SpeedFragment() {
         context = HomeActivity.MAIN_CONTEXT;
         sendDataService = new SendDataService(this);
@@ -54,6 +57,13 @@ public class SpeedFragment extends Fragment implements SendDataService.SendDataM
     }
 
 
+    /**
+     * Used to initialize the UI
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -67,34 +77,26 @@ public class SpeedFragment extends Fragment implements SendDataService.SendDataM
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //isDrivingUser();
     }
 
+    /**
+     * Used to show the user speed
+     * @param latitude
+     * @param longitude
+     * @param speedMS
+     * @param speedKmHr
+     */
     @Override
     public void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr) {
         tvSpeed.setText(df.format(speedMS)+"m/s, "+df.format(speedKmHr)+"km/hr");
-        //if (driving) {
-            //tvAcceleration.setText("Manejando");
-            /*if (events.suddenStop(speedMS, new Date().getTime(), latitude,  longitude)){
-                rootView.setBackgroundColor(Color.parseColor("#e74c3c"));
-            }else {
-                rootView.setBackgroundColor(Color.parseColor("#2980b9"));
-            }*/
-            if (roadSegment != null){
-
-                String[] laneUsages, locationRoadSegment;
-                Log.d("ROAD SEGMENT LOCATION", roadSegment.getLocation());
-                laneUsages = roadSegment.getLaneUsage().split(",");
-
-
-                tvAcceleration.setText(roadSegment.getLocation().substring(1, roadSegment.getLocation().length()-1));
-
-            }
-        /*}else {
-            //tvAcceleration.setText("No manejando");
-        }*/
+        if (roadSegment != null){
+            tvAcceleration.setText(roadSegment.getLocation().substring(1, roadSegment.getLocation().length() -1));
+        }
     }
 
+    /**
+     * Show an Alert Dialog to ask if the user is driving DEPRECATED
+     */
     private void isDrivingUser(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
         alertDialogBuilder.setMessage(R.string.message_is_driving_user_title)
@@ -121,13 +123,17 @@ public class SpeedFragment extends Fragment implements SendDataService.SendDataM
 
     }
 
+    /**
+     * Used to store the roadSegment when change
+     * @param latitude
+     * @param longitude
+     * @param roadSegment
+     */
     @Override
     public void detectRoadSegment(double latitude, double longitude, RoadSegment roadSegment) {
         if (roadSegment != null){
             this.roadSegment =  roadSegment;
-            //tvAcceleration.setText(roadSegment.getStartPoint() + "," +  roadSegment.getEndPoint());
         }
-
     }
 
     @Override

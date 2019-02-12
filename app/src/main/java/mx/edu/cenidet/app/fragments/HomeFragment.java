@@ -53,12 +53,21 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
 
     private ApplicationPreferences appPreferences;
 
-
+    /**
+     * Used to inialize the context and the senDataService
+     */
     public HomeFragment() {
         context = HomeActivity.MAIN_CONTEXT;
         sendDataService = new SendDataService(this);
     }
 
+    /**
+     * USed to initialize the UI and add click listener to the floating button
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -88,14 +97,25 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
         super.onViewCreated(view, savedInstanceState);
     }
 
+    /**
+     * Used to store the location
+     * @param latitude
+     * @param longitude
+     * @param speedMS
+     * @param speedKmHr
+     */
     @Override
-
     public void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr) {
         this.latitude = latitude;
         this.longitude = longitude;
         // Log.i("STATUS: ","HomeFragment-sendLocationSpeed");
     }
 
+    /**
+     * Used to show the zone data where the user is and change the main image
+     * @param zone
+     * @param statusLocation
+     */
     @Override
     public void detectZone(Zone zone, boolean statusLocation) {
         if (statusLocation == true) {
@@ -114,6 +134,12 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
         }
     }
 
+    /**
+     * Runs when detects that the user is on a roadsegment
+     * @param latitude
+     * @param longitude
+     * @param roadSegment
+     */
     @Override
     public void detectRoadSegment(double latitude, double longitude, RoadSegment roadSegment) {
         if(tvRoadSegment != null){
@@ -136,55 +162,5 @@ public class HomeFragment extends Fragment implements SendDataService.SendDataMe
 
     }
 
-
-    //Android - Get Contact Photo from phone number
-
-
-    /*public Bitmap retrieveContactPhoto(Context context) {
-        ContentResolver contentResolver = context.getContentResolver();
-        String contactId = null;
-        //String number = "7471054389";
-        String number = "7471154097";
-
-        String phone = ContactsContract.CommonDataKinds.Phone.NUMBER;
-        Log.i("PHONE: ","---------------------------------: "+phone);
-        Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
-
-        String[] projection = new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME, ContactsContract.PhoneLookup._ID};
-
-        Cursor cursor =
-                contentResolver.query(
-                        uri,
-                        projection,
-                        null,
-                        null,
-                        null);
-
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                contactId = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.PhoneLookup._ID));
-            }
-            cursor.close();
-        }
-
-        Bitmap photo = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_alert_critical);
-
-        try {
-            InputStream inputStream = ContactsContract.Contacts.openContactPhotoInputStream(context.getContentResolver(),
-                    ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, new Long(contactId)));
-
-            if (inputStream != null) {
-                photo = BitmapFactory.decodeStream(inputStream);
-            }
-
-            assert inputStream != null;
-            inputStream.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return photo;
-
-    }*/
 
 }

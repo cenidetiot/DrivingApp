@@ -41,6 +41,10 @@ public class SendDataService {
     private ApplicationPreferences applicationPreferences;
     private Context context;
 
+    /**
+     * Used to implement the receiver
+     * @param sendDataMethods
+     */
     public SendDataService(SendDataService.SendDataMethods sendDataMethods){
         context = HomeActivity.MAIN_CONTEXT;
         this.sendDataMethods = sendDataMethods;
@@ -57,6 +61,9 @@ public class SendDataService {
     }
 
 
+    /**
+     * Used to implements this on other class
+     */
     public interface SendDataMethods{
         void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr);
         void detectZone(Zone zone, boolean statusLocation);
@@ -65,6 +72,9 @@ public class SendDataService {
         void sendEvent(String event);
     }
 
+    /**
+     * Objecto used to receive the user context information
+     */
     private class ResponseReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -82,7 +92,9 @@ public class SendDataService {
 
                     sendDataMethods.sendLocationSpeed(latitude, longitude, speedMS, speedKmHr);
 
-                    //Detecta Zona
+                    /**
+                     * Detects the zone where the user is
+                     */
                     if(listZone.size() > 0) {
                         detectZone(latitude, longitude, listZone);
                     }else {
@@ -98,6 +110,13 @@ public class SendDataService {
             }
         }
     }
+
+    /**
+     * Used to determinate the zone where the user is
+     * @param latitude
+     * @param longitude
+     * @param listZone
+     */
     private void detectZone(double latitude, double longitude, ArrayList<Zone> listZone){
         zone = EventsFuntions.detectedZone(latitude, longitude, listZone);
         if(zone == null){

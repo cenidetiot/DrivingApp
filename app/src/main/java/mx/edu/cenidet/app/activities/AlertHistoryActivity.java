@@ -12,9 +12,15 @@ import mx.edu.cenidet.app.fragments.AlertHistoryFragment;
 import mx.edu.cenidet.app.fragments.MapHistoryFragment;
 import www.fiware.org.ngsi.datamodel.entity.Alert;
 
+
 public class AlertHistoryActivity extends AppCompatActivity implements AlertHistoryFragment.DataListener {
 
     public Context context;
+
+    /**
+     * Is used to call hthe setToolbar
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,7 +29,9 @@ public class AlertHistoryActivity extends AppCompatActivity implements AlertHist
         setToolbar();
     }
 
-    // SET TOOLBAR METHOD
+    /**
+     * assigns the toolbar aspect into the activity_alert_history
+     */
     private void setToolbar(){
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -31,25 +39,41 @@ public class AlertHistoryActivity extends AppCompatActivity implements AlertHist
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle(R.string.menu_current_alerts);
     }
-    //FUNCTION TO BACK TO THE ACTIVITY WITH THE ARROW
+
+    /**
+     * Used to back using the back arrow
+     * @return true
+     */
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
     }
 
+    /**
+     *
+     * @param listAlerts
+     */
     @Override
     public void sendDataListAlerts(ArrayList<Alert> listAlerts) {
         MapHistoryFragment mapHistoryFragment = (MapHistoryFragment) getSupportFragmentManager().findFragmentById(R.id.mapHistoryFragment);
         mapHistoryFragment.renderListAlerts(listAlerts);
     }
 
+    /**
+     *
+     * @param alert
+     */
     @Override
     public void sendDataAlert(Alert alert) {
         MapHistoryFragment mapHistoryFragment = (MapHistoryFragment) getSupportFragmentManager().findFragmentById(R.id.mapHistoryFragment);
         mapHistoryFragment.renderAlert(alert);
     }
 
+    /**
+     *
+     * @param zoneId
+     */
     @Override
     public void sendDataZoneId(String zoneId) {
         MapHistoryFragment mapHistoryFragment = (MapHistoryFragment) getSupportFragmentManager().findFragmentById(R.id.mapHistoryFragment);

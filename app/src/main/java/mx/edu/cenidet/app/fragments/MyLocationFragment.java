@@ -52,6 +52,10 @@ public class MyLocationFragment extends Fragment implements OnMapReadyCallback, 
     private ArrayList<LatLng> listLocation;
     private ArrayList<LatLng> listPolyline;
     private SendDataService sendDataService;
+
+    /**
+     * Initialize the context the send data and a list of polyline
+     */
     public MyLocationFragment() {
         context = HomeActivity.MAIN_CONTEXT;
         sqLiteDrivingApp = new SQLiteDrivingApp(context);
@@ -60,7 +64,6 @@ public class MyLocationFragment extends Fragment implements OnMapReadyCallback, 
         listPolyline = new ArrayList<>();
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -68,6 +71,11 @@ public class MyLocationFragment extends Fragment implements OnMapReadyCallback, 
         return rootView;
     }
 
+    /**
+     * Used to initialize the map
+     * @param view
+     * @param savedInstanceState
+     */
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -81,6 +89,10 @@ public class MyLocationFragment extends Fragment implements OnMapReadyCallback, 
 
     }
 
+    /**
+     * Runs when the map is ready and drow the zones on the map
+     * @param googleMap
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
@@ -107,7 +119,6 @@ public class MyLocationFragment extends Fragment implements OnMapReadyCallback, 
                         latitude = Double.parseDouble(subString[0]);
                         longitude = Double.parseDouble(subString[1]);
                         listLocation.add(new LatLng(latitude,longitude));
-                        Log.i("Status: ", "Latitude: "+latitude+ " Longitude: "+longitude);
                     }
                     gMap.addPolygon(new PolygonOptions()
                             .addAll(listLocation).strokeColor(Color.RED));
@@ -117,34 +128,30 @@ public class MyLocationFragment extends Fragment implements OnMapReadyCallback, 
             }
             Log.i("Status ", "Lista con datos");
         }
-       // if(listPolyline.size() > 1){
-           /* gMap.addPolyline(new PolylineOptions()
-                    .addAll(listPolyline)
-                    .width(5)
-                    .color(Color.BLUE));*/
-            /*gMap.addPolyline(new PolylineOptions()
-                    .add(new LatLng(18.879757, -99.221625),
-                            new LatLng(18.879592, -99.221646),
-                            new LatLng(18.879363, -99.221208))
-                    .width(5)
-                    .color(Color.BLUE));*/
-        //}
-
         gMap.setMyLocationEnabled(true);
         //Ocultar el boton
         gMap.getUiSettings().setMyLocationButtonEnabled(false);
     }
 
+    /**
+     * Draw the marker on the map
+     * @param latitude
+     * @param longitude
+     */
     private void createOrUpdateMarkerByLocation(double latitude, double longitude){
         if(marker == null){
             marker = gMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).draggable(true));
             zoomToLocation(latitude, longitude);
         }else{
             marker.setPosition(new LatLng(latitude, longitude));
-            //Polyline
         }
     }
 
+    /**
+     * Make the zoom animation
+     * @param latitude
+     * @param longitude
+     */
     private void zoomToLocation(double latitude, double longitude){
         camera = new CameraPosition.Builder()
                 .target(new LatLng(latitude, longitude))
@@ -155,13 +162,16 @@ public class MyLocationFragment extends Fragment implements OnMapReadyCallback, 
         gMap.animateCamera(CameraUpdateFactory.newCameraPosition(camera));
     }
 
+    /**
+     * Runs when change the location
+     * @param latitude
+     * @param longitude
+     * @param speedMS
+     * @param speedKmHr
+     */
     @Override
     public void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr) {
         createOrUpdateMarkerByLocation(latitude, longitude);
-        //listPolyline.add(new LatLng(latitude,longitude));
-
-        //sLog.i("STATUS: ","MyLocationFragment-sendLocationSpeed");
-        //Log.i("SPEED: ", "VIEW Latitude: " + latitude + " Longitude: " + longitude + " Velocidad: " + speedMS + "m/s  Velocidad: " + speedKmHr + "km/hr");
     }
 
     @Override

@@ -112,6 +112,10 @@ public class HomeActivity extends AppCompatActivity
     };
 
 
+    /**
+     * USed to initialize the UI and the navigation
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,13 +133,15 @@ public class HomeActivity extends AppCompatActivity
         sqLiteDrivingApp = new SQLiteDrivingApp(this);
 
 
-        //Inicializa los datos de conexión
+        /**
+         * Initialize the configuration properties
+         */
         try {
             Tools.initialize("config.properties", getApplicationContext());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //Mandar a llamar el toolbar una vez generado en el activity_main de la actividad
+
         setToolbar();
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.navView);
@@ -149,13 +155,14 @@ public class HomeActivity extends AppCompatActivity
         setFragmentDefault();
         //frameLayout = (FrameLayout)findViewById(R.id.headerNavigationDrawer).findViewById(R.id.tvUserName);
 
+        /**
+         * Add the event on tab selected listener
+         */
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
                 viewPager.setCurrentItem(position);
-                //changeDrawerMenu(position);
-                Log.i("POSITION: ", "-------------------------------------"+position);
             }
 
             @Override
@@ -169,6 +176,9 @@ public class HomeActivity extends AppCompatActivity
             }
         });
 
+        /**
+         * Set the navigation item selected listener
+         */
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -226,16 +236,23 @@ public class HomeActivity extends AppCompatActivity
         tvUserName.setText(appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_NAME));
         navigationView.addHeaderView(view);
 
-        //Descarga los Road y RoadSegment
+        /**
+         * Download the Roads form the server
+         */
         listRoad = sqLiteDrivingApp.getAllRoad();
         if(listRoad.size() <= 0){
             roadControllerSdk.getAllRoad();
         }
-        //roadControllerSdk.getByResponsibleRoad("Zone_1523999247187");
+        /**
+         * Download the RoadSegments from the server
+         */
         listRoadSegment = sqLiteDrivingApp.getAllRoadSegment();
         if(listRoadSegment.size() <= 0){
             roadSegmentControllerSdk.getAllRoadSegment();
         }
+        /**
+         * Download the offStreetparking from the server
+         */
         listOffStreetParking = sqLiteDrivingApp.getAllOffStreetParking();
         if (listOffStreetParking.size() <= 0){
             offStreetParkingControllerSdk.getAllOffStreetParking();
@@ -249,11 +266,19 @@ public class HomeActivity extends AppCompatActivity
 
 
     }
+
+    /**
+     * add the my campus item if is mobile user
+     */
     private void menuItemInNavMenuDrawer() {
         if(appPreferences.getPreferenceString(getApplicationContext(),ConstantSdk.PREFERENCE_NAME_GENERAL,ConstantSdk.PREFERENCE_USER_TYPE).equals("mobileUser")) {
             navigationView.getMenu().findItem(R.id.menu_my_campus).setVisible(false);
         }
     }
+
+    /**
+     * Set the Tab Layout
+     */
     public void setUpTabLayout(){
         //TabLayout set text title
         tabLayout.addTab(tabLayout.newTab().setText(R.string.menu_home));
@@ -270,6 +295,11 @@ public class HomeActivity extends AppCompatActivity
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         numberTab = tabLayout.getTabCount();
     }
+
+    /**
+     * Set the view pager
+     * @param viewPager
+     */
     public void setUpViewPager(ViewPager viewPager){
         PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), numberTab);
         viewPager.setAdapter(adapter);
@@ -304,12 +334,12 @@ public class HomeActivity extends AppCompatActivity
     }
     @Override
     protected void onPause() {
-        super.onPause();}
-
-    private boolean setCredentialsIfExist(){
-        return !(appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_TOKEN).equals("") && appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_NAME).equals(""));
+        super.onPause();
     }
 
+    /**
+     * Initialize the floating buttons menu
+     */
     public void btnFloatingGUI(){
         btnFloatingUnknown = (FloatingActionButton)findViewById(R.id.btnFloatingUnknown);
         btnFloatingUnknown.setOnClickListener(this);
@@ -319,6 +349,9 @@ public class HomeActivity extends AppCompatActivity
         btnFloatingTraffic.setOnClickListener(this);
     }
 
+    /**
+     * Set the toolbar
+     */
     private void setToolbar(){
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -326,10 +359,14 @@ public class HomeActivity extends AppCompatActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    /**
+     * Set the fragment initially using the position 0
+     */
     private void setFragmentDefault(){
         navigationView.getMenu().getItem(0);
         //changeFragment(new HomeFragment(), navigationView.getMenu().getItem(0));
     }
+
 
     private void changeFragment(Fragment fragment, MenuItem item){
         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
@@ -350,11 +387,15 @@ public class HomeActivity extends AppCompatActivity
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * Add the optionsItemSelected event
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case android.R.id.home:
-                //Abrir el menu lateral
                 drawerLayout.openDrawer(GravityCompat.START);
                 return true;
             case R.id.menu_notify:
@@ -366,6 +407,9 @@ public class HomeActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Show the message to known if the user is driving  DEPRECATED
+     */
     private void isDrivingUser(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setMessage(R.string.message_is_driving_user_title)
@@ -392,6 +436,9 @@ public class HomeActivity extends AppCompatActivity
         alert.show();
     }
 
+    /**
+     * Confirmation message to send the unknown alert
+     */
     private void confirmAlert(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle(R.string.message_confirm_alert_title)
@@ -431,6 +478,10 @@ public class HomeActivity extends AppCompatActivity
         alert.show();
     }
 
+    /**
+     * Add the click evento to the buttons
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -454,6 +505,13 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Used to store the location when change
+     * @param latitude
+     * @param longitude
+     * @param speedMS
+     * @param speedKmHr
+     */
     @Override
     public void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr) {
         this.latitude = latitude;
@@ -480,6 +538,10 @@ public class HomeActivity extends AppCompatActivity
         //Toast.makeText(this, event, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Check the Orion response when create the alert to show a successfully or failed message
+     * @param response
+     */
     @Override
     public void onCreateEntityAlert(Response response) {
         if(response.getHttpCode() == 201 || response.getHttpCode() == 200){
@@ -499,6 +561,10 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Receives the server response when download the road segments
+     * @param response
+     */
     @Override
     public void getAllRoadSegment(mx.edu.cenidet.cenidetsdk.httpmethods.Response response) {
         //Log.i("ALLROADSegment: ", "--------------------------------------------------------\n"+response.getBodyString());
@@ -538,6 +604,10 @@ public class HomeActivity extends AppCompatActivity
         Log.i(": ", "getRoadSegmentByRefRoad: --------------------------------------------------------\n"+response.getBodyString());
     }
 
+    /**
+     * Receives the server response when download the roads
+     * @param response
+     */
     @Override
     public void getAllRoad(mx.edu.cenidet.cenidetsdk.httpmethods.Response response) {
         //Log.i("ALLROAD: ", "--------------------------------------------------------\n"+response.getBodyString());
@@ -571,6 +641,10 @@ public class HomeActivity extends AppCompatActivity
         //Log.i(": ", "getRoadByResponsible: --------------------------------------------------------\n"+response.getBodyString());
     }
 
+    /**
+     * Receives the server response when download the parking
+     * @param response
+     */
     @Override
     public void getAllOffStreetParking(mx.edu.cenidet.cenidetsdk.httpmethods.Response response) {
         //Log.i("AllOffStreetParking: ", "--------------------------------------------------------\n"+response.getBodyString());

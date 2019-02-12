@@ -23,6 +23,11 @@ public class AlertMapDetailActivity extends AppCompatActivity implements OnMapRe
     private CameraPosition camera;
     private String subcategory, description, location, severity;
     private double pointLatitude, pointLongitude;
+
+    /**
+     * Used to check if the app have a new notification
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,13 +52,19 @@ public class AlertMapDetailActivity extends AppCompatActivity implements OnMapRe
         }
     }
 
+    /**
+     * When the map is ready draw the alert location marker
+     * @param googleMap
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
         createOrUpdateMarkerByLocation(pointLatitude, pointLongitude, severity, subcategory, description );
     }
 
-    // SET TOOLBAR METHOD
+    /**
+     * Set the toolbar into the view
+     */
     private void setToolbar(){
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -61,13 +72,25 @@ public class AlertMapDetailActivity extends AppCompatActivity implements OnMapRe
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle(R.string.alert_location);
     }
-    //FUNCTION TO BACK TO THE ACTIVITY WITH THE ARROW
+
+    /**
+     * FUNCTION TO BACK TO THE ACTIVITY WITH THE ARROW
+     * @return
+     */
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
     }
 
+    /**
+     * Create the alert marker on the map adding the respective color
+     * @param latitude
+     * @param longitude
+     * @param severity
+     * @param subcategory
+     * @param description
+     */
     private void createOrUpdateMarkerByLocation(double latitude, double longitude, String severity, String subcategory, String description){
         if(marker == null){
            switch (severity){
@@ -96,6 +119,11 @@ public class AlertMapDetailActivity extends AppCompatActivity implements OnMapRe
         }
     }
 
+    /**
+     * Make the animated zoom effect in the alert location
+     * @param latitude
+     * @param longitude
+     */
     private void zoomToLocation(double latitude, double longitude){
         camera = new CameraPosition.Builder()
                 .target(new LatLng(latitude, longitude))

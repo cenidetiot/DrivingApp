@@ -84,12 +84,6 @@ import mx.edu.cenidet.app.utils.MyBounceInterpolator;
 
 import static mx.edu.cenidet.app.activities.MainActivity.getColorWithAlpha;
 
-/*
- * User
- * temporal@gmail.com
- * +527771234567
- * temporal123
- */
 public class DrivingView extends AppCompatActivity implements SensorEventListener, OnMapReadyCallback, SendDataService.SendDataMethods {
 
     private SensorManager sensorManager;
@@ -138,6 +132,10 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
     private LatLng centerLatLngParking = null;
     private String currentTitle;
 
+    /**
+     * Used to initialize the UI
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -183,25 +181,33 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
 
     }
 
+    /**
+     * Initialize the map
+     * @param googleMap
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         googleMapDrivingView = googleMap;
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-
         googleMapDrivingView.setMyLocationEnabled(false);
         googleMapDrivingView.getUiSettings().setMyLocationButtonEnabled(false);
         //googleMapDrivingView.getUiSettings().setScrollGesturesEnabled(false);
 
     }
 
+    /**
+     * Draw the user marker on the map
+     * @param latitude
+     * @param longitude
+     * @param title
+     * @param bearing
+     */
     private void createOrUpdateMarkerByLocation(double latitude, double longitude, String title, float bearing){
 
         if(markerDrivingView == null){
             //circleDrivingView = googleMapDrivingView.addCircle(new CircleOptions().center(new LatLng(latitude, longitude)).radius(10).strokeColor(Color.argb(255, 20, 160, 255)).fillColor(Color.argb(80,20,160, 255)));
-
-
             //circleDrivingView.setStrokeWidth(1);
             markerDrivingView = googleMapDrivingView.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(title));
 
@@ -234,6 +240,12 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
         }
     }
 
+    /**
+     * Make the animated zoom effect in the location
+     * @param latitude
+     * @param longitude
+     * @param bearing
+     */
     private void zoomToLocation(double latitude, double longitude, float bearing){
 
         cameraPositionDrivingView = new CameraPosition.Builder()
@@ -246,6 +258,9 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
         googleMapDrivingView.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPositionDrivingView));
     }
 
+    /**
+     * Used to receive the location from the DeviceService and use the method sendLocationSpeed
+     */
     private class ResponseReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -263,6 +278,9 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
         }
     }
 
+    /**
+     * Set the toolbar into the view
+     */
     private void setToolbar(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -272,6 +290,10 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
         getSupportActionBar().setTitle(R.string.menu_speed);
     }
 
+    /**
+     * Add the onBackPressed to the back arrow and add the finish to stop the broadcast receiver in the class
+     * @return
+     */
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
@@ -280,6 +302,9 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
     }
 
 
+    /**
+     * Used to registry the Broadcast receiver
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -293,10 +318,12 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
                 true);
     }
 
+    /**
+     * When the activity stops unregister the broadcast receiver
+     */
     @Override
     public void onStop() {
         super.onStop();
-
         LocalBroadcastManager.getInstance(context).unregisterReceiver(receiver);
         applicationPreferences.saveOnPreferenceBoolean(
                 getApplicationContext(),
@@ -305,19 +332,30 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
                 false);
     }
 
+    /**
+     * Add the animation to the events buttons
+     * @param button
+     */
     public void anim(FloatingActionButton button) {
         Animation myAnim = AnimationUtils.loadAnimation(this, R.transition.bounce);
-
         // Use bounce interpolator with amplitude 0.2 and frequency 20
         MyBounceInterpolator interpolator = new MyBounceInterpolator(0.2, 20);
         myAnim.setInterpolator(interpolator);
-
         button.startAnimation(myAnim);
     }
 
+    /**
+     * Check if the user is speeding
+     * @param speedMS
+     * @param longitude
+     * @param latitude
+     */
     public void speeding(double speedMS, double longitude, double latitude) {
         String speedText = "";
 
+        /**
+         * Get a JSON with the detection data
+         */
         JSONObject speedDetection = events.speeding(
                 roadSegment.getMinimumAllowedSpeed(),
                 roadSegment.getMaximumAllowedSpeed(),
@@ -358,11 +396,20 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
 
     }
 
+    /**
+     * Check if the user have a sudden stop
+     * @param speedMS
+     * @param latitude
+     * @param longitude
+     */
     public void sudden (double speedMS , double latitude, double longitude) {
+
+        /**
+         * Get the stop data in a JSON
+         */
         JSONObject suddenStop = events.suddenStop(speedMS, new Date().getTime(), latitude, longitude);
 
         try {
-            //its ok = green
             boolean stopped = suddenStop.getBoolean("isStopped");  //red
             boolean stopping =  suddenStop.getBoolean("isStopping"); //orange
             boolean sudden =  suddenStop.getBoolean("isSuddenStop"); //red
@@ -371,29 +418,24 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
 
             if (!stopped && !stopping & !sudden){
                 if (acelerating) {
-                    //textEvent.setText("You are acelerating");
                     floatingSudden.setBackgroundTintList(getResources().getColorStateList(R.color.driving_blue));
                 }else {
-                    //textEvent.setText("You are OK");
                     floatingSudden.setBackgroundTintList(getResources().getColorStateList(R.color.driving_green));
                 }
                 textSpeed.setTextColor(Color.parseColor("#2980b9"));
 
             }else {
                 if (stopping){
-                    //textEvent.setText("You are stopping");
                     textSpeed.setTextColor(Color.parseColor("#d35400"));
                     floatingSudden.setBackgroundTintList(getResources().getColorStateList(R.color.driving_orange));
                 }
                 if (stopped){
-                    //textEvent.setText("You are stopped");
                     rootView.setBackgroundColor(Color.parseColor("#2c3e50"));
                     textSpeed.setTextColor(Color.parseColor("#2c3e50"));
                     floatingSudden.setBackgroundTintList(getResources().getColorStateList(R.color.driving_red));
                     anim(floatingSudden);
                 }
                 if (sudden){
-                    //textPruebas.setText(suddenStop.getString("result"));
                     textSpeed.setTextColor(Color.parseColor("#c0392b"));
                     floatingSudden.setBackgroundTintList(getResources().getColorStateList(R.color.driving_red));
                 }
@@ -402,8 +444,17 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
         }catch (Exception e){}
     }
 
+    /**
+     * Check if the user is in opposite direction
+     * @param currentLatLng
+     * @param startLatLng
+     * @param endLatLng
+     */
     public void wrongWay (LatLng currentLatLng, LatLng startLatLng, LatLng endLatLng ){
 
+        /**
+         * Get the wronway data in a JSON
+         */
         JSONObject wrong = events.wrongWay(
                 currentLatLng,
                 startLatLng,
@@ -416,22 +467,27 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
             boolean isWrong =  wrong.getBoolean("isWrongWay"); // red
 
             if (isWrong){
-                //textWrongEvent.setText("Wrong Way Detection");
                 floatingWrong.setBackgroundTintList(getResources().getColorStateList(R.color.driving_red));
                 anim(floatingWrong);
             }else{
-                //textWrongEvent.setText("");
                 floatingWrong.setBackgroundTintList(getResources().getColorStateList(R.color.driving_green));
-
             }
         }catch (Exception e ){ }
     }
 
-    
+    /**
+     * Used when the location change
+     * @param latitude
+     * @param longitude
+     * @param speedMS
+     * @param speedKmHr
+     */
     public void sendLocationSpeed(double latitude, double longitude, double speedMS, double speedKmHr) {
         String sTextSpeed = df.format(speedKmHr) + " km/hr";
-
         textSpeed.setText(sTextSpeed);
+        /**
+         * Used to draw the car maker when the user change location
+         */
         if (latitude!=0 && longitude!=0){
             if(lastLatitude==0 && lastLongitude==0){
                 lastLatitude = latitude;
@@ -470,11 +526,6 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
                             lastLastLongitude = lastLongitude;
                             lastLatitude = latitude;
                             lastLongitude = longitude;
-                            Log.i("CENIDET.TAG", "latitud:" + latitude + " longitud:" + longitude);
-
-
-
-                            Log.i("CENIDET.TAG", "bearing:" + bearing);
                             createOrUpdateMarkerByLocation(latitude, longitude, sTextSpeed, bearing);
                         }
                     }
@@ -483,6 +534,9 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
             }
         }
 
+        /**
+         * Used to detects if the user is speeding, have a sudden stop or is wrongway(opppsite direction)
+         */
         if (applicationPreferences.getPreferenceBoolean(getApplicationContext(),
                 ConstantSdk.PREFERENCE_NAME_GENERAL,
                 ConstantSdk.PREFERENCE_USER_IS_DRIVING)){
@@ -493,7 +547,6 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
                 if (roadSegment != null){
 
                     speeding(speedKmHr, longitude, latitude);
-
                     String originalString, clearString;
                     String[] subString;
                     List<LatLng> polyline = new ArrayList<>();
@@ -537,11 +590,9 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
                     }
 
                     wrongWay(myPoint,nearLine.get(0),nearLine.get(1));
-
                 }else  {
                     Log.d("SEGMENTO" , "Fuera de segmento");
                 }
-
             } catch (Exception e){
                 e.printStackTrace();
             }
@@ -549,6 +600,11 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
         }
     }
 
+    /**
+     * Detects the zone where the user is
+     * @param zone
+     * @param statusLocation
+     */
     @Override
     public void detectZone(Zone zone, boolean statusLocation) {
         if (statusLocation){
@@ -575,6 +631,10 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
 
     }
 
+    /**
+     * Change the action bar title
+     * @param title
+     */
     private void changeActionBarTitle(String title){
         if (currentTitle==null || currentTitle.isEmpty() || !title.equalsIgnoreCase(currentTitle)) {
             currentTitle = title;
@@ -588,7 +648,12 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
     }
 
 
-
+    /**
+     * Detects if the user is on a road Segment
+     * @param latitude
+     * @param longitude
+     * @param roadSegment
+     */
     @Override
     public void detectRoadSegment(double latitude, double longitude, RoadSegment roadSegment) {
         if (roadSegment != null){
@@ -608,11 +673,13 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
 
     }
 
-
+    /**
+     * Receives the sensor changes
+     * @param event
+     */
     @Override
     public void onSensorChanged(SensorEvent event) {
         Sensor mySensor = event.sensor;
-
 
         if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             float x = event.values[0];
@@ -633,7 +700,7 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
     }
 
     /**
-     * Dibuja la zona en el que se encuentra el dispositivo.
+     * Draw the zone where the user is.
      * @param zone el identificador de la zona.
      */
     public void drawZone(Zone zone){
@@ -660,9 +727,10 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
         }
 
     }
+
     /**
-     * Dibuja el parking de la zona.
-     * @param zoneId el identificador de la zona.
+     * Draw the parkings where the user is
+     * @param zoneId
      */
     public void drawParking(String zoneId){
         listOffStreetParking = sqLiteDrivingApp.getAllOffStreetParkingByAreaServed(zoneId);
@@ -708,6 +776,10 @@ public class DrivingView extends AppCompatActivity implements SensorEventListene
 
     }
 
+    /**
+     * Draw the Roads Segments in the parking
+     * @param responsible
+     */
     public void drawRoadSegmentByParking(String responsible){
         ArrayList<Road> listRoadByResponsible = sqLiteDrivingApp.getRoadByResponsible(responsible); //obtiene la lista de los road por el responsable.
         if( listRoadByResponsible.size() > 0) {

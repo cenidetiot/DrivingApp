@@ -33,12 +33,22 @@ public class LoginAsActivity extends AppCompatActivity implements View.OnClickLi
             setToolbar();
     }
 
+    /**
+     * Assigns the event onBackPressed when the user use the back arrow of the toolbar
+     * @return
+     */
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
     }
 
+    /**
+     * Get the Color added with alpha
+     * @param color
+     * @param ratio
+     * @return
+     */
     public static int getColorWithAlpha(int color, float ratio) {
             int newColor = 0;
             int alpha = Math.round(Color.alpha(color) * ratio);
@@ -47,7 +57,12 @@ public class LoginAsActivity extends AppCompatActivity implements View.OnClickLi
             int b = Color.blue(color);
             newColor = Color.argb(alpha, r, g, b);
             return newColor;
-            }
+    }
+
+    /**
+     * Add the click event
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         Intent loginUser = new Intent(this, LoginActivity.class);
@@ -65,6 +80,9 @@ public class LoginAsActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
+    /**
+     * Assigns the toolbar aspect to the view
+     */
     private void setToolbar(){
         Toolbar toolbarLogin = (Toolbar) findViewById(R.id.toolbar2);
         setSupportActionBar(toolbarLogin);

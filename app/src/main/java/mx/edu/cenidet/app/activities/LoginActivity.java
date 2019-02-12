@@ -97,7 +97,6 @@ public class LoginActivity extends AppCompatActivity implements
 
         setToolbar();
 
-        //Main Activity Intent --- Authenticate user as: (userType)
         userType = getIntent().getStringExtra("userType");
         appPreferences = new ApplicationPreferences();
 
@@ -117,6 +116,10 @@ public class LoginActivity extends AppCompatActivity implements
 
 
     }
+
+    /**
+     * Assign the toolbar
+     */
     private void setToolbar(){
         Toolbar toolbarLogin = (Toolbar) findViewById(R.id.toolbar2);
         setSupportActionBar(toolbarLogin);
@@ -131,6 +134,9 @@ public class LoginActivity extends AppCompatActivity implements
         return true;
     }
 
+    /**
+     * Assigns the UI to the view
+     */
     private void bindUI(){
 
         etEmailSG = (EditText) findViewById (R.id.etEmailSG);
@@ -142,6 +148,9 @@ public class LoginActivity extends AppCompatActivity implements
         btnLogin.setOnClickListener(this);
         btnLogin.setEnabled(false);
 
+        /**
+         * Used to check if the email is empty when the text change
+         */
         etEmailSG.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -159,7 +168,9 @@ public class LoginActivity extends AppCompatActivity implements
                 checkEmptyText();
             }
         });
-
+        /**
+         * Used to check if the phone number is empty when the text change
+         */
         etPhone.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -179,7 +190,9 @@ public class LoginActivity extends AppCompatActivity implements
                 checkEmptyText();
             }
         });
-
+        /**
+         * Used to check if the password is empty when the text change
+         */
         etLoginPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -198,12 +211,13 @@ public class LoginActivity extends AppCompatActivity implements
                 checkEmptyText();
             }
         });
-
+        /**
+         * Used to get the phone number when the user touch it
+         */
         etPhone.setOnTouchListener(new View.OnTouchListener(){
             public boolean onTouch(View v, MotionEvent event){
                 if (etPhoneTouched == false) {
                     requestHint();
-
                 }
                 return false;
             }
@@ -221,13 +235,13 @@ public class LoginActivity extends AppCompatActivity implements
         }
     }
 
-
+    /**
+     * Retrieve the phone number
+     */
     private void requestHint() {
         HintRequest hintRequest = new HintRequest.Builder()
                 .setHintPickerConfig(new CredentialPickerConfig.Builder().setShowCancelButton(true).build())
                 .setPhoneNumberIdentifierSupported(true)
-                //.setEmailAddressIdentifierSupported(true)
-                //.setAccountTypes(IdentityProviders.GOOGLE)
                 .build();
         PendingIntent intent = Auth.CredentialsApi.getHintPickerIntent(mGoogleApiClient, hintRequest);
         try {
@@ -238,6 +252,9 @@ public class LoginActivity extends AppCompatActivity implements
         etPhoneTouched =  true;
     }
 
+    /**
+     * Check if the text is empy
+     */
     public  void  checkEmptyText(){
         boolean accountIsOk = false;
         if(userType.equals("mobileUser")){
@@ -254,7 +271,12 @@ public class LoginActivity extends AppCompatActivity implements
 
     }
 
-
+    /**
+     * Run when try to retrieve the phone number
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -265,6 +287,7 @@ public class LoginActivity extends AppCompatActivity implements
                 etPhone.setText("+52");
             etPhone.requestFocus(View.FOCUS_LEFT);
         }else {
+            // if is not possible retrieve the phone number use the number that the user registered
             if (requestCode == RESOLVE_HINT) {
                 if (resultCode == RESULT_OK) {
                     Bundle extras = data.getExtras();
@@ -275,7 +298,11 @@ public class LoginActivity extends AppCompatActivity implements
         }
     }
 
-
+    /**
+     * Used to validate the email
+     * @param email
+     * @return
+     */
     private boolean isValidEmail(String email){
         boolean valid = !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
         if (valid == false) {
@@ -288,7 +315,9 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
 
-
+    /**
+     * Change the Activity to the SplashActivity
+     */
     private void goToHome(){
         Intent intent = new Intent(LoginActivity.this, SplashActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -296,10 +325,19 @@ public class LoginActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
+
+    /**
+     * Check the credencials(if the user is logged)
+     * @return
+     */
     private boolean setCredentialsIfExist(){
         return !(appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_TOKEN).equals("") && appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_NAME).equals(""));
     }
 
+    /**
+     * Used to assign the click event to the button btnLogin
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         String password = etLoginPassword.getText().toString();
@@ -330,6 +368,10 @@ public class LoginActivity extends AppCompatActivity implements
 
     }
 
+    /**
+     * Run when the user could log in
+     * @param response
+     */
     @Override
     public void readUser(Response response) {
         switch (response.getHttpCode()){
@@ -366,6 +408,10 @@ public class LoginActivity extends AppCompatActivity implements
 
     }
 
+    /**
+     * Run when the user try to login
+     * @param response
+     */
     @Override
     public void logInUser(Response response) {
         Log.i("Status:", "code: "+response.getHttpCode()+" body: "+response.getBodyString());
@@ -418,9 +464,11 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
 
-
-
-    //Mensaje que muestra que permisos son requeridos para que la aplicación funcione.
+    /**
+     * Message shows that permits be required for the app work
+     * @param message
+     * @param okListener
+     */
     private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
         new AlertDialog.Builder(LoginActivity.this)
                 .setTitle(R.string.message_title_showMessageOKCancel)
@@ -433,10 +481,10 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
     /**
-     * Devolución de llamada para el resultado de la solicitud de permisos. Este método se invoca para cada llamada en requestPermissions(android.app.Activity, String[], int).
-     * @param requestCode El código de solicitud pasó en requestPermissions (android.app.Activity, String [], int)
-     * @param permissions String: Los permisos solicitados. Nunca nulo
-     * @param grantResults int: Los resultados de la concesión para los permisos correspondientes son PERMISSION_GANTED o PERMISSION_DENIED. Nunca nulo
+     * Run for each call to requestPermissions
+     * @param requestCode
+     * @param permissions
+     * @param grantResults PERMISSION_GANTED o PERMISSION_DENIED.
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -447,7 +495,6 @@ public class LoginActivity extends AppCompatActivity implements
                 // Initial
                 perms.put(Manifest.permission.ACCESS_FINE_LOCATION, PackageManager.PERMISSION_GRANTED);
                 perms.put(Manifest.permission.READ_PHONE_STATE, PackageManager.PERMISSION_GRANTED);
-                //perms.put(Manifest.permission.READ_PHONE_STATE, PackageManager.PERMISSION_GRANTED);
                 // Fill with results
                 for (int i = 0; i < permissions.length; i++)
                     perms.put(permissions[i], grantResults[i]);

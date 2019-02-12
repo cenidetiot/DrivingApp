@@ -27,6 +27,7 @@ import www.fiware.org.ngsi.utilities.ApplicationPreferences;
 public class EventsFuntions {
     public static ApplicationPreferences applicationPreferences = new ApplicationPreferences();
     /**
+     * Used to detects the area where the user is
      * @param latitude actual en la que se encuentra el dispositivo.
      * @param longitude actual en la que se encuentra el dispositivo.
      * @param listLatLng lista de latitudes y longitudes del poligono.
@@ -41,6 +42,7 @@ public class EventsFuntions {
     }
 
     /**
+     * Used to detect the zone where the user is
      * @param latitude actual en la que se encuentra el dispositivo.
      * @param longitude actual en la que se encuentra el dispositivo.
      * @param listZone lista de las zonas que se encuentran en el sistema.
@@ -87,12 +89,17 @@ public class EventsFuntions {
                     return auxZone;
                 }
             }
-            return auxZone;
-        }else{
-            return auxZone;
         }
+        return  auxZone;
     }
 
+    /**
+     * Used to detect which parking isede of the zones is the user
+     * @param latitude
+     * @param longitude
+     * @param listOffStreetParking
+     * @return
+     */
     public static OffStreetParking detectedOffStreetParking(double latitude, double longitude, ArrayList<OffStreetParking> listOffStreetParking){
         OffStreetParking auxOffStreetParking = null;
         if(listOffStreetParking.size() > 0){
@@ -128,7 +135,6 @@ public class EventsFuntions {
                 }
                 if(EventsFuntions.detectedArea(latitude, longitude, listLatLng)){
                     auxOffStreetParking = offStreetParking;
-                    return auxOffStreetParking;
                 }
             }
 
@@ -137,6 +143,13 @@ public class EventsFuntions {
 
     }
 
+    /**
+     * Used to get the road segments inside of the zone or parking where the user is
+     * @param context
+     * @param currentLatitude
+     * @param currentLongitude
+     * @return
+     */
     public static RoadSegment detectedRoadSegment(Context context, double currentLatitude, double currentLongitude){
         SQLiteDrivingApp sqLiteDrivingApp; //Para acceder a los metodos que gestionan la DB interna del dispositivo movil.
         String currentZone = applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_CURRENT_ZONE);
@@ -156,15 +169,13 @@ public class EventsFuntions {
                     //listRoadByIdParking = sqLiteDrivingApp.getRoadByResponsible(offStreetParking.getIdOffStreetParking());
                     Log.i("STATUS: ","SI SE ENCUENTRA EN UN PARKING------------------------------------------------");
                     roadSegment = EventsFuntions.getRoadSegmentParking(currentLatitude, currentLongitude, offStreetParking, sqLiteDrivingApp);
-                    return roadSegment;
                 }else {//Si no se encuentra dentro de un parking.
                     roadSegment = EventsFuntions.getRoadSegmentZone(currentLatitude, currentLongitude, currentZone, sqLiteDrivingApp);
-                    return roadSegment;
+
                 }//FIN Si no se encuentra dentro de un parking.
             }else{//si no se encuentra ningun parking asignado a la zona.
                 Log.i("STATUS: ","ESTA ZONA NO CUENTA CON PARKING----------------------------------------------");
                 roadSegment = EventsFuntions.getRoadSegmentZone(currentLatitude, currentLongitude, currentZone, sqLiteDrivingApp);
-                return roadSegment;
             }
 
         }
@@ -172,6 +183,7 @@ public class EventsFuntions {
     }
 
     /**
+     * Used to detect the road segment inside the parking where the user is
      * @param currentLatitude latitude actual en la que se encuentra el dispositivo.
      * @param currentLongitude longitude actual en la que se encuentra el dispositivo.
      * @param offStreetParking objeto del parking en el que se encuentra el dispositivo.
@@ -243,6 +255,7 @@ public class EventsFuntions {
     }
 
     /**
+     * Used to detect the road segment inside the zone where the user is
      * @param currentLatitude latitude actual en la que se encuentra el dispositivo.
      * @param currentLongitude longitude actual en la que se encuentra el dispositivo.
      * @param currentZone el identificador de la zona en la que se encuentra el dispositivo movil.
@@ -306,44 +319,19 @@ public class EventsFuntions {
                 }
             }
         }
-        Log.i("STATUS: ","FUERA DE PARKING Y EN NINGUN ROAD SEGMENT----------------------------------------------");
         return auxRoadSegment;
     }
 
-
+    /**
+     * Used to determinate if the user is in te roadSegment
+     * @param point
+     * @param polyline
+     * @param tolerance
+     * @return
+     */
     public static boolean detectRoadSegment(LatLng point, List<LatLng> polyline, double tolerance){
         return PolyUtil.isLocationOnPath(point, polyline, false, tolerance);
     }
-    public static String detectRoad(){
-        String status = "";
-        LatLng point = new LatLng(18.869783,-99.211887);
 
-        List<LatLng> polyline = new ArrayList<>();
-        polyline.add(new LatLng(18.869799,-99.21116));
-        polyline.add(new LatLng(18.869781,-99.212142));
 
-        //tolerancia en metros.
-        boolean isLocationOnPath = PolyUtil.isLocationOnPath(point, polyline, false, 1);
-        if (isLocationOnPath == true){
-            status = "Se encuentra en la polyline: "+PolyUtil.distanceToLine(point, polyline.get(0), polyline.get(1));
-        }else{
-            status = "Fuera del rango de la polyline: "+PolyUtil.distanceToLine(point, polyline.get(0), polyline.get(1));
-        }
-        return status;
-    }
-
-    public static ArrayList<Road> getRoadByResponsible(Context context){
-        String currentZone = applicationPreferences.getPreferenceString(context, ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_CURRENT_ZONE);
-        ArrayList<Road> listRoad = null;
-        if (currentZone.equals("undetectedZone")){
-
-        }else{
-
-        }
-        return listRoad;
-    }
-
-    public static void main(String ... arg){
-        System.out.println(EventsFuntions.detectRoad());
-    }
 }

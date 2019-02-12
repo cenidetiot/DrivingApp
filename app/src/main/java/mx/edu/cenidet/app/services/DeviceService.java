@@ -129,8 +129,6 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
             owner = "undefined";
         }
 
-
-
     }
 
     @Nullable
@@ -139,6 +137,13 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         return null;
     }
 
+    /**
+     * Used to check the permits, and create the location manager to add the location listener by GPS and by network
+     * @param intent
+     * @param flags
+     * @param startId
+     * @return
+     */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -155,6 +160,9 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         return START_NOT_STICKY;
     }
 
+    /**
+     * Object used to listen the location by GPS change
+     */
     private final LocationListener locationListenerGPS = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
@@ -174,6 +182,9 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         }
     };
 
+    /**
+     * Used to listen the location by network change
+     */
     private final LocationListener locationListenerNetwork = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
@@ -193,6 +204,9 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         }
     };
 
+    /**
+     * USed to remove the location listeners when stop the service
+     */
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -208,14 +222,21 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         }
     }
 
+    /**
+     * Used to send the context information to others views using a broadcast
+     * @param location
+     */
     private void eventDetecion(Location location){
-
         if (location != null) {
             RoadSegment roadSegment;
+            /**
+             * Get the context data of the loction object
+             */
             latitude = (double) location.getLatitude();
             longitude = (double) location.getLongitude();
             speedMS = (double) location.getSpeed();
             speedKmHr = (double) (location.getSpeed() * 3.6);
+
             //Envía el Modelo de datos Device
             if(countSendDevice == 0){
                 sendContext(latitude, longitude);
@@ -225,6 +246,9 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
             }
             roadSegment = EventsFuntions.detectedRoadSegment(context, latitude, longitude);
             countSendDevice++;
+            /**
+             * Send the data using a Broadcast
+             */
             Intent intent = new Intent(Constants.SERVICE_CHANGE_LOCATION_DEVICE)
                 .putExtra(Constants.SERVICE_RESULT_LATITUDE, latitude)
                 .putExtra(Constants.SERVICE_RESULT_LONGITUDE, longitude)
@@ -239,7 +263,11 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
 
     }
 
-
+    /**
+     * Used to create and update the device entity on the orion
+     * @param latitude
+     * @param longitude
+     */
     private void sendContext(Double latitude, Double longitude){
         device = createDevice(latitude, longitude);
         tblTemp.setKeyword(device.getId());
@@ -262,6 +290,12 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         }
     }
 
+    /**
+     * Used to create the object device using the model device to convert this object to JSON
+     * @param latitude
+     * @param longitude
+     * @return
+     */
     private Device createDevice(Double latitude, Double longitude){
         String actualDate = Functions.getActualDate();
         Device device = new Device();
@@ -279,6 +313,12 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         return device;
     }
 
+    /**
+     * Used to create the object device using the model deviceUpdateModel to convert this object to JSON
+     * @param latitude
+     * @param longitude
+     * @return
+     */
     private DeviceUpdateModel updateDevice(Double latitude, Double longitude){
         String actualDate = Functions.getActualDate();
         DeviceUpdateModel deviceUpdateModel = new DeviceUpdateModel();
@@ -294,6 +334,10 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
         return  deviceUpdateModel;
     }
 
+    /**
+     * Runs when the device entity was created on the orion, receive the orion response
+     * @param response
+     */
     @Override
     public void onCreateEntity(Response response) {
         if(response.getHttpCode() == 201){
@@ -325,6 +369,10 @@ public class DeviceService extends Service implements DeviceController.DeviceRes
     public void onCreateEntitySaveOffline(Response response) {
     }
 
+    /**
+     * Runs when the device entity was updated o the orion, receive the orion response
+     * @param response
+     */
     @Override
     public void onUpdateEntity(Response response) {
 

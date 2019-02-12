@@ -16,13 +16,21 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService  {
     public MyFirebaseInstanceIDService(){
         appPreferences = new ApplicationPreferences();
     }
+
+    /**
+     * Runs when the tokens is refreshed
+     */
     @Override
     public void onTokenRefresh() { 
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.d(TAG, "Refreshed token: " + refreshedToken);
         sendRegistrationToServer(refreshedToken);
     }
-    
+
+    /**
+     * Used to store the token on the app preferences
+     * @param token
+     */
     private void sendRegistrationToServer(String token) {
         Context context = getApplicationContext();
         appPreferences.saveOnPreferenceString(

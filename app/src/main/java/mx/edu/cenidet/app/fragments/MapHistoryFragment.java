@@ -54,12 +54,14 @@ public class MapHistoryFragment extends Fragment implements OnMapReadyCallback, 
     private String zoneId;
     private SendDataService sendDataService;
 
+    /**
+     * Constructor used to initialize the context, the senDataService and the SqLiteDrivingApp
+     */
     public MapHistoryFragment() {
         context = HomeActivity.MAIN_CONTEXT;
         sendDataService = new SendDataService(this);
         sqLiteDrivingApp = new SQLiteDrivingApp(context);
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,6 +70,11 @@ public class MapHistoryFragment extends Fragment implements OnMapReadyCallback, 
         return rootView;
     }
 
+    /**
+     * Used to initialize the map
+     * @param view
+     * @param savedInstanceState
+     */
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -80,6 +87,10 @@ public class MapHistoryFragment extends Fragment implements OnMapReadyCallback, 
         }
     }
 
+    /**
+     * Runs when the map is ready
+     * @param googleMap
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
@@ -92,6 +103,11 @@ public class MapHistoryFragment extends Fragment implements OnMapReadyCallback, 
         drawZone(this.zoneId);
     }
 
+    /**
+     * Used to store the location and call the zoom effect
+     * @param latitude
+     * @param longitude
+     */
     private void createOrUpdateMarkerByLocation(double latitude, double longitude) {
         if (this.latitude == 0 && this.longitude == 0) {
             zoomToLocation(latitude, longitude);
@@ -100,6 +116,11 @@ public class MapHistoryFragment extends Fragment implements OnMapReadyCallback, 
         }
     }
 
+    /**
+     * Make the animated zoom effect in the alert location
+     * @param latitude
+     * @param longitude
+     */
     private void zoomToLocation(double latitude, double longitude) {
         camera = new CameraPosition.Builder()
                 .target(new LatLng(latitude, longitude))
@@ -110,12 +131,19 @@ public class MapHistoryFragment extends Fragment implements OnMapReadyCallback, 
         gMap.animateCamera(CameraUpdateFactory.newCameraPosition(camera));
     }
 
+    /**
+     * Used to store the zoneId
+     * @param zoneId
+     */
     public void renderZone(String zoneId) {
         this.zoneId = zoneId;
         //this.zoneId = "Zone_1523933778251";
     }
 
-    //Buscar la zona en la DB interna y pintar en el mapa.
+    /**
+     * Draw the zone on the map
+     * @param zoneId
+     */
     public void drawZone(String zoneId) {
         if (!zoneId.equals("undetectedZone")) {
             Zone zone = sqLiteDrivingApp.getZoneById(zoneId);
@@ -157,6 +185,10 @@ public class MapHistoryFragment extends Fragment implements OnMapReadyCallback, 
         //Log.i("MapHistoryFragment: 3", text);
     }
 
+    /**
+     * Used to draw the alert marker on the map usong the icon depending the severity
+     * @param alert
+     */
     public void renderAlert(Alert alert) {
 
         if (alert != null) {

@@ -38,13 +38,15 @@ public class MyCampusFragment extends Fragment {
     private AdapterView.AdapterContextMenuInfo info;
     private String idZone, name, location, centerPoint;
 
+    /**
+     * Constructor used to initialize the context the db and get the list of zones
+     */
     public MyCampusFragment() {
         // Required empty public constructor
         context = HomeActivity.MAIN_CONTEXT;
         sqLiteDrivingApp = new SQLiteDrivingApp(context);
         listZone = sqLiteDrivingApp.getAllZone();
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,6 +56,11 @@ public class MyCampusFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * Used to initialize the UI and registry a new context menu
+     * @param view
+     * @param savedInstanceState
+     */
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -64,6 +71,12 @@ public class MyCampusFragment extends Fragment {
     }
 
 
+    /**
+     * Runs when a new cintext menu is registered
+     * @param menu
+     * @param v
+     * @param menuInfo
+     */
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -74,6 +87,11 @@ public class MyCampusFragment extends Fragment {
         menuInflater.inflate(R.menu.campus_map_menu, menu);
     }
 
+    /**
+     * Assigns the event on context item selected
+     * @param item
+     * @return
+     */
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()){

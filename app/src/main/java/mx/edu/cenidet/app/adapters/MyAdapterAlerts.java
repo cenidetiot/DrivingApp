@@ -23,6 +23,12 @@ public class MyAdapterAlerts extends BaseAdapter {
     private int layout;
     private List<Alert> listAlerts;
 
+    /**
+     * Used to store the context, layout and the list of alerts
+     * @param context
+     * @param layout
+     * @param listAlerts
+     */
     public MyAdapterAlerts(Context context, int layout, List<Alert> listAlerts){
         this.context = context;
         this.layout = layout;
@@ -43,6 +49,13 @@ public class MyAdapterAlerts extends BaseAdapter {
         return position;
     }
 
+    /**
+     * Used to show the elements of the alert list
+     * @param position
+     * @param convertView
+     * @param parent
+     * @return
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;

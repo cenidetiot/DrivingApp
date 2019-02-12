@@ -59,11 +59,15 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
 
     private View header;
 
+    /**
+     * Constructor used to initialize the Alerts controller and the application preferences
+     */
     public AlertHistoryFragment() {
         context =  HomeActivity.MAIN_CONTEXT;
         alertsControllerSdk = new AlertsControllerSdk(context, this);
         applicationPreferences = new ApplicationPreferences();
     }
+
 
     @Override
     public void onAttach(Context context) {
@@ -75,6 +79,13 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
         }
     }
 
+    /**
+     * Used to registry the Broadcast receiver and get the Alerts
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -87,12 +98,18 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
         return rootView;
     }
 
+    /**
+     * Used to unregister the Broadcast receiver
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         LocalBroadcastManager.getInstance(context).unregisterReceiver(receiver);
     }
 
+    /**
+     * Used to get the history of alerts from the server
+     */
     private void getAlerts (){
         Log.d("ALERT", "loading alerts");
         listAlerts = new ArrayList<Alert>();
@@ -112,6 +129,9 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
         }
     }
 
+    /**
+     * The response receiver receive new alert data from the Firebase Messaging service
+     */
     private class ResponseReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -133,23 +153,36 @@ public class AlertHistoryFragment extends Fragment implements AlertsControllerSd
         }
     }
 
+    /**
+     * Interface of data listener
+     */
     public interface DataListener{
         void sendDataListAlerts(ArrayList<Alert> listAlerts);
         void sendDataAlert(Alert alert);
         void sendDataZoneId(String zoneId);
     }
 
+    /**
+     * Used to initialize the UI
+     * @param view
+     * @param savedInstanceState
+     */
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         listViewAlertsHistory = (ListView) rootView.findViewById(R.id.listViewAlertsHistory);
     }
 
+
     @Override
     public void currentAlertByZone(Response response) {
 
     }
 
+    /**
+     * Receive the server response when get the history Alert
+     * @param response
+     */
     @Override
     public void historyAlertByZone(Response response) {
         Log.i("Test: ", "Code Alerts: "+response.getHttpCode()+" 1-------------------------------------");

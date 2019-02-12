@@ -36,13 +36,16 @@ public class SplashActivity extends AppCompatActivity implements
     private SQLiteDrivingApp sqLiteDrivingApp;
     private ArrayList<Zone> listZone;
     private ZoneControllerSdk zoneControllerSdk;
-
-    //Envío del token de firebase
     private DeviceTokenControllerSdk deviceTokenControllerSdk;
     private String fcmToken;
     private Context context;
     private ApplicationPreferences appPreferences;
     private ProgressBar progressBar;
+
+    /**
+     * Used to check if have data alert to show or if is should to redirect a user
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,16 +67,21 @@ public class SplashActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     * Used to load the zones and send the device token to the server
+     */
     @Override
     protected void onStart() {
         super.onStart();
         loadZones();
         sendDeviceToken();
     }
+
     @Override
     protected void onResume() {
         super.onResume();
     }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -84,6 +92,10 @@ public class SplashActivity extends AppCompatActivity implements
         super.onPostResume();
     }
 
+    /**
+     * Retrieve the data alert
+     * @return
+     */
     private boolean checkAlert () {
         boolean result = false;
         Log.d("CHEKINGALERT","CHEKINGALERT");
@@ -124,6 +136,9 @@ public class SplashActivity extends AppCompatActivity implements
         return result;
     }
 
+    /**
+     * Check if the GPS is enabled
+     */
     private void checkGPS(){
         Log.d("LOADZONES", "CHEKING GPS");
 
@@ -139,6 +154,9 @@ public class SplashActivity extends AppCompatActivity implements
         return;
     }
 
+    /**
+     * Used to retrieve the zones from database or get them from the server
+     */
     private void loadZones(){
         sqLiteDrivingApp = new SQLiteDrivingApp(this);
         zoneControllerSdk = new ZoneControllerSdk(context, this);
@@ -150,6 +168,10 @@ public class SplashActivity extends AppCompatActivity implements
         }
         return;
     }
+
+    /**
+     * Show an Alert dialog informing that the GPS is disabled
+     */
     private void showGPSDisabledAlert(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setMessage(R.string.message_alert_gps)
@@ -165,6 +187,9 @@ public class SplashActivity extends AppCompatActivity implements
         alert.show();
     }
 
+    /**
+     * Send the device token to update in the server
+     */
     public void sendDeviceToken(){
         appPreferences = new ApplicationPreferences();
         deviceTokenControllerSdk = new DeviceTokenControllerSdk(context, this);
@@ -183,6 +208,10 @@ public class SplashActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     * Receives the server response when update the device token
+     * @param response
+     */
     @Override
     public void createDeviceToken(Response response) {
         Log.i("STATUS", "Firebase Service Create: CODE: "+ response.getHttpCode());
@@ -209,7 +238,10 @@ public class SplashActivity extends AppCompatActivity implements
 
     }
 
-
+    /**
+     * Receive the server response from the server can get the zones if the data base is empty
+     * @param response
+     */
     @Override
     public void readAllZone(mx.edu.cenidet.cenidetsdk.httpmethods.Response response) {
         Log.d("LOADZONES", "LOADING ZONES");
@@ -250,6 +282,11 @@ public class SplashActivity extends AppCompatActivity implements
                 break;
         }
     }
+
+    /**
+     * Used to check if the user is logged
+     * @return
+     */
     private boolean setCredentialsIfExist(){
         return !(appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_TOKEN).equals("") && appPreferences.getPreferenceString(getApplicationContext(), ConstantSdk.PREFERENCE_NAME_GENERAL, ConstantSdk.PREFERENCE_KEY_USER_NAME).equals(""));
     }
