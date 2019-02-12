@@ -24,6 +24,11 @@ public class RoadControllerSdk implements MethodGET.MethodGETCallback, MethodPOS
         this.roadServiceMethods = roadServiceMethods;
 
     }
+
+    /**
+     * Runs when GET method is used
+     * @param response
+     */
     @Override
     public void onMethodGETCallback(Response response) {
         switch (method){
@@ -46,6 +51,9 @@ public class RoadControllerSdk implements MethodGET.MethodGETCallback, MethodPOS
         void getRoadByResponsible(Response response);
     }
 
+    /**
+     * Retrieve all the roads registered from the server
+     */
     public void getAllRoad(){
         method = "getAllRoad";
         String URL = URL_BASE_HOST +ConfigServer.http_api.getPropiedad()+"/"+ConfigServer.http_road.getPropiedad()+"?status=1";
@@ -53,6 +61,10 @@ public class RoadControllerSdk implements MethodGET.MethodGETCallback, MethodPOS
         mGET.execute(URL);
     }
 
+    /**
+     * Retrieve the roads on a specific place (zone or parking) DEPRECATED
+     * @param responsible
+     */
     public void getRoadByResponsible(String responsible){
         method = "getRoadByResponsible";
         String URL = URL_BASE_HOST +ConfigServer.http_api.getPropiedad()+"/"+ConfigServer.http_road.getPropiedad()+"?responsible="+responsible+"&status=1";

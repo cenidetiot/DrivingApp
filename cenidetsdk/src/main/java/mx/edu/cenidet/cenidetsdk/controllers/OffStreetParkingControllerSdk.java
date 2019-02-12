@@ -24,6 +24,10 @@ public class OffStreetParkingControllerSdk implements MethodGET.MethodGETCallbac
         this.offStreetParkingServiceMethods = offStreetParkingServiceMethods;
     }
 
+    /**
+     * Runs when the GET method is used
+     * @param response
+     */
     @Override
     public void onMethodGETCallback(Response response) {
         switch (method){
@@ -46,6 +50,9 @@ public class OffStreetParkingControllerSdk implements MethodGET.MethodGETCallbac
         void getOffStreetParkingByAreaServed(Response response);
     }
 
+    /**
+     * Retrieve all the parking registered from the server
+     */
     public void getAllOffStreetParking(){
         method = "getAllOffStreetParking";
         String URL = URL_BASE_HOST +ConfigServer.http_api.getPropiedad()+"/"+ConfigServer.http_parking.getPropiedad()+"?status=1";
@@ -53,6 +60,10 @@ public class OffStreetParkingControllerSdk implements MethodGET.MethodGETCallbac
         mGET.execute(URL);
     }
 
+    /**
+     * Retrieve the parking on a specific zone DEPRECATED
+     * @param areaServed
+     */
     public void getOffStreetParkingByAreaServed(String areaServed){
         method = "getOffStreetParkingByAreaServed";
         String URL = URL_BASE_HOST +ConfigServer.http_api.getPropiedad()+"/"+ConfigServer.http_parking.getPropiedad()+"?areaServed="+areaServed+"&status=1";

@@ -19,6 +19,12 @@ import java.util.List;
  */
 
 public class FunctionSdk {
+
+    /**
+     * Used to retrieve the phone number
+     * @param context
+     * @return
+     */
     public static String getPhoneNumber(Context context) {
         String phoneNumber = "";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {

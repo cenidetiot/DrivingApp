@@ -9,6 +9,7 @@ import mx.edu.cenidet.cenidetsdk.utilities.ConfigServer;
 
 /**
  * Created by Cipriano on 3/18/2018.
+ * Class DEPRECATED
  */
 
 public class CampusController implements MethodGET.MethodGETCallback, MethodPOST.MethodPOSTCallback {

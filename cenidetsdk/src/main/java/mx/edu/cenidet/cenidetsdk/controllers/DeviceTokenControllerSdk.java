@@ -28,11 +28,16 @@ public class DeviceTokenControllerSdk implements MethodGET.MethodGETCallback, Me
         this.context = context;
         this.deviceTokenServiceMethods = deviceTokenServiceMethods;
     }
+
     @Override
     public void onMethodGETCallback(Response response) {
 
     }
 
+    /**
+     * Runs when the POST method is used
+     * @param response
+     */
     @Override
     public void onMethodPOSTCallback(Response response) {
         switch (method){
@@ -42,6 +47,10 @@ public class DeviceTokenControllerSdk implements MethodGET.MethodGETCallback, Me
         }
     }
 
+    /**
+     * Runs when the PUT method is used
+     * @param response
+     */
     @Override
     public void onMethodPUTCallback(Response response) {
         switch (method){
@@ -57,6 +66,12 @@ public class DeviceTokenControllerSdk implements MethodGET.MethodGETCallback, Me
         void updateDeviceToken(Response response);
     }
 
+    /**
+     * USed to create the DeviceToken entity on the server
+     * @param fcmToken
+     * @param refDevice
+     * @param preferences
+     */
     public void createDeviceToken(String fcmToken, String refDevice, String preferences){
         method = "createDeviceToken";
         String URL = URL_BASE_HOST + ConfigServer.http_api.getPropiedad() +"/"+ ConfigServer.http_device.getPropiedad() +"/"+ ConfigServer.http_token.getPropiedad();
@@ -74,6 +89,10 @@ public class DeviceTokenControllerSdk implements MethodGET.MethodGETCallback, Me
         mPOST.execute(URL, jsonDeviceToken.toString());
     }
 
+    /**
+     * Used to update the DeviceToken entity on the server
+     * @param refDevice
+     */
     public void updateDeviceToken(String refDevice){
         method = "updateDeviceToken";
         String URL = URL_BASE_HOST + ConfigServer.http_api.getPropiedad() +"/"+ ConfigServer.http_device.getPropiedad() +"/"+ ConfigServer.http_token.getPropiedad()+"/"+refDevice;

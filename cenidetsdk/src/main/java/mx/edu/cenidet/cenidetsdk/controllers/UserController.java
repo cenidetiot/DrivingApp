@@ -30,6 +30,11 @@ public class UserController implements MethodGET.MethodGETCallback, MethodPOST.M
         this.uServiceMethods = uServiceMethods;
         this.context = context;
     }
+
+    /**
+     * Runs when the GET method is used
+     * @param response
+     */
     @Override
     public void onMethodGETCallback(Response response) {
         switch (method){
@@ -39,6 +44,10 @@ public class UserController implements MethodGET.MethodGETCallback, MethodPOST.M
         }
     }
 
+    /**
+     * Runs when the POST method is used
+     * @param response
+     */
     @Override
     public void onMethodPOSTCallback(Response response) {
         switch (method){
@@ -60,6 +69,10 @@ public class UserController implements MethodGET.MethodGETCallback, MethodPOST.M
         void logOutUser(Response response);
     }
 
+    /**
+     * Register the user on the server
+     * @param user
+     */
     public void createUser(User user){
         method = "createUser";
         Response response = new Response();
@@ -72,6 +85,12 @@ public class UserController implements MethodGET.MethodGETCallback, MethodPOST.M
         mPOST.execute(URL, jsonString.toString());
     }
 
+    /**
+     * Login the user to get the token from the server
+     * @param userID
+     * @param password
+     * @param typeUser
+     */
     public void logInUser(String userID, String password, String typeUser){
         method = "logInUser";
         Response response = new Response();
@@ -96,6 +115,11 @@ public class UserController implements MethodGET.MethodGETCallback, MethodPOST.M
         mPOST = new MethodPOST(this);
         mPOST.execute(URL, jsonLogInUser.toString());
     }
+
+    /**
+     * Read the user data from the server DEPRECATED
+     * @param email
+     */
     public void readUser(String email){
         method = "readUser";
         String URL = URL_BASE_NODE + ConfigServer.http_user.getPropiedad()+"?email="+email;

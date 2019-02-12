@@ -2,6 +2,7 @@ package mx.edu.cenidet.cenidetsdk.entities;
 
 /**
  * Created by Cipriano on 3/17/2018.
+ * DEPRECATED
  */
 
 public class Campus {

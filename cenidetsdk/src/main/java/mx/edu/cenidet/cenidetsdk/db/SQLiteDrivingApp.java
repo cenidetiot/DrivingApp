@@ -92,6 +92,10 @@ public class SQLiteDrivingApp extends SQLiteOpenHelper {
         //Log.i("Result Insert: ", "QUERY ZONE:\n " + sqlCreateTblZone);
     }
 
+    /**
+     * Runs when the data base is created to create into the tables
+     * @param db
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         //db.execSQL(sqlCreateTblCampus);
@@ -101,6 +105,12 @@ public class SQLiteDrivingApp extends SQLiteOpenHelper {
         db.execSQL(sqlCreateTblParking);
     }
 
+    /**
+     * Runs if the data base exist to create empty tables again
+     * @param db
+     * @param oldVersion
+     * @param newVersion
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         //Se elimina la versión anterior de la tabla;
@@ -118,14 +128,18 @@ public class SQLiteDrivingApp extends SQLiteOpenHelper {
     }
 
     /**
-     * Elimina la base de datos.
+     * Drop the data on the data base
      * @param context el contexto de donde se desea eliminar a DB.
      */
     public void deleteDatabase(Context context) {
         context.deleteDatabase(DATABASE_NAME);
     }
 
-    //------------------------Inicio de los metodos para la gestión de Zone------------------------------//
+    /**
+     * Create a new zone in the zones table
+     * @param zone
+     * @return
+     */
     public boolean createZone(Zone zone){
         boolean band = false;
         if(zone == null){
@@ -161,6 +175,10 @@ public class SQLiteDrivingApp extends SQLiteOpenHelper {
         return band;
     }
 
+    /**
+     * Retrieve the zones stored on the data base
+     * @return
+     */
     public ArrayList<Zone> getAllZone() {
         ArrayList<Zone> list = new ArrayList<Zone>();
         // Select All Query
@@ -193,6 +211,11 @@ public class SQLiteDrivingApp extends SQLiteOpenHelper {
         return list;
     }
 
+    /**
+     * Retrieve a specific zone by id
+     * @param zoneId
+     * @return
+     */
     public Zone getZoneById(String zoneId) {
         Zone zone = new Zone();
 
@@ -260,7 +283,11 @@ public class SQLiteDrivingApp extends SQLiteOpenHelper {
         return zone;
     }
 
-    //------------------------Inicio de los metodos para la gestión de Parking------------------------------//
+    /**
+     * Create a new parking into the parking table
+     * @param offStreetParking
+     * @return
+     */
     public boolean createParking(OffStreetParking offStreetParking){
         boolean band = false;
         if(offStreetParking == null){
@@ -293,6 +320,10 @@ public class SQLiteDrivingApp extends SQLiteOpenHelper {
         return band;
     }
 
+    /**
+     * Retrieve all the parking stored on the data base
+     * @return
+     */
     public ArrayList<OffStreetParking> getAllOffStreetParking() {
         ArrayList<OffStreetParking> list = new ArrayList<>();
         // Select All Query
@@ -322,6 +353,11 @@ public class SQLiteDrivingApp extends SQLiteOpenHelper {
         return list;
     }
 
+    /**
+     * Retrieve all the parking inside a specific zone
+     * @param areaServed
+     * @return
+     */
     public ArrayList<OffStreetParking> getAllOffStreetParkingByAreaServed(String areaServed) {
         ArrayList<OffStreetParking> list = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -367,6 +403,11 @@ public class SQLiteDrivingApp extends SQLiteOpenHelper {
         return list;
     }
 
+    /**
+     * Retrieve the parking inside a specific zone DEPRECATED
+     * @param areaServed
+     * @return
+     */
     public OffStreetParking getOffStreetParkingByAreaServed(String areaServed){
         OffStreetParking offStreetParking = new OffStreetParking();
 
@@ -417,7 +458,11 @@ public class SQLiteDrivingApp extends SQLiteOpenHelper {
         return offStreetParking;
     }
 
-    //------------------------Inicio de los metodos para la gestión de Road------------------------------//
+    /**
+     * Create a new road into the roads table
+     * @param road
+     * @return
+     */
     public boolean createRoad(Road road){
         boolean band = false;
         if(road == null){
@@ -448,6 +493,10 @@ public class SQLiteDrivingApp extends SQLiteOpenHelper {
         return band;
     }
 
+    /**
+     * Retrieve all roads stored in the data base
+     * @return
+     */
     public ArrayList<Road> getAllRoad() {
         ArrayList<Road> list = new ArrayList<Road>();
         // Select All Query
@@ -475,6 +524,11 @@ public class SQLiteDrivingApp extends SQLiteOpenHelper {
         return list;
     }
 
+    /**
+     * Retrieve the roads inside a specific zone or parking
+     * @param responsible
+     * @return
+     */
     public ArrayList<Road> getRoadByResponsible(String responsible) {
         ArrayList<Road> list = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -516,7 +570,11 @@ public class SQLiteDrivingApp extends SQLiteOpenHelper {
         return list;
     }
 
-    //------------------------Inicio de los metodos para la gestión de RoadSegment------------------------------//
+    /**
+     * Create a new road Segment into the road segment table
+     * @param roadSegment
+     * @return
+     */
     public boolean createRoadSegment(RoadSegment roadSegment){
         boolean band = false;
         if(roadSegment == null){
@@ -554,6 +612,10 @@ public class SQLiteDrivingApp extends SQLiteOpenHelper {
         return band;
     }
 
+    /**
+     * Retrieve all the roadSegments stored in the data base
+     * @return
+     */
     public ArrayList<RoadSegment> getAllRoadSegment() {
         ArrayList<RoadSegment> list = new ArrayList<>();
         // Select All Query
@@ -588,6 +650,11 @@ public class SQLiteDrivingApp extends SQLiteOpenHelper {
         return list;
     }
 
+    /**
+     * Retrieve the all roadsSegments by a specific ref to road
+     * @param refRoad
+     * @return
+     */
     public ArrayList<RoadSegment> getAllRoadSegmentByRefRoad(String refRoad) {
         ArrayList<RoadSegment> list = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -644,6 +711,11 @@ public class SQLiteDrivingApp extends SQLiteOpenHelper {
         return list;
     }
 
+    /**
+     * Retrieve the roadsSegments by a specific ref to road  DEPRECATED
+     * @param refRoad
+     * @return
+     */
     public RoadSegment getRoadSegmentByRefRoad(String refRoad){
         RoadSegment roadSegment = new RoadSegment();
 

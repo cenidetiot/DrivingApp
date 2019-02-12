@@ -49,7 +49,7 @@ public class AlertsControllerSdk implements MethodGET.MethodGETCallback, MethodP
     }
 
     /**
-     * Leer las alertas de un determinado campus
+     * Read the alerts of the campus where the user is DEPRECATED
      */
     public void readAlertsByCampus(){
         method = "readAlertsByCampus";
@@ -58,6 +58,10 @@ public class AlertsControllerSdk implements MethodGET.MethodGETCallback, MethodP
         mGET.execute(URL);
     }
 
+    /**
+     * Get the current alerts of the zone where the user is from the orion
+     * @param zoneId
+     */
     public void currentAlertByZone(String zoneId){
         //Zone_1523325691338
         method = "currentAlertByZone";
@@ -66,6 +70,10 @@ public class AlertsControllerSdk implements MethodGET.MethodGETCallback, MethodP
         mGET.execute(URL);
     }
 
+    /**
+     * Get the history alerts of the zone where the user is from the orion
+     * @param zoneId
+     */
     public void historyAlertByZone(String zoneId){
         method = "historyAlertByZone";
         String URL = URL_BASE_HOST +ConfigServer.http_service.getPropiedad()+ConfigServer.http_history.getPropiedad()+"/"+zoneId;

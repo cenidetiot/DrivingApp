@@ -24,6 +24,10 @@ public class RoadSegmentControllerSdk implements MethodGET.MethodGETCallback, Me
         this.roadSegmentServiceMethods = roadSegmentServiceMethods;
     }
 
+    /**
+     * Runs when GET method is used
+     * @param response
+     */
     @Override
     public void onMethodGETCallback(Response response) {
         switch (method){
@@ -46,6 +50,9 @@ public class RoadSegmentControllerSdk implements MethodGET.MethodGETCallback, Me
         void getRoadSegmentByRefRoad(Response response);
     }
 
+    /**
+     * Retrieve all roadSegments registered from the server
+     */
     public void getAllRoadSegment(){
         method = "getAllRoadSegment";
         String URL = URL_BASE_HOST +ConfigServer.http_api.getPropiedad()+"/"+ConfigServer.http_road_segment.getPropiedad()+"?status=1";
@@ -53,6 +60,10 @@ public class RoadSegmentControllerSdk implements MethodGET.MethodGETCallback, Me
         mGET.execute(URL);
     }
 
+    /**
+     * Retrieve the roadSegments that refers to a specific road DEPRECATED
+     * @param refRoad
+     */
     public void getRoadSegmentByRefRoad(String refRoad){
         method = "getRoadSegmentByRefRoad";
         String URL = URL_BASE_HOST +ConfigServer.http_api.getPropiedad()+"/"+ConfigServer.http_road_segment.getPropiedad()+"?refRoad="+refRoad+"&status=1";

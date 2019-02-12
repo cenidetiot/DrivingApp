@@ -23,6 +23,11 @@ public class ZoneControllerSdk implements MethodGET.MethodGETCallback, MethodPOS
         this.context = context;
         this.zoneServiceMethods = zoneServiceMethods;
     }
+
+    /**
+     * Runs when the GET method is used
+     * @param response
+     */
     @Override
     public void onMethodGETCallback(Response response) {
         switch (method){
@@ -31,6 +36,7 @@ public class ZoneControllerSdk implements MethodGET.MethodGETCallback, MethodPOS
                 break;
         }
     }
+
 
     @Override
     public void onMethodPOSTCallback(Response response) {
@@ -41,6 +47,9 @@ public class ZoneControllerSdk implements MethodGET.MethodGETCallback, MethodPOS
         void readAllZone(Response response);
     }
 
+    /**
+     * Retrieve all the zones from the server
+     */
     public void readAllZone(){
         method = "readAllZone";
         String URL = URL_BASE_HOST +ConfigServer.http_api.getPropiedad()+"/"+ConfigServer.http_zone.getPropiedad()+"?status=1";
